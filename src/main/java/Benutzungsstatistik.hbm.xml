@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="benutzungsstatistik.model.Benutzungsstatistik" table="handstatistik">
+
+		<id name="benutzungsstatistik_ID" column="Benutzungsstatistik_ID" type="int">
+			<generator class="native" />
+		</id>
+		
+		<property name="datum" column="Datum" not-null="true"
+			type="date" />
+		
+		<property name="anzahl_Rechercheberatung" column="Anzahl_Rechercheberatung" not-null="true" type="int" />
+
+		<property name="kassenbeleg" column="Kassenbeleg" not-null="true"
+			type="boolean" />
+			
+		<many-to-one name="standort" column="Standort_ID" not-null="true"
+			class="Allgemein.model.Standort" />
+			
+		<one-to-one name="wintikurier" class="benutzungsstatistik.model.Wintikurier" 
+			cascade="save-update"></one-to-one>
+			
+	</class>
+</hibernate-mapping>
