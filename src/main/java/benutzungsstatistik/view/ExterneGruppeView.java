@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
@@ -142,19 +143,38 @@ public class ExterneGruppeView {
 		})).setCaption("Bearbeitung");
 		
 		tabelle.addColumn(ExterneGruppeBean -> "Löschen", new ButtonRenderer(clickEvent -> {
-			externeGruppeBeanListe.remove(clickEvent.getItem());
+			
+//			ConfirmDialog.show(this, "Bitte bestätigen:", "Sind Sie sicher sie wollen die Gruppe löschen?",
+//			        "Löschen", "Abbrechen", new ConfirmDialog.Listener() {
+//
+//			            public void onClose(ConfirmDialog dialog) {
+//			                if (dialog.isConfirmed()) {
+//			                    // Confirmed to continue
+			                	externeGruppeBeanListe.remove(clickEvent.getItem());
 
-			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
+			        			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
 
-			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
-					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-			for (ExterneGruppe e : externeGruppeListe2) {
-				if (beanZuLöschen.getName().equals(e.getName())) {
-					externeGruppeDB.deleteExterneGruppe(e);
-				}
-			}
+			        			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
+			        					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+			        			for (ExterneGruppe e : externeGruppeListe2) {
+			        				if (beanZuLöschen.getName().equals(e.getName())) {
+			        					externeGruppeDB.deleteExterneGruppe(e);
+			        				}
+			        			}
 
-			tabelle.setItems(externeGruppeBeanListe);
+			        			tabelle.setItems(externeGruppeBeanListe);
+//			                } else {
+//			                    // User did not confirm
+//			                	// do nothing
+//			                }
+//			            }
+//			        });
+			
+//			ConfirmDialog dialog = new ConfirmDialog("Löschen bestätigen",
+//			        "Wollen Sie die Gruppe wirklich löschen?", "Löschen", this::onPublish,
+//			        "Abbrechen", this::onCancel);
+			
+			
 		})).setCaption("Löschfunktion");
 
 		GridLayout grid = new GridLayout(5, 7);
@@ -235,5 +255,6 @@ public class ExterneGruppeView {
 		};
 
 	}
+
 
 }

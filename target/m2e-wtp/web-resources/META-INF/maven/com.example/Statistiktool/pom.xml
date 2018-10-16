@@ -98,11 +98,8 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.11.1</version>
 		</dependency>
-		<!--<dependency>
-			<groupId>javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.12.1.GA</version>
-		</dependency>-->
+		<!--<dependency> <groupId>javassist</groupId> <artifactId>javassist</artifactId> 
+			<version>3.12.1.GA</version> </dependency> -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -119,12 +116,19 @@
 			<artifactId>switch</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<!-- Dependecy für Vaadin Icons
+		<!-- Dependecy für Confirm-Dialog -->
 		<dependency>
-			<groupId>org.webjars.bowergithub.vaadin</groupId>
-			<artifactId>vaadin-icons</artifactId>
-			<version>4.2.0</version>
-		</dependency> -->
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>confirmdialog</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-confirm-dialog-flow</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- Dependecy für Vaadin Icons <dependency> <groupId>org.webjars.bowergithub.vaadin</groupId> 
+			<artifactId>vaadin-icons</artifactId> <version>4.2.0</version> </dependency> -->
 	</dependencies>
 
 	<build>

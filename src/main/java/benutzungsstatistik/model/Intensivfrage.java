@@ -1,14 +1,15 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
+
+import java.sql.Timestamp;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine Intensivfrage in
  * die Tabelle 'Intensivfrage' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
-import java.sql.Timestamp;
-
 public class Intensivfrage implements Serializable {
 
 	

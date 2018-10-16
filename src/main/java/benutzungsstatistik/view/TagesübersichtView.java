@@ -28,13 +28,13 @@ import benutzungsstatistik.bean.WintikurierBean;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.KundenkontaktDatenbank;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 
 /**
@@ -223,15 +223,15 @@ public class TagesübersichtView {
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBean> tabelleUhrzeiten) {
 
 		tabelleUhrzeiten.addColumn(TagesübersichtBean::getUhrzeit).setCaption("Uhrzeit");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getKontakt).setCaption("Kunden");
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getKontakt).setCaption("Benutzer");
 		tabelleUhrzeiten.addColumn(TagesübersichtBean::getIntensiv).setCaption("Intensiv");
 		tabelleUhrzeiten.addColumn(TagesübersichtBean::getEmail).setCaption("Email");
 		tabelleUhrzeiten.addColumn(TagesübersichtBean::getTelefon).setCaption("Telefon");
 		
 		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
 		List<Intensivfrage> intensivfragenListe = intensivFrageDB.selectAllIntensivfragenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-		KundenkontaktDatenbank kundenKontaktDB = new KundenkontaktDatenbank();
-		List<Kundenkontakt> kundenkontaktListe = kundenKontaktDB.selectAllKundenkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
+		List<Benutzerkontakt> benutzerkontaktListe = benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 		List<Telefonkontakt> telefonkontaktListe = telefonKontaktDB.selectAllTelefonkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
@@ -261,13 +261,13 @@ public class TagesübersichtView {
 			}
 			tb.setIntensiv(intensivzaehler);
 			
-			int kundenzaehler = 0;
-			for(Kundenkontakt k : kundenkontaktListe) {
+			int benutzerzaehler = 0;
+			for(Benutzerkontakt k : benutzerkontaktListe) {
 				if(Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
-					kundenzaehler++;
+					benutzerzaehler++;
 				}
 			}
-			tb.setKontakt(kundenzaehler);
+			tb.setKontakt(benutzerzaehler);
 			
 			int telefonzaehler = 0;
 			for(Telefonkontakt t : telefonkontaktListe) {

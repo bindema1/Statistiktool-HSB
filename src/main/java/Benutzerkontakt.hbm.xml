@@ -6,9 +6,9 @@
 
 <hibernate-mapping>
 
-	<class name="benutzungsstatistik.model.Kundenkontakt" table="kundenkontakt">
+	<class name="benutzungsstatistik.model.Benutzerkontakt" table="benutzerkontakt">
 
-		<id name="kundenkontakt_ID" column="Kundenkontakt_ID" type="int">
+		<id name="benutzerkontakt_ID" column="Benutzerkontakt_ID" type="int">
 			<generator class="native" />
 		</id>
 		

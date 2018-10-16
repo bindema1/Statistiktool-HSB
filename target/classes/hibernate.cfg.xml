@@ -34,7 +34,7 @@
 		<mapping resource="Standort.hbm.xml"></mapping>
 		<mapping resource="Angestellter.hbm.xml"></mapping>
 		<mapping resource="Benutzungsstatistik.hbm.xml"></mapping>
-		<mapping resource="Kundenkontakt.hbm.xml"></mapping>
+		<mapping resource="Benutzerkontakt.hbm.xml"></mapping>
 		<mapping resource="Emailkontakt.hbm.xml"></mapping>
 		<mapping resource="Telefonkontakt.hbm.xml"></mapping>
 		<mapping resource="Intensivfrage.hbm.xml"></mapping>

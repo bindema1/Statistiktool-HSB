@@ -8,18 +8,17 @@ package benutzungsstatistik.model;
  */
 public class Wintikurier {
 
-	
 	int wintikurier_ID;
 	int anzahl_Gesundheit;
 	int anzahl_Technik;
 	int anzahl_Wirtschaft;
 	int anzahl_Linguistik;
-	
+
 	// Für Hibernate
-	public Wintikurier(){
-				
+	public Wintikurier() {
+
 	}
-	
+
 	public Wintikurier(int anzahl_Gesundheit, int anzahl_Technik, int anzahl_Wirtschaft, int anzahl_Linguistik) {
 		this.anzahl_Gesundheit = anzahl_Gesundheit;
 		this.anzahl_Technik = anzahl_Technik;
@@ -34,11 +33,11 @@ public class Wintikurier {
 	public int getAnzahl_Gesundheit() {
 		return anzahl_Gesundheit;
 	}
-	
+
 	public void increaseAnzahl_Gesundheit() {
 		anzahl_Gesundheit++;
 	}
-	
+
 	public void decreaseAnzahl_Gesundheit() {
 		anzahl_Gesundheit--;
 	}
@@ -46,11 +45,11 @@ public class Wintikurier {
 	public int getAnzahl_Technik() {
 		return anzahl_Technik;
 	}
-	
+
 	public void increaseAnzahl_Technik() {
 		anzahl_Technik++;
 	}
-	
+
 	public void decreaseAnzahl_Technik() {
 		anzahl_Technik--;
 	}
@@ -58,11 +57,11 @@ public class Wintikurier {
 	public int getAnzahl_Wirtschaft() {
 		return anzahl_Wirtschaft;
 	}
-	
+
 	public void increaseAnzahl_Wirtschaft() {
 		anzahl_Wirtschaft++;
 	}
-	
+
 	public void decreaseAnzahl_Wirtschaft() {
 		anzahl_Wirtschaft--;
 	}
@@ -70,16 +69,15 @@ public class Wintikurier {
 	public int getAnzahl_Linguistik() {
 		return anzahl_Linguistik;
 	}
-	
+
 	public void increaseAnzahl_Linguistik() {
 		anzahl_Linguistik++;
 	}
-	
+
 	public void decreaseAnzahl_Linguistik() {
 		anzahl_Linguistik--;
 	}
 
-	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
 	public void setWintikurier_ID(int wintikurier_ID) {
 		this.wintikurier_ID = wintikurier_ID;
@@ -134,5 +132,5 @@ public class Wintikurier {
 			return false;
 		return true;
 	}
-	
+
 }

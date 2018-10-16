@@ -31,13 +31,13 @@ import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.KundenkontaktDatenbank;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 
 /**
@@ -52,7 +52,7 @@ public class BenutzungsstatistikView {
 	private AbsoluteLayout mainLayout;
 //	private Angestellter angestellter;
 	private Button bZurueck;
-	private Button bKundenkontakt;
+	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
 	private Button bRechercheBeratung;
 	private Button bEmailkontakt;
@@ -70,7 +70,7 @@ public class BenutzungsstatistikView {
 	BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	KundenkontaktDatenbank kundenKontaktDB = new KundenkontaktDatenbank();
+	BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
 	TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 
@@ -127,11 +127,11 @@ public class BenutzungsstatistikView {
 		lKassenbeleg.setValue("Kassenbeleg");
 		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		bKundenkontakt = new Button();
-		bKundenkontakt.setCaption("Kundenkontakt");
-		bKundenkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bKundenkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bKundenkontakt.addClickListener(createClickListener(mainView));
+		bBenutzerkontakt = new Button();
+		bBenutzerkontakt.setCaption("Benutzerkontakt");
+		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bBenutzerkontakt.addClickListener(createClickListener(mainView));
 
 		bIntensivFrage = new Button();
 		bIntensivFrage.setCaption("Intensiv Frage");
@@ -204,7 +204,7 @@ public class BenutzungsstatistikView {
 		grid.addComponent(lText, 1, 0, 3, 0);
 		grid.addComponent(lKassenbeleg, 4, 0);
 		grid.addComponent(kassenbeleg, 5, 0);
-		grid.addComponent(bKundenkontakt, 0, 1, 1, 2);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
 		grid.addComponent(bIntensivFrage, 2, 1, 3, 2);
 		grid.addComponent(bRechercheBeratung, 4, 1, 5, 2);
 		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
@@ -240,16 +240,16 @@ public class BenutzungsstatistikView {
 					Notification.show("Zurück", Type.WARNING_MESSAGE);
 				}
 
-				if (e.getSource() == bKundenkontakt) {
+				if (e.getSource() == bBenutzerkontakt) {
 
-					Kundenkontakt kundenkontakt = new Kundenkontakt(new Timestamp(new Date().getTime()),
+					Benutzerkontakt benutzerkontakt = new Benutzerkontakt(new Timestamp(new Date().getTime()),
 							benutzungsstatistik);
-					kundenKontaktDB.insertKundenkontakt(kundenkontakt);
+					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
 
-					List<Kundenkontakt> kundenliste = kundenKontaktDB.selectAllKundenkontakteForBenutzungsstatistik(
+					List<Benutzerkontakt> benutzerliste = benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(
 							benutzungsstatistik.getBenutzungsstatistik_ID());
-					Notification.show("Kundenkontakt erfasst ", Type.WARNING_MESSAGE);
-					Notification.show("+1 Kundenkontakt", Type.TRAY_NOTIFICATION);
+					Notification.show("Benutzerkontakt erfasst ", Type.WARNING_MESSAGE);
+					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bIntensivFrage) {

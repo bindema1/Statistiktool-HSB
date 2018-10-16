@@ -31,13 +31,13 @@ import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.KundenkontaktDatenbank;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 
 /**
@@ -51,7 +51,7 @@ public class KorrekturView {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
-	private Button bKundenkontakt;
+	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
 	private Button bRechercheBeratung;
 	private Button bEmailkontakt;
@@ -100,11 +100,11 @@ public class KorrekturView {
 		lText.setValue("Benutzungsstatistik vom " + sdf.format(benutzungsstatistik.getDatum()));
 		lText.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
 		
-		bKundenkontakt = new Button();
-		bKundenkontakt.setCaption("Einfache Frage");
-		bKundenkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bKundenkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE + "huge-icon");
-		bKundenkontakt.addClickListener(createClickListener(mainView));
+		bBenutzerkontakt = new Button();
+		bBenutzerkontakt.setCaption("Einfache Frage");
+		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE + "huge-icon");
+		bBenutzerkontakt.addClickListener(createClickListener(mainView));
 
 
 //		GridLayout grid = new GridLayout(6, 7);
@@ -114,7 +114,7 @@ public class KorrekturView {
 //		grid.addComponent(lText, 1, 0, 3, 0);
 //		grid.addComponent(lKassenbeleg, 4, 0);
 //		grid.addComponent(kassenbeleg, 5, 0);
-//		grid.addComponent(bKundenkontakt, 0, 1, 1, 2);
+//		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
 //		grid.addComponent(bIntensivFrage, 2, 1, 3, 2);
 //		grid.addComponent(bRechercheBeratung, 4, 1, 5, 2);
 //		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
@@ -149,16 +149,16 @@ public class KorrekturView {
 					mainView.setContent(new BenutzungsstatistikView().init(mainView));
 				}
 
-				if (e.getSource() == bKundenkontakt) {
+				if (e.getSource() == bBenutzerkontakt) {
 
-//					Kundenkontakt kundenkontakt = new Kundenkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik);
-//					kundenKontaktDB.insertKundenkontakt(kundenkontakt);
+//					Benutzerkontakt benutzerkontakt = new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik);
+//					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
 //
-//					List<Kundenkontakt> kundenliste = kundenKontaktDB
-//							.selectAllKundenkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-//					Notification.show("Kundenkontakt erfasst " + kundenliste.get(kundenliste.size() - 1).getTimestamp(),
+//					List<Benutzerkontakt> benutzerliste = benutzerKontaktDB
+//							.selectAllBenutzerkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+//					Notification.show("Benutzerkontakt erfasst " + benutzerliste.get(benutzerliste.size() - 1).getTimestamp(),
 //							Type.WARNING_MESSAGE);
-//					Notification.show("+1 Kundenkontakt", Type.TRAY_NOTIFICATION);
+//					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 				}
 
 			}

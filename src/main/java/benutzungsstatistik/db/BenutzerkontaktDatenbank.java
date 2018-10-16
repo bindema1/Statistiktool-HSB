@@ -9,24 +9,24 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 
 /**
- * Das ist die DAO-Klasse (Data Access Object) von Kundenkontakt. Man kann damit
- * die Tabelle 'Kundenkontakt' verwalten. Sie öffnet Connections, schliesst diese
+ * Das ist die DAO-Klasse (Data Access Object) von Benutzerkontakt. Man kann damit
+ * die Tabelle 'Benutzerkontakt' verwalten. Sie öffnet Connections, schliesst diese
  * wieder und hat alle Funktionen implementiert. (Delete, Insert, Update,
  * Select)
  * 
  * @author Marvin Bindemann
  */
-public class KundenkontaktDatenbank {
+public class BenutzerkontaktDatenbank {
 
 	private static SessionFactory sessionFactory;
 
 	/**
-	 * Konstruktor der KundenkontaktDatenbank
+	 * Konstruktor der BenutzerkontaktDatenbank
 	 */
-	public KundenkontaktDatenbank() {
+	public BenutzerkontaktDatenbank() {
 		if (sessionFactory == null) {
 			sessionFactory = new Configuration().configure()
 					.buildSessionFactory();
@@ -34,11 +34,11 @@ public class KundenkontaktDatenbank {
 	}
 
 	/**
-	 * Neuen Kundenkontakt in die DB hinzufuegen
+	 * Neuen Benutzerkontakt in die DB hinzufuegen
 	 * 
-	 * @param kundenkontakt
+	 * @param benutzerkontakt
 	 */
-	public void insertKundenkontakt(Kundenkontakt kundenkontakt) {
+	public void insertBenutzerkontakt(Benutzerkontakt benutzerkontakt) {
 
 		Session tempSession = null;
 		Transaction tempTransaction = null;
@@ -47,7 +47,7 @@ public class KundenkontaktDatenbank {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
 
-			tempSession.save(kundenkontakt);
+			tempSession.save(benutzerkontakt);
 
 			tempTransaction.commit();
 		} catch (final HibernateException ex) {
@@ -72,11 +72,11 @@ public class KundenkontaktDatenbank {
 	}
 
 	/**
-	 * Kundenkontakt löschen
+	 * Benutzerkontakt löschen
 	 * 
-	 * @param kundenkontakt
+	 * @param benutzerkontakt
 	 */
-	public void deleteKundenkontakt(Kundenkontakt kundenkontakt) {
+	public void deleteBenutzerkontakt(Benutzerkontakt benutzerkontakt) {
 
 		Session tempSession = null;
 		Transaction tempTransaction = null;
@@ -85,7 +85,7 @@ public class KundenkontaktDatenbank {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
 
-			tempSession.delete(kundenkontakt);
+			tempSession.delete(benutzerkontakt);
 			tempTransaction.commit();
 		} catch (HibernateException ex) {
 
@@ -107,19 +107,19 @@ public class KundenkontaktDatenbank {
 	}
 
 	/**
-	 * @return Liste von allen Kundenkontakten
+	 * @return Liste von allen Benutzerkontakten
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public List<Kundenkontakt> selectAllKundenkontakte() {
+	public List<Benutzerkontakt> selectAllBenutzerkontakte() {
 
 		Session tempSession = null;
 		Transaction tempTransaction = null;
-		List<Kundenkontakt> kundenkontaktenListe = new ArrayList<Kundenkontakt>();
+		List<Benutzerkontakt> benutzerkontaktenListe = new ArrayList<Benutzerkontakt>();
 
 		try {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
-			kundenkontaktenListe = tempSession.createQuery("From Kundenkontakt")
+			benutzerkontaktenListe = tempSession.createQuery("From Benutzerkontakt")
 					.list();
 			tempTransaction.commit();
 
@@ -141,26 +141,26 @@ public class KundenkontaktDatenbank {
 			}
 		}
 
-		return kundenkontaktenListe;
+		return benutzerkontaktenListe;
 	}
 	
 	/**
-	 * @return Liste von allen Kundenkontakten für eine Benutzungsstatistik
+	 * @return Liste von allen Benutzerkontakten für eine Benutzungsstatistik
 	 */
-	public List<Kundenkontakt> selectAllKundenkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
+	public List<Benutzerkontakt> selectAllBenutzerkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
-		// Kundenkontakt aus der DB auslesen
-		final KundenkontaktDatenbank kundenkontaktDB = new KundenkontaktDatenbank();
-		List<Kundenkontakt> kundenkontaktenListe = kundenkontaktDB.selectAllKundenkontakte();
-		final List<Kundenkontakt> kundenkontaktenListeFuerBenutzungsstatistik = new ArrayList<Kundenkontakt>();
+		// Benutzerkontakt aus der DB auslesen
+		final BenutzerkontaktDatenbank benutzerkontaktDB = new BenutzerkontaktDatenbank();
+		List<Benutzerkontakt> benutzerkontaktenListe = benutzerkontaktDB.selectAllBenutzerkontakte();
+		final List<Benutzerkontakt> benutzerkontaktenListeFuerBenutzungsstatistik = new ArrayList<Benutzerkontakt>();
 		
-		for (final Kundenkontakt kundenkontakt : kundenkontaktenListe) {
-			if (kundenkontakt.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				kundenkontaktenListeFuerBenutzungsstatistik.add(kundenkontakt);
+		for (final Benutzerkontakt benutzerkontakt : benutzerkontaktenListe) {
+			if (benutzerkontakt.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
+				benutzerkontaktenListeFuerBenutzungsstatistik.add(benutzerkontakt);
 			}
 		}
 		
-		return kundenkontaktenListeFuerBenutzungsstatistik;
+		return benutzerkontaktenListeFuerBenutzungsstatistik;
 	}
 	
 }

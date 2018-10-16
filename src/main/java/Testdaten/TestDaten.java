@@ -14,7 +14,7 @@ import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.KundenkontaktDatenbank;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
@@ -22,7 +22,7 @@ import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -40,7 +40,7 @@ public class TestDaten {
 	BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	KundenkontaktDatenbank kundenKontaktDB = new KundenkontaktDatenbank();
+	BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
 	TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 	
@@ -98,20 +98,20 @@ public class TestDaten {
 		Timestamp timestamp16 = Timestamp.valueOf(datumheute +" 16:30:00.0");
 		Timestamp timestamp17 = Timestamp.valueOf(datumheute +" 17:30:00.0");
 		
-		Kundenkontakt kundenkontakt1 = new Kundenkontakt(timestamp8, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt2 = new Kundenkontakt(timestamp9, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt3 = new Kundenkontakt(timestamp9, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt4 = new Kundenkontakt(timestamp9, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt5 = new Kundenkontakt(timestamp14, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt6 = new Kundenkontakt(timestamp15, benutzungsstatistik1);
-		Kundenkontakt kundenkontakt7 = new Kundenkontakt(timestamp16, benutzungsstatistik1);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt1);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt2);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt3);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt4);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt5);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt6);
-		kundenKontaktDB.insertKundenkontakt(kundenkontakt7);
+		Benutzerkontakt benutzerkontakt1 = new Benutzerkontakt(timestamp8, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt2 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt3 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt4 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt5 = new Benutzerkontakt(timestamp14, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt6 = new Benutzerkontakt(timestamp15, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt7 = new Benutzerkontakt(timestamp16, benutzungsstatistik1);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt1);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt2);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt3);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt4);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt5);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt6);
+		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt7);
 		
 		Intensivfrage intensivfrage1 = new Intensivfrage(timestamp9, benutzungsstatistik1);
 		Intensivfrage intensivfrage2 = new Intensivfrage(timestamp10, benutzungsstatistik1);

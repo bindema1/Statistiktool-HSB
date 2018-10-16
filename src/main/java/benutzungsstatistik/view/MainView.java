@@ -20,7 +20,7 @@ import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.KundenkontaktDatenbank;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
@@ -28,7 +28,7 @@ import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Kundenkontakt;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 

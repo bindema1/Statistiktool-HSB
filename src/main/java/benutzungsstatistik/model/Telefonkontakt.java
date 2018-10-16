@@ -1,14 +1,14 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Telefonkontakt in
  * die Tabelle 'Telefonkontakt' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
-import java.sql.Timestamp;
-
 public class Telefonkontakt implements Serializable {
 
 	int telefonkontakt_ID;
