@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-	<class name="Allgemein.model.Standort" table="standort">
+	<class name="allgemein.model.Standort" table="standort">
 
 		<id name="standort_ID" column="Standort_ID" type="int">
 			<generator class="native" />

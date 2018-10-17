@@ -21,7 +21,7 @@
 			type="boolean" />
 			
 		<many-to-one name="standort" column="Standort_ID" not-null="true"
-			class="Allgemein.model.Standort" />
+			class="allgemein.model.Standort" />
 			
 		<one-to-one name="wintikurier" class="benutzungsstatistik.model.Wintikurier" 
 			cascade="save-update"></one-to-one>

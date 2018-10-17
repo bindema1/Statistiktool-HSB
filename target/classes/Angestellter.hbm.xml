@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-	<class name="Allgemein.model.Angestellter" table="angestellter">
+	<class name="allgemein.model.Angestellter" table="angestellter">
 
 		<id name="angestellter_ID" column="Angesteller_ID" type="int">
 			<generator class="native" />
@@ -24,7 +24,7 @@
 			type="boolean" />
 			
 		<many-to-one name="standort" column="Standort_ID" not-null="true"
-			class="Allgemein.model.Standort" />
+			class="allgemein.model.Standort" />
 
 	</class>
 </hibernate-mapping>

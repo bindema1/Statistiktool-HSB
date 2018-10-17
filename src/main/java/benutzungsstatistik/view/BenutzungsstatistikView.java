@@ -247,8 +247,6 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
 
-					List<Benutzerkontakt> benutzerliste = benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(
-							benutzungsstatistik.getBenutzungsstatistik_ID());
 					Notification.show("Benutzerkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 				}
@@ -258,9 +256,6 @@ public class BenutzungsstatistikView {
 					Intensivfrage intensivfrage = new Intensivfrage(new Timestamp(new Date().getTime()),
 							benutzungsstatistik);
 					intensivFrageDB.insertIntensivfrage(intensivfrage);
-
-					List<Intensivfrage> intensivliste = intensivFrageDB.selectAllIntensivfragenForBenutzungsstatistik(
-							benutzungsstatistik.getBenutzungsstatistik_ID());
 
 					Notification.show("Intensivfrage erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Intensivfrage", Type.TRAY_NOTIFICATION);
@@ -281,9 +276,6 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					emailKontaktDB.insertEmailkontakt(emailkontakt);
 
-					List<Emailkontakt> emailliste = emailKontaktDB.selectAllEmailkontakteForBenutzungsstatistik(
-							benutzungsstatistik.getBenutzungsstatistik_ID());
-
 					Notification.show("Emailkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
 				}
@@ -292,9 +284,6 @@ public class BenutzungsstatistikView {
 					Telefonkontakt telefonkontakt = new Telefonkontakt(new Timestamp(new Date().getTime()),
 							benutzungsstatistik);
 					telefonKontaktDB.insertTelefonkontakt(telefonkontakt);
-
-					List<Telefonkontakt> telefonliste = telefonKontaktDB.selectAllTelefonkontakteForBenutzungsstatistik(
-							benutzungsstatistik.getBenutzungsstatistik_ID());
 
 					Notification.show("Telefonkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);

@@ -228,6 +228,14 @@ public class WintikurierView {
 		grid.addComponent(bLinguistikMinus, 2, 6, 3, 6);
 		grid.addComponent(bTechnikMinus, 4, 6, 5, 6);
 		grid.addComponent(bWirtschaftMinus, 6, 6, 7, 6);
+		grid.setColumnExpandRatio(0, 0.125f);
+		grid.setColumnExpandRatio(1, 0.125f);
+		grid.setColumnExpandRatio(2, 0.125f);
+		grid.setColumnExpandRatio(3, 0.125f);
+		grid.setColumnExpandRatio(4, 0.125f);
+		grid.setColumnExpandRatio(5, 0.125f);
+		grid.setColumnExpandRatio(6, 0.125f);
+		grid.setColumnExpandRatio(7, 0.125f);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
