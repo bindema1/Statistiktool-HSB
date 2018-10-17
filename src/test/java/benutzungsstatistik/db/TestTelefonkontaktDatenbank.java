@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import Allgemein.db.StandortDatenbank;
-import Allgemein.model.Standort;
+import allgemein.db.StandortDatenbank;
+import allgemein.model.Standort;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;

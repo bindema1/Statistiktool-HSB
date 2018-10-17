@@ -5,10 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import Allgemein.db.AngestellterDatenbank;
-import Allgemein.db.StandortDatenbank;
-import Allgemein.model.Angestellter;
-import Allgemein.model.Standort;
+import allgemein.db.AngestellterDatenbank;
+import allgemein.db.StandortDatenbank;
+import allgemein.model.Angestellter;
+import allgemein.model.Standort;
 import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;

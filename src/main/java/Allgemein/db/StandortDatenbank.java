@@ -1,4 +1,4 @@
-package Allgemein.db;
+package allgemein.db;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import Allgemein.model.Standort;
+import allgemein.model.Standort;
 
 /**
  * Das ist die DAO-Klasse (Data Access Object) vom Standort. Man kann damit

@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import Allgemein.db.AngestellterDatenbank;
-import Allgemein.db.StandortDatenbank;
-import Allgemein.model.Angestellter;
-import Allgemein.model.Standort;
+import allgemein.db.AngestellterDatenbank;
+import allgemein.db.StandortDatenbank;
+import allgemein.model.Angestellter;
+import allgemein.model.Standort;
 /**
  * Testet alle Methoden der AngestellterDatenbank
  * 

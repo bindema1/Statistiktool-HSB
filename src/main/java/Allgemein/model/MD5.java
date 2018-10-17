@@ -1,4 +1,4 @@
-package Allgemein.model;
+package allgemein.model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

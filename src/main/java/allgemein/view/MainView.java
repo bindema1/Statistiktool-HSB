@@ -1,4 +1,4 @@
-package benutzungsstatistik.view;
+package allgemein.view;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -12,9 +12,9 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
 
-import Allgemein.db.StandortDatenbank;
-import Allgemein.model.Standort;
 import Testdaten.TestDaten;
+import allgemein.db.StandortDatenbank;
+import allgemein.model.Standort;
 import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
@@ -31,6 +31,7 @@ import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
+import benutzungsstatistik.view.BenutzungsstatistikView;
 
 /**
  * MainView setzt den Content und gibt seine eigene MainView an die entsprechende View weiter

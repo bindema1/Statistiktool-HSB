@@ -1,4 +1,4 @@
-package Allgemein.model;
+package allgemein.model;
 
 import java.io.Serializable;
 

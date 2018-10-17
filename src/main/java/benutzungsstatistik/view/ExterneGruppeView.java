@@ -24,6 +24,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;

@@ -22,6 +22,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.bean.TagesübersichtBean;
 import benutzungsstatistik.bean.WintikurierBean;

@@ -3,7 +3,7 @@ package benutzungsstatistik.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import Allgemein.model.Standort;
+import allgemein.model.Standort;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine Benutzungsstatistik in
