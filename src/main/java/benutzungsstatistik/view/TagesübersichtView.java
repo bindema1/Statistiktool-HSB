@@ -2,7 +2,10 @@ package benutzungsstatistik.view;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.vaadin.teemu.switchui.Switch;
@@ -22,20 +25,23 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.db.StandortDatenbank;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.bean.TagesübersichtBean;
 import benutzungsstatistik.bean.WintikurierBean;
+import benutzungsstatistik.db.BenutzerkontaktDatenbank;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
+import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Telefonkontakt;
 
 /**
@@ -75,7 +81,7 @@ public class TagesübersichtView {
 	}
 
 	private void initData() {
-		
+
 	}
 
 	// Initialisieren der GUI Komponente
@@ -89,13 +95,6 @@ public class TagesübersichtView {
 		Label lText = new Label();
 		lText.setValue("Tagesübersicht Belegungsstatistik vom ");
 		lText.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
-		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
-		datefield.setDateFormat("dd.MM.yyyy");
-		datefield.addValueChangeListener(event -> 
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION)
-		);
 		
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
@@ -125,13 +124,51 @@ public class TagesübersichtView {
 		lGruppen.setValue("Gruppen");
 		lGruppen.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
 		
+		Grid<TagesübersichtBean> tabelleUhrzeiten = new Grid<TagesübersichtBean>();
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getUhrzeit).setCaption("Uhrzeit");
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getKontakt).setCaption("Benutzer");
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getIntensiv).setCaption("Intensiv");
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getEmail).setCaption("Email");
+		tabelleUhrzeiten.addColumn(TagesübersichtBean::getTelefon).setCaption("Telefon");
+		fülleTabelleUhrzeiten(tabelleUhrzeiten);
+		
+		Grid<WintikurierBean> tabelleWintikurier = new Grid<WintikurierBean>();
+		tabelleWintikurier.addColumn(WintikurierBean::getDepartment).setCaption("Department");
+		tabelleWintikurier.addColumn(WintikurierBean::getAnzahl).setCaption("Anzahl");
+		fülleTabelleWintikurier(tabelleWintikurier);
+		
+		Grid<ExterneGruppeBean> tabelleGruppen = new Grid<ExterneGruppeBean>();
+		tabelleGruppen.addColumn(ExterneGruppeBean::getName).setCaption("Name").setId("GruppenName");
+		tabelleGruppen.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Personen");
+		fülleTabelleGruppen(tabelleGruppen);
+		
+		DateTimeField datefield = new DateTimeField();
+		datefield.setValue(LocalDateTime.now());
+		datefield.setDateFormat("dd.MM.yyyy");
+		datefield.addValueChangeListener(event -> {
+			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
+			
+			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			Date date = Date.from(zdt.toInstant());
+			
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			
+			//Alle Werte anpassen
+			fülleTabelleGruppen(tabelleGruppen);
+			fülleTabelleUhrzeiten(tabelleUhrzeiten);
+			fülleTabelleWintikurier(tabelleWintikurier);
+			if(benutzungsstatistik.isKassenbeleg()) {
+				kassenbeleg.setValue(true);
+			}else {
+				kassenbeleg.setValue(false);
+			}
+			lRechercheberatung.setValue("Rechercheberatung: " +benutzungsstatistik.getAnzahl_Rechercheberatung());
+		});
 		
 		VerticalLayout overallLayout = new VerticalLayout();
 		overallLayout.setSpacing(true);
 		
 		HorizontalLayout headerLayout = new HorizontalLayout();
-//		headerLayout.setSpacing(true);
-//		headerLayout.setWidth("100%");
 		headerLayout.addComponent(bZurueck);
 		headerLayout.addComponent(lText);
 		headerLayout.addComponent(datefield);
@@ -140,18 +177,10 @@ public class TagesübersichtView {
 		
 		HorizontalLayout contentLayout = new HorizontalLayout();
 		overallLayout.addComponent(contentLayout);
-		
-		Grid<TagesübersichtBean> tabelleUhrzeiten = new Grid<TagesübersichtBean>();
-		fülleTabelleUhrzeiten(tabelleUhrzeiten);		
 		contentLayout.addComponent(tabelleUhrzeiten);
 		
-		Grid<WintikurierBean> tabelleWintikurier = new Grid<WintikurierBean>();
-		fülleTabelleWintikurier(tabelleWintikurier);
-		
-		Grid<ExterneGruppeBean> tabelleGruppen = new Grid<ExterneGruppeBean>();
-		fülleTabelleGruppen(tabelleGruppen);
-		
 		VerticalLayout rightLayout = new VerticalLayout();
+		rightLayout.setSizeUndefined();
 		rightLayout.addComponent(lRechercheberatung);
 		HorizontalLayout kassenbelegLayout = new HorizontalLayout();
 		kassenbelegLayout.addComponent(lKassenbeleg);
@@ -169,12 +198,9 @@ public class TagesübersichtView {
 	}
 
 	private void fülleTabelleWintikurier(Grid<WintikurierBean> tabelleWintikurier) {
-		
-		tabelleWintikurier.addColumn(WintikurierBean::getDepartment).setCaption("Department");
-		tabelleWintikurier.addColumn(WintikurierBean::getAnzahl).setCaption("Anzahl");
-		
+
 		List<WintikurierBean> wintikurierBeanListe = new ArrayList<>();
-		
+
 		WintikurierBean wb1 = new WintikurierBean();
 		wb1.setDepartment("Gesundheit");
 		wb1.setAnzahl(benutzungsstatistik.getWintikurier().getAnzahl_Gesundheit());
@@ -191,100 +217,101 @@ public class TagesübersichtView {
 		wb4.setDepartment("Wirtschaft");
 		wb4.setAnzahl(benutzungsstatistik.getWintikurier().getAnzahl_Wirtschaft());
 		wintikurierBeanListe.add(wb4);
-		
+
 		tabelleWintikurier.setItems(wintikurierBeanListe);
 		tabelleWintikurier.setWidth("400px");
 		tabelleWintikurier.setHeightByRows(wintikurierBeanListe.size());
 	}
 
 	private void fülleTabelleGruppen(Grid<ExterneGruppeBean> tabelleGruppen) {
-		tabelleGruppen.addColumn(ExterneGruppeBean::getName).setCaption("Name");
-		tabelleGruppen.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Anzahl Personen");
 
 		ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-		List<ExterneGruppe> externeGruppeListe = externeGruppeDB.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		List<ExterneGruppe> externeGruppeListe = externeGruppeDB
+				.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		List<ExterneGruppeBean> externeGruppeBeanListe = new ArrayList<>();
-		
-		for(ExterneGruppe eg : externeGruppeListe) {
+
+		for (ExterneGruppe eg : externeGruppeListe) {
 			ExterneGruppeBean egb = new ExterneGruppeBean();
 			egb.setName(eg.getName());
 			egb.setAnzahl_personen(eg.getAnzahl_Personen());
 			externeGruppeBeanListe.add(egb);
 		}
-		
+
 		tabelleGruppen.setItems(externeGruppeBeanListe);
+		tabelleGruppen.getColumn("GruppenName").setExpandRatio(2);
 		tabelleGruppen.setWidth("400px");
-		if(externeGruppeBeanListe.size() >= 4) {
+		if (externeGruppeBeanListe.size() >= 4) {
 			tabelleGruppen.setHeight("150px");
-		}else {
+		} else if(externeGruppeBeanListe.size() > 0){
 			tabelleGruppen.setHeightByRows(externeGruppeBeanListe.size());
+		} else {
+			tabelleGruppen.setHeight("85px");
 		}
 	}
 
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBean> tabelleUhrzeiten) {
 
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getUhrzeit).setCaption("Uhrzeit");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getKontakt).setCaption("Benutzer");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getIntensiv).setCaption("Intensiv");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getEmail).setCaption("Email");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getTelefon).setCaption("Telefon");
-		
 		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-		List<Intensivfrage> intensivfragenListe = intensivFrageDB.selectAllIntensivfragenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		List<Intensivfrage> intensivfragenListe = intensivFrageDB
+				.selectAllIntensivfragenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-		List<Benutzerkontakt> benutzerkontaktListe = benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		List<Benutzerkontakt> benutzerkontaktListe = benutzerKontaktDB
+				.selectAllBenutzerkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
-		List<Telefonkontakt> telefonkontaktListe = telefonKontaktDB.selectAllTelefonkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		List<Telefonkontakt> telefonkontaktListe = telefonKontaktDB
+				.selectAllTelefonkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-		List<Emailkontakt> emailkontaktListe = emailKontaktDB.selectAllEmailkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-		
+		List<Emailkontakt> emailkontaktListe = emailKontaktDB
+				.selectAllEmailkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+
 		List<TagesübersichtBean> tagesübersichtListe = new ArrayList<>();
-		
-		for(int i = 8; i <= 19; i++) {
+
+		for (int i = 8; i <= 19; i++) {
 			TagesübersichtBean tb = new TagesübersichtBean();
 			int plus = i + 1;
-			tb.setUhrzeit(i +"-" +plus);
+			tb.setUhrzeit(i + "-" + plus);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
-			
+
 			int emailzaehler = 0;
-			for(Emailkontakt e : emailkontaktListe) {
-				if(Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
+			for (Emailkontakt e : emailkontaktListe) {
+				if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
 					emailzaehler++;
 				}
 			}
 			tb.setEmail(emailzaehler);
-			
+
 			int intensivzaehler = 0;
-			for(Intensivfrage in : intensivfragenListe) {
-				if(Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
+			for (Intensivfrage in : intensivfragenListe) {
+				if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
 					intensivzaehler++;
 				}
 			}
 			tb.setIntensiv(intensivzaehler);
-			
+
 			int benutzerzaehler = 0;
-			for(Benutzerkontakt k : benutzerkontaktListe) {
-				if(Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
+			for (Benutzerkontakt k : benutzerkontaktListe) {
+				if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
 					benutzerzaehler++;
 				}
 			}
 			tb.setKontakt(benutzerzaehler);
-			
+
 			int telefonzaehler = 0;
-			for(Telefonkontakt t : telefonkontaktListe) {
-				if(Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == i) {
+			for (Telefonkontakt t : telefonkontaktListe) {
+				if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == i) {
 					telefonzaehler++;
 				}
 			}
 			tb.setTelefon(telefonzaehler);
-			
+
 			tagesübersichtListe.add(tb);
 		}
-		
+
 		tabelleUhrzeiten.setItems(tagesübersichtListe);
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
 
+	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override

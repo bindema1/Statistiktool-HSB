@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 
 /**
  * Testet alle Methoden der StandortDatenbank
@@ -23,7 +24,7 @@ public class TestStandortDatenbank {
 
 	@Before
 	public void initComponents() {
-		standort = new Standort("Test Standort");
+		standort = new Standort(StandortEnum.Test);
 	}
 
 	@Test
@@ -38,8 +39,16 @@ public class TestStandortDatenbank {
 		List<Standort> standortListe = new ArrayList<Standort>();
 		standortListe = standortDB.selectAllStandorte();
 		
-		System.out.println(standortListe.get(0).getName());
-
 		assertEquals(standortListe.get(0).getName(), standort.getName());
 	}
+	
+	@Test
+	public void testgetStandort() {
+		standortDB.insertStandort(standort);
+		
+		Standort s = standortDB.getStandort(StandortEnum.Test);
+		
+		assertEquals(s.getName(), StandortEnum.Test);
+	}
+	
 }

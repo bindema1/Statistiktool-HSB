@@ -14,6 +14,7 @@ import allgemein.db.AngestellterDatenbank;
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 /**
  * Testet alle Methoden der AngestellterDatenbank
  * 
@@ -23,7 +24,7 @@ public class TestAngestellterDatenbank {
 
 	AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
 	Angestellter angestellter;
-	Standort standort = new Standort("Test Standort");
+	Standort standort = new Standort(StandortEnum.Test);
 	StandortDatenbank standortDB = new StandortDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	

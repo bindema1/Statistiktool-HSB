@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -24,10 +25,11 @@ public class TestBenutzungsstatistikDatenbank {
 
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	Benutzungsstatistik benutzungsstatistik;
-	Standort standort = new Standort("Test Standort");
+	Standort standort = new Standort(StandortEnum.Test);
 	StandortDatenbank standortDB = new StandortDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	Date date;
+	Wintikurier wintikurier1;
 	
 	@Before
 	public void initComponents() {
@@ -35,7 +37,7 @@ public class TestBenutzungsstatistikDatenbank {
 		standortDB.insertStandort(standort);
 		
 		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
-		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
+		wintikurier1 = new Wintikurier(6, 2, 9, 5);
 		wintikurierDB.insertWintikurier(wintikurier1);
 		
 		benutzungsstatistik = new Benutzungsstatistik(date, 8, true, standort, wintikurier1);
@@ -84,7 +86,7 @@ public class TestBenutzungsstatistikDatenbank {
 		assertEquals(b.getAnzahl_Rechercheberatung(), benutzungsstatistik.getAnzahl_Rechercheberatung());
 		assertEquals(b.isKassenbeleg(), benutzungsstatistik.isKassenbeleg());
 		assertEquals(sdf.format(b.getDatum()), sdf.format(benutzungsstatistik.getDatum()));
-		assertEquals(b.getStandort().getStandort_ID(), 4);
-		assertEquals(b.getWintikurier().getAnzahl_Gesundheit(), 6);
+		assertEquals(b.getStandort().getStandort_ID(), standort.getStandort_ID());
+		assertEquals(b.getWintikurier().getAnzahl_Gesundheit(), wintikurier1.getAnzahl_Gesundheit());
 	}
 }

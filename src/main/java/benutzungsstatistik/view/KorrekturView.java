@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.db.StandortDatenbank;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
@@ -123,12 +127,6 @@ public class KorrekturView implements Serializable {
 		Label lText = new Label();
 		lText.setValue("Benutzungsstatistik Korrektur vom ");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-
-		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
-		datefield.setDateFormat("dd.MM.yyyy");
-		datefield.addValueChangeListener(
-				event -> Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION));
 
 		bBenutzerkontakt = new Button();
 		bBenutzerkontakt.setCaption("Kontakt");
@@ -327,25 +325,55 @@ public class KorrekturView implements Serializable {
 
 		bRechercheBeratung = new Button();
 		bRechercheBeratung.setCaption("Rechercheb. +1");
-//		bRechercheBeratung.addStyleName(ValoTheme.BUTTON_LARGE);
 		bRechercheBeratung.addClickListener(createClickListener(mainView));
 
 		bRechercheBeratungMinus = new Button();
 		bRechercheBeratungMinus.setCaption("Rechercheb. -1");
-//		bRechercheBeratungMinus.addStyleName(ValoTheme.BUTTON_LARGE +" " +ValoTheme.BUTTON_DANGER);
+		bRechercheBeratungMinus.addStyleName(ValoTheme.BUTTON_DANGER);
 		bRechercheBeratungMinus.addClickListener(createClickListener(mainView));
 
 		bKorrekturWintikurier = new Button();
 		bKorrekturWintikurier.setCaption("Wintikurier");
-//		bKorrekturWintikurier.addStyleName(ValoTheme.BUTTON_LARGE);
 		bKorrekturWintikurier.addClickListener(createClickListener(mainView));
 
 		bKorrekturGruppen = new Button();
 		bKorrekturGruppen.setCaption("Gruppen");
 		bKorrekturGruppen.setCaptionAsHtml(true);
-//		bKorrekturGruppen.addStyleName(ValoTheme.BUTTON_LARGE);
 		bKorrekturGruppen.addClickListener(createClickListener(mainView));
 
+		DateTimeField datefield = new DateTimeField();
+		datefield.setValue(LocalDateTime.now());
+		datefield.setDateFormat("dd.MM.yyyy");
+		datefield.addValueChangeListener(event -> {
+			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
+
+			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			Date date = Date.from(zdt.toInstant());
+
+			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			
+			//Alle Werte anpassen
+			if (benutzungsstatistik.isKassenbeleg()) {
+				kassenbeleg.setValue(true);
+			} else {
+				kassenbeleg.setValue(false);
+			}
+			uhrzeitListSelect.select(data.get(0));
+			bBenutzerkontakt.setEnabled(false);
+			bBenutzerkontaktMinus.setEnabled(false);
+			bEmailkontakt.setEnabled(false);
+			bEmailkontaktMinus.setEnabled(false);
+			bTelefonkontakt.setEnabled(false);
+			bTelefonkontaktMinus.setEnabled(false);
+			bIntensivFrage.setEnabled(false);
+			bIntensivFrageMinus.setEnabled(false);
+			lBenutzerkontakt.setValue("0");
+			lEmailkontakt.setValue("0");
+			lTelefonkontakt.setValue("0");
+			lIntensivFrage.setValue("0");
+			lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
+		});
+		
 		GridLayout grid = new GridLayout(5, 8);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
@@ -436,7 +464,7 @@ public class KorrekturView implements Serializable {
 					lBenutzerkontakt.setValue("" + benutzerzaehler);
 					Notification.show("+1 Benutzerkontakt" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
-				
+
 				if (e.getSource() == bBenutzerkontaktMinus) {
 
 					if (benutzerzaehler != 0) {
@@ -451,9 +479,7 @@ public class KorrekturView implements Serializable {
 
 						benutzerzaehler--;
 						lBenutzerkontakt.setValue("" + benutzerzaehler);
-						Notification.show(
-								"-1 Benutzerkontakt " + ausgewählteUhrzeit + " Uhr",
-								Type.TRAY_NOTIFICATION);
+						Notification.show("-1 Benutzerkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 					} else {
 						Notification.show("Der Benutzerkontakt ist bereits 0", Type.WARNING_MESSAGE);
 					}
@@ -471,7 +497,7 @@ public class KorrekturView implements Serializable {
 					} catch (ParseException e1) {
 						e1.printStackTrace();
 					}
-					
+
 					Intensivfrage intensivfrage = new Intensivfrage(new Timestamp(date.getTime()), benutzungsstatistik);
 					intensivFrageDB.insertIntensivfrage(intensivfrage);
 
@@ -479,7 +505,7 @@ public class KorrekturView implements Serializable {
 					lIntensivFrage.setValue("" + intensivzaehler);
 					Notification.show("+1 Intensivfrage" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
-				
+
 				if (e.getSource() == bIntensivFrageMinus) {
 
 					if (intensivzaehler != 0) {
@@ -494,9 +520,7 @@ public class KorrekturView implements Serializable {
 
 						intensivzaehler--;
 						lIntensivFrage.setValue("" + intensivzaehler);
-						Notification.show(
-								"-1 Intensivfrage " + ausgewählteUhrzeit + " Uhr",
-								Type.TRAY_NOTIFICATION);
+						Notification.show("-1 Intensivfrage " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 					} else {
 						Notification.show("Die Intensivfrage ist bereits 0", Type.WARNING_MESSAGE);
 					}
@@ -522,14 +546,15 @@ public class KorrekturView implements Serializable {
 					lEmailkontakt.setValue("" + emailzaehler);
 					Notification.show("+1 Emailkontakt" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
-				
+
 				if (e.getSource() == bEmailkontaktMinus) {
 
 					if (emailzaehler != 0) {
 						Emailkontakt emailkontakt = null;
 						for (Emailkontakt e1 : emailKontaktDB.selectAllEmailkontakteForBenutzungsstatistik(
 								benutzungsstatistik.getBenutzungsstatistik_ID())) {
-							if (Integer.parseInt(dateFormat.format(e1.getTimestamp().getTime())) == ausgewählteUhrzeit) {
+							if (Integer
+									.parseInt(dateFormat.format(e1.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								emailkontakt = e1;
 							}
 						}
@@ -537,9 +562,7 @@ public class KorrekturView implements Serializable {
 
 						emailzaehler--;
 						lEmailkontakt.setValue("" + emailzaehler);
-						Notification.show(
-								"-1 Emailkontakt " + ausgewählteUhrzeit + " Uhr",
-								Type.TRAY_NOTIFICATION);
+						Notification.show("-1 Emailkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 					} else {
 						Notification.show("Der Emailkontakt ist bereits 0", Type.WARNING_MESSAGE);
 					}
@@ -581,9 +604,7 @@ public class KorrekturView implements Serializable {
 
 						telefonzaehler--;
 						lTelefonkontakt.setValue("" + telefonzaehler);
-						Notification.show(
-								"-1 Telefonkontakt " + ausgewählteUhrzeit + " Uhr",
-								Type.TRAY_NOTIFICATION);
+						Notification.show("-1 Telefonkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 					} else {
 						Notification.show("Der Telefonkontakt ist bereits 0", Type.WARNING_MESSAGE);
 					}

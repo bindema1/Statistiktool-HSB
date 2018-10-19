@@ -3,7 +3,6 @@ package benutzungsstatistik.view;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.vaadin.teemu.switchui.Switch;
 
@@ -22,23 +21,18 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
-import Testdaten.TestDaten;
 import allgemein.db.StandortDatenbank;
-import allgemein.model.Angestellter;
-import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
-import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
-import benutzungsstatistik.db.EmailkontaktDatenbank;
-import benutzungsstatistik.db.ExterneGruppeDatenbank;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
 import benutzungsstatistik.db.BenutzerkontaktDatenbank;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
+import benutzungsstatistik.db.EmailkontaktDatenbank;
+import benutzungsstatistik.db.IntensivfrageDatenbank;
 import benutzungsstatistik.db.TelefonkontaktDatenbank;
-import benutzungsstatistik.db.WintikurierDatenbank;
-import benutzungsstatistik.model.Emailkontakt;
-import benutzungsstatistik.model.Benutzungsstatistik;
-import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Benutzerkontakt;
+import benutzungsstatistik.model.Benutzungsstatistik;
+import benutzungsstatistik.model.Emailkontakt;
+import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Telefonkontakt;
 
 /**
@@ -51,7 +45,6 @@ import benutzungsstatistik.model.Telefonkontakt;
 public class BenutzungsstatistikView {
 
 	private AbsoluteLayout mainLayout;
-//	private Angestellter angestellter;
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
@@ -65,14 +58,11 @@ public class BenutzungsstatistikView {
 	private Switch kassenbeleg;
 	private Label lText;
 	private Label lKassenbeleg;
-	StandortDatenbank standortDB = new StandortDatenbank();
-	EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-	ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-	BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
-	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-	IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-	TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
+	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
+	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
+	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
+	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
+	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 
 	private AbsoluteLayout buildMainLayout() {
@@ -98,17 +88,7 @@ public class BenutzungsstatistikView {
 	}
 
 	private void initData() {
-		TestDaten t = new TestDaten();
-//		List<Standort> standortListe = standortDB.selectAllStandorte();
-//		Standort standort = null;
-//		for(Standort s : standortListe) {
-//			if(s.getName().equals("Winterthur BB")) {
-//				standort = s;
-//			}
-//		}
-//		
-//		benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(new Date(), standort);
-		benutzungsstatistik = benutzungsstatistikDB.selectAllBenutzungsstatistiken().get(0);
+		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
 	}
 
 	// Initialisieren der GUI Komponente
@@ -116,6 +96,7 @@ public class BenutzungsstatistikView {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
+		bZurueck.setEnabled(false);
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener(mainView));
 
@@ -194,7 +175,6 @@ public class BenutzungsstatistikView {
 			benutzungsstatistik.setKassenbeleg(item);
 			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-			List<Benutzungsstatistik> liste = benutzungsstatistikDB.selectAllBenutzungsstatistiken();
 			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
 		});
 
@@ -232,12 +212,12 @@ public class BenutzungsstatistikView {
 
 	}
 
+	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-//					mainView.setContent(new ModulGUI(modul).init(mainView));
 					Notification.show("Zurück", Type.WARNING_MESSAGE);
 				}
 

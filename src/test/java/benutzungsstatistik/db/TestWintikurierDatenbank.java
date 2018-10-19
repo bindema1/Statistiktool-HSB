@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -30,7 +31,7 @@ public class TestWintikurierDatenbank {
 
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort("Test Standort");
+		Standort standort = new Standort(StandortEnum.Test);
 		standortDB.insertStandort(standort);
 		
 		wintikurier = new Wintikurier(5, 7, 2, 10);

@@ -1,11 +1,13 @@
 package benutzungsstatistik.view;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
@@ -24,15 +26,18 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.db.StandortDatenbank;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.ExterneGruppe;
 
 /**
- * View der ExterneGruppe. Zeigt alle Button, Label, Felder etc. in einem
- * Layout an.
+ * View der ExterneGruppe. Zeigt alle Button, Label, Felder etc. in einem Layout
+ * an.
  * 
  * @author Marvin Bindemann
  */
@@ -76,7 +81,7 @@ public class ExterneGruppeView {
 	}
 
 	// Initialisieren der GUI Komponente
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents(MainView mainView) {
 
 		bZurueck = new Button();
@@ -91,8 +96,17 @@ public class ExterneGruppeView {
 		DateTimeField datefield = new DateTimeField();
 		datefield.setValue(LocalDateTime.now());
 		datefield.setDateFormat("dd.MM.yyyy");
-		datefield.addValueChangeListener(
-				event -> Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION));
+		datefield.addValueChangeListener(event -> {
+			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
+
+			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			Date date = Date.from(zdt.toInstant());
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
+					new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+
+			// Alle Werte anpassen
+			fülleGruppenTabelle();
+		});
 
 		tName = new TextField("Name der Gruppe");
 		tName.addStyleName(ValoTheme.TEXTFIELD_HUGE);
@@ -109,22 +123,9 @@ public class ExterneGruppeView {
 		bSpeichern.setCaption("Speichern");
 		bSpeichern.addClickListener(createClickListener(mainView));
 
-		List<ExterneGruppe> externeGruppeListe = externeGruppeDB
-				.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		tabelle = new Grid<ExterneGruppeBean>();
-		externeGruppeBeanListe = new ArrayList<>();
-
-		for (ExterneGruppe eg : externeGruppeListe) {
-			ExterneGruppeBean egb = new ExterneGruppeBean();
-			egb.setName(eg.getName());
-			egb.setAnzahl_personen(eg.getAnzahl_Personen());
-			externeGruppeBeanListe.add(egb);
-		}
-
-		tabelle.setItems(externeGruppeBeanListe);
 		tabelle.addColumn(ExterneGruppeBean::getName).setCaption("Name");
 		tabelle.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Anzahl Personen");
-
 		tabelle.addColumn(ExterneGruppeBean -> "Bearbeiten", new ButtonRenderer(clickEvent -> {
 			externeGruppeBeanListe.remove(clickEvent.getItem());
 			ExterneGruppeBean beanZuBearbeiten = (ExterneGruppeBean) clickEvent.getItem();
@@ -136,47 +137,49 @@ public class ExterneGruppeView {
 					externeGruppeDB.deleteExterneGruppe(e);
 				}
 			}
-			
+
 			tName.setValue(beanZuBearbeiten.getName());
-			tPersonenzahl.setValue(""+beanZuBearbeiten.getAnzahl_personen());
+			tPersonenzahl.setValue("" + beanZuBearbeiten.getAnzahl_personen());
 
 			tabelle.setItems(externeGruppeBeanListe);
 		})).setCaption("Bearbeitung");
-		
+
 		tabelle.addColumn(ExterneGruppeBean -> "Löschen", new ButtonRenderer(clickEvent -> {
-			
+
 //			ConfirmDialog.show(this, "Bitte bestätigen:", "Sind Sie sicher sie wollen die Gruppe löschen?",
 //			        "Löschen", "Abbrechen", new ConfirmDialog.Listener() {
 //
 //			            public void onClose(ConfirmDialog dialog) {
 //			                if (dialog.isConfirmed()) {
 //			                    // Confirmed to continue
-			                	externeGruppeBeanListe.remove(clickEvent.getItem());
+//            } else {
+//            // User did not confirm
+//        	// do nothing
+//        }
+//    }
+//});
+//			ConfirmDialog dialog = new ConfirmDialog("Meeting starting",
+//	        "Your next meeting starts in 5 minutes", "OK", this::onOK);
 
-			        			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
 
-			        			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
-			        					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-			        			for (ExterneGruppe e : externeGruppeListe2) {
-			        				if (beanZuLöschen.getName().equals(e.getName())) {
-			        					externeGruppeDB.deleteExterneGruppe(e);
-			        				}
-			        			}
+			externeGruppeBeanListe.remove(clickEvent.getItem());
 
-			        			tabelle.setItems(externeGruppeBeanListe);
-//			                } else {
-//			                    // User did not confirm
-//			                	// do nothing
-//			                }
-//			            }
-//			        });
+			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
+
+			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
+					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+			for (ExterneGruppe e : externeGruppeListe2) {
+				if (beanZuLöschen.getName().equals(e.getName())) {
+					externeGruppeDB.deleteExterneGruppe(e);
+				}
+			}
+
+			tabelle.setItems(externeGruppeBeanListe);
 			
-//			ConfirmDialog dialog = new ConfirmDialog("Löschen bestätigen",
-//			        "Wollen Sie die Gruppe wirklich löschen?", "Löschen", this::onPublish,
-//			        "Abbrechen", this::onCancel);
 			
-			
+
 		})).setCaption("Löschfunktion");
+		fülleGruppenTabelle();
 
 		GridLayout grid = new GridLayout(5, 7);
 		grid.setSizeFull();
@@ -216,6 +219,23 @@ public class ExterneGruppeView {
 
 	}
 
+	private void fülleGruppenTabelle() {
+
+		List<ExterneGruppe> externeGruppeListe = externeGruppeDB
+				.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
+		externeGruppeBeanListe = new ArrayList<>();
+
+		for (ExterneGruppe eg : externeGruppeListe) {
+			ExterneGruppeBean egb = new ExterneGruppeBean();
+			egb.setName(eg.getName());
+			egb.setAnzahl_personen(eg.getAnzahl_Personen());
+			externeGruppeBeanListe.add(egb);
+		}
+
+		tabelle.setItems(externeGruppeBeanListe);
+	}
+
+	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override
@@ -237,15 +257,15 @@ public class ExterneGruppeView {
 						egb.setAnzahl_personen(personenzahl);
 						externeGruppeBeanListe.add(egb);
 						tabelle.setItems(externeGruppeBeanListe);
-						
-						//Textfelder zurücksetzen
+
+						// Textfelder zurücksetzen
 						tName.setValue("");
 						tPersonenzahl.setValue("");
 					} catch (NumberFormatException e1) {
 						// Not an integer
-						if(tPersonenzahl.getValue().equals("") || tName.getValue().equals("")) {
+						if (tPersonenzahl.getValue().equals("") || tName.getValue().equals("")) {
 							Notification.show("Bitte alle Felder ausfüllen", Type.WARNING_MESSAGE);
-						}else {
+						} else {
 							Notification.show("Personenzahl muss eine Zahl sein", Type.WARNING_MESSAGE);
 						}
 					}
@@ -256,6 +276,5 @@ public class ExterneGruppeView {
 		};
 
 	}
-
 
 }

@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.IntensivfrageDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -31,7 +32,7 @@ public class TestIntensivfrageDatenbank {
 	
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort("Test Standort");
+		Standort standort = new Standort(StandortEnum.Test);
 		standortDB.insertStandort(standort);
 		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);

@@ -12,8 +12,11 @@
 			<generator class="native" />
 		</id>
 
-		<property name="name" column="Standort_Name" not-null="true"
-			type="string" />
+		<property name="name" column="Standort_Name" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">allgemein.model.StandortEnum</param>
+			</type>
+		</property>
 
 	</class>
 </hibernate-mapping>

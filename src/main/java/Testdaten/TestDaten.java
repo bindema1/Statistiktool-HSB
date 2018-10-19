@@ -9,6 +9,7 @@ import allgemein.db.AngestellterDatenbank;
 import allgemein.db.StandortDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
@@ -49,7 +50,6 @@ public class TestDaten {
 			init();
 			System.out.println("TestDaten eingelesen");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Fehler");
 		}
@@ -57,15 +57,15 @@ public class TestDaten {
 	
 
 	private void init() throws ParseException {
-		Standort standort1 = new Standort("Winterthur BB");
-		Standort standort2 = new Standort("Winterthur LL");
-		Standort standort3 = new Standort("Wädenswil");
+		Standort standort1 = new Standort(StandortEnum.Winterthur_BB);
+		Standort standort2 = new Standort(StandortEnum.Winterthur_LL);
+		Standort standort3 = new Standort(StandortEnum.Wädenswil);
 		standortDB.insertStandort(standort1);
 		standortDB.insertStandort(standort2);
 		standortDB.insertStandort(standort3);
 		
-		//SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		Date date = new Date();
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = sdf2.parse("10.10.2018");
 		
 		Angestellter angestellter1 = new Angestellter("Mitarbeiter Winterthur", "123", date, false, standort1);
 		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeiter Winterthur", "123", date, false, standort2);
@@ -86,7 +86,7 @@ public class TestDaten {
 		
 //		Timestamp timestamp = new Timestamp(date.getTime());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String datumheute = sdf.format(new Date());
+		String datumheute = sdf.format(date);
 		Timestamp timestamp8 = Timestamp.valueOf(datumheute +" 08:30:00.0");
 		Timestamp timestamp9 = Timestamp.valueOf(datumheute +" 09:59:00.0");
 		Timestamp timestamp10 = Timestamp.valueOf(datumheute +" 10:30:00.0");
@@ -182,7 +182,7 @@ public class TestDaten {
 
 
 	public static void main(String[] args){
-		TestDaten testdaten = new TestDaten();
+		new TestDaten();
 	}
 
 }

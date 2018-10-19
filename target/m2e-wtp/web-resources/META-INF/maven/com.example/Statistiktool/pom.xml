@@ -90,19 +90,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.11.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.11.1</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<!--<dependency> <groupId>javassist</groupId> <artifactId>javassist</artifactId> 
 			<version>3.12.1.GA</version> </dependency> -->
 		<dependency>
@@ -121,7 +116,7 @@
 			<artifactId>switch</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<!-- Dependecy für Confirm-Dialog -->
+		<!-- Dependecy für Confirm-Dialog
 		<dependency>
 			<groupId>org.vaadin.addon</groupId>
 			<artifactId>confirmdialog</artifactId>
@@ -131,9 +126,7 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-confirm-dialog-flow</artifactId>
 			<version>1.0.1</version>
-		</dependency>
-		<!-- Dependecy für Vaadin Icons <dependency> <groupId>org.webjars.bowergithub.vaadin</groupId> 
-			<artifactId>vaadin-icons</artifactId> <version>4.2.0</version> </dependency> -->
+		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -148,7 +141,7 @@
 					<packagingExcludes>WEB-INF/classes/VAADIN/widgetsets/WEB-INF/**</packagingExcludes>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<version>${vaadin.plugin.version}</version>
@@ -158,12 +151,11 @@
 							<goal>update-theme</goal>
 							<goal>update-widgetset</goal>
 							<goal>compile</goal>
-							<!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
 							<goal>compile-theme</goal>
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>

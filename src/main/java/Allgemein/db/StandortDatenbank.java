@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 
 /**
  * Das ist die DAO-Klasse (Data Access Object) vom Standort. Man kann damit
@@ -109,5 +110,19 @@ public class StandortDatenbank {
 
 		return standortListe;
 	}
+	
+	public Standort getStandort(StandortEnum standortEnum) {
+		Standort standort = null;
+		for(Standort s : selectAllStandorte()) {
+			if(s.getName().equals(standortEnum)) {
+				standort = s;
+			}
+		}
+		
+		return standort;
+	}
+	
+	
+	
 	
 }

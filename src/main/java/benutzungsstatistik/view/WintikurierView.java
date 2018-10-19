@@ -1,6 +1,9 @@
 package benutzungsstatistik.view;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
@@ -17,7 +20,10 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.db.StandortDatenbank;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
@@ -93,17 +99,20 @@ public class WintikurierView {
 		lText.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
 		
 		datefield = new DateTimeField();
-//		datefield.setValue(LocalDateTime.ofInstant(benutzungsstatistik.getDatum().toInstant(), ZoneId.systemDefault()));
 		datefield.setValue(LocalDateTime.now());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
+			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 			
-//			BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-//			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
-//			Date date = Date.from(zdt.toInstant());
-//			Benutzungsstatistik benutzungsstatistikNeu = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date, benutzungsstatistik.getStandort());
-//			benutzungsstatistik = benutzungsstatistikNeu;
+			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			Date date = Date.from(zdt.toInstant());
+			
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			wintikurier = benutzungsstatistik.getWintikurier();
+			lWirtschaftTotal.setValue(""+wintikurier.getAnzahl_Wirtschaft());
+			lTechnikTotal.setValue(""+wintikurier.getAnzahl_Technik());
+			lLinguistikTotal.setValue(""+wintikurier.getAnzahl_Linguistik());
+			lGesundheitTotal.setValue(""+wintikurier.getAnzahl_Gesundheit());			
 		});
 		
 		lTotal = new Label();
@@ -265,6 +274,7 @@ public class WintikurierView {
 
 	}
 
+	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override

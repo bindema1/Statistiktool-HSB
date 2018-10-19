@@ -161,10 +161,11 @@ public class BenutzungsstatistikDatenbank {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		for(Benutzungsstatistik b : benutzungsstatistikenListe) {
-			if(b.getStandort().getStandort_ID() == standort.getStandort_ID())
+			if(b.getStandort().getName().equals(standort.getName())) {
 				if(sdf.format(b.getDatum()).equals(sdf.format(date))){
 					benutzungsstatistik = b;
 				}
+			}
 		}
 		
 		//Falls es keine Benutzungsstatistik für das Datum gibt, erstelle eine Benutzungsstatistik
@@ -175,6 +176,11 @@ public class BenutzungsstatistikDatenbank {
 			
 			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier);
 			insertBenutzungsstatistik(benutzungsstatistik);
+			System.out.println("Benutzungsstatistik gespeichert "+benutzungsstatistik.getBenutzungsstatistik_ID());
+			
+			for(Benutzungsstatistik b : selectAllBenutzungsstatistiken()) {
+				System.out.println(b.getBenutzungsstatistik_ID() +"   " +b.getDatum());
+			}
 		}
 
 		return benutzungsstatistik;

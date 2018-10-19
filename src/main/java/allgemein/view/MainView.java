@@ -1,8 +1,5 @@
 package allgemein.view;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -13,24 +10,6 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
 
 import Testdaten.TestDaten;
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
-import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.EmailkontaktDatenbank;
-import benutzungsstatistik.db.ExterneGruppeDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.BenutzerkontaktDatenbank;
-import benutzungsstatistik.db.TelefonkontaktDatenbank;
-import benutzungsstatistik.db.WintikurierDatenbank;
-import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
-import benutzungsstatistik.model.Benutzungsstatistik;
-import benutzungsstatistik.model.Emailkontakt;
-import benutzungsstatistik.model.ExterneGruppe;
-import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Benutzerkontakt;
-import benutzungsstatistik.model.Telefonkontakt;
-import benutzungsstatistik.model.Wintikurier;
 import benutzungsstatistik.view.BenutzungsstatistikView;
 
 /**
@@ -54,6 +33,8 @@ public class MainView extends UI {
 //	    navigator.addView("login", new Login());
 //	    navigator.addView("dashboard", new Dashboard());
 //	    navigator.navigateTo("login");
+		
+		new TestDaten();
 		
 		return new BenutzungsstatistikView().init(this);
 	}

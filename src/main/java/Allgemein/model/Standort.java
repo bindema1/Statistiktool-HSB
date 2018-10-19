@@ -11,14 +11,14 @@ import java.io.Serializable;
 public class Standort implements Serializable {
 
 	int standort_ID;
-	String name;
+	StandortEnum name;
 
 	// Für Hibernate
 	public Standort(){
 			
 	}
 
-	public Standort(String name) {
+	public Standort(StandortEnum name) {
 		this.name = name;
 	}
 
@@ -26,7 +26,7 @@ public class Standort implements Serializable {
 		return standort_ID;
 	}
 
-	public String getName() {
+	public StandortEnum getName() {
 		return name;
 	}
 
@@ -36,7 +36,7 @@ public class Standort implements Serializable {
 		this.standort_ID = standort_ID;
 	}
 
-	public void setName(String name) {
+	public void setName(StandortEnum name) {
 		this.name = name;
 	}
 
@@ -58,14 +58,11 @@ public class Standort implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Standort other = (Standort) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
+		if (name != other.name)
 			return false;
 		if (standort_ID != other.standort_ID)
 			return false;
 		return true;
 	}
-	
+
 }
