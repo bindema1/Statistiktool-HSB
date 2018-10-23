@@ -1,20 +1,33 @@
 package belegung.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man die Kapazität in die
  * Tabelle 'Kapazität' der Datenbank schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@Entity
+@Table(name = "kapazität")
 public class Kapazität {
 
-	int kapzität_ID;
-	int maxArbeitsplätze;
-	int maxSektorA;
-	int maxSektorB;
-	int maxCarrels;
-	int maxGruppenräume;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long kapzität_ID;
+	
+	private int maxArbeitsplätze;
+	private int maxSektorA;
+	private int maxSektorB;
+	private int maxCarrels;
+	private int maxGruppenräume;
 
+	
 	// Für Hibernate
 	public Kapazität() {
 
@@ -28,7 +41,7 @@ public class Kapazität {
 		this.maxGruppenräume = maxGruppenräume;
 	}
 
-	public int getKapzität_ID() {
+	public Long getKapzität_ID() {
 		return kapzität_ID;
 	}
 
@@ -54,7 +67,7 @@ public class Kapazität {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setKapzität_ID(int kapzität_ID) {
+	public void setKapzität_ID(Long kapzität_ID) {
 		this.kapzität_ID = kapzität_ID;
 	}
 
@@ -82,7 +95,7 @@ public class Kapazität {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + kapzität_ID;
+		result = prime * result + ((kapzität_ID == null) ? 0 : kapzität_ID.hashCode());
 		result = prime * result + maxArbeitsplätze;
 		result = prime * result + maxCarrels;
 		result = prime * result + maxGruppenräume;
@@ -100,7 +113,10 @@ public class Kapazität {
 		if (getClass() != obj.getClass())
 			return false;
 		Kapazität other = (Kapazität) obj;
-		if (kapzität_ID != other.kapzität_ID)
+		if (kapzität_ID == null) {
+			if (other.kapzität_ID != null)
+				return false;
+		} else if (!kapzität_ID.equals(other.kapzität_ID))
 			return false;
 		if (maxArbeitsplätze != other.maxArbeitsplätze)
 			return false;
@@ -114,6 +130,5 @@ public class Kapazität {
 			return false;
 		return true;
 	}
-	
-	
+
 }

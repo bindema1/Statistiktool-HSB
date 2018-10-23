@@ -11,13 +11,13 @@
 		<property name="connection.username">sa</property>
 		<property name="connection.password"></property>
 		<property name="dialect">org.hibernate.dialect.HSQLDialect</property>
-		<property name="show_sql">true</property>
+		<property name="show_sql">false</property>
 		<property name="connection.pool_size">2</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.jdbc.batch_size">0</property>
 		<property name="hibernate.enable_lazy_load_no_trans">true</property>
 		<property name="hibernate.current_session_context_class">thread</property>
-		
+
 		<!--<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 	  	<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool</property>
 		<property name="connection.username">root</property>
@@ -42,6 +42,14 @@
 		<mapping resource="BeantwortungBibliothekspersonal.hbm.xml"></mapping>
 		<mapping resource="ExterneGruppe.hbm.xml"></mapping>
 		<mapping resource="Wintikurier.hbm.xml"></mapping>
+		<mapping class="belegung.model.Arbeitsplätze"/>
+		<mapping class="belegung.model.Belegung"/>
+		<mapping class="belegung.model.Carrels"/>
+		<mapping class="belegung.model.Gruppenräume"/>
+		<mapping class="belegung.model.Kapazität"/>
+		<mapping class="belegung.model.SektorA"/>
+		<mapping class="belegung.model.SektorB"/>
+		<mapping class="belegung.model.Stockwerk"/>
 		
 	</session-factory>
 </hibernate-configuration>

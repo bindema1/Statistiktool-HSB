@@ -1,18 +1,39 @@
 package belegung.model;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man die Carrels in
  * die Tabelle 'Carrels' der Datenbank schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@Entity
+@Table(name = "carrels")
 public class Carrels {
 
-	int carrels_ID;
-	int anzahlPersonen;
-	int anzahlRäume;
-	UhrzeitEnum uhrzeit;
-	Stockwerk stockwerk;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long carrels_ID;
+	
+	private int anzahlPersonen;
+	private int anzahlRäume;
+	
+	@Enumerated(EnumType.STRING)
+	private UhrzeitEnum uhrzeit;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stockwerk_ID")
+	private Stockwerk stockwerk;
 	
 	// Für Hibernate
 	public Carrels() {
@@ -26,7 +47,7 @@ public class Carrels {
 		this.stockwerk = stockwerk;
 	}
 
-	public int getCarrels_ID() {
+	public Long getCarrels_ID() {
 		return carrels_ID;
 	}
 	
@@ -48,7 +69,7 @@ public class Carrels {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setCarrels_ID(int carrels_ID) {
+	public void setCarrels_ID(Long carrels_ID) {
 		this.carrels_ID = carrels_ID;
 	}
 
@@ -74,7 +95,7 @@ public class Carrels {
 		int result = 1;
 		result = prime * result + anzahlPersonen;
 		result = prime * result + anzahlRäume;
-		result = prime * result + carrels_ID;
+		result = prime * result + ((carrels_ID == null) ? 0 : carrels_ID.hashCode());
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -93,7 +114,10 @@ public class Carrels {
 			return false;
 		if (anzahlRäume != other.anzahlRäume)
 			return false;
-		if (carrels_ID != other.carrels_ID)
+		if (carrels_ID == null) {
+			if (other.carrels_ID != null)
+				return false;
+		} else if (!carrels_ID.equals(other.carrels_ID))
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)
@@ -105,4 +129,5 @@ public class Carrels {
 		return true;
 	}
 
+	
 }

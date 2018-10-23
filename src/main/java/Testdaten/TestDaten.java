@@ -10,6 +10,7 @@ import allgemein.db.StandortDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
+import belegung.db.BelegungsDatenbank2;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
 import belegung.model.Carrels;
@@ -45,30 +46,10 @@ import benutzungsstatistik.model.Wintikurier;
  */
 public class TestDaten {
 
-	AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
-	StandortDatenbank standortDB = new StandortDatenbank();
-	EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-	ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-	BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
-	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-	IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-	TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
-	WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 	Standort standortBB;
 	Standort standortLL;
 	SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 	Date date;
-	Belegung belegungBB;
-	Belegung belegungLL;
-
-	public Belegung getBelegungBB() {
-		return belegungBB;
-	}
-	
-	public Belegung getBelegungLL() {
-		return belegungLL;
-	}
 
 	public TestDaten() {
 		try {
@@ -83,6 +64,10 @@ public class TestDaten {
 	}
 
 	private void initAllgemein() throws ParseException {
+		
+		AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
+		StandortDatenbank standortDB = new StandortDatenbank();
+		
 		standortBB = new Standort(StandortEnum.WINTERTHUR_BB);
 		standortLL = new Standort(StandortEnum.WINTERTHUR_LL);
 		Standort standortWädi = new Standort(StandortEnum.WÄDENSWIL);
@@ -108,6 +93,15 @@ public class TestDaten {
 
 	private void initBenutzungsstatistik() throws ParseException {
 
+		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
+		ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
+		BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
+		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
+		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
+		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
+		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
+		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
+		
 		date = sdf2.parse("10.10.2018");
 
 		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
@@ -215,10 +209,12 @@ public class TestDaten {
 
 	private void initBelegung() throws ParseException {
 
+	    BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
+		
 		date = sdf2.parse("22.10.2018");
 
-		belegungBB = new Belegung(date, standortBB);
-		belegungLL = new Belegung(date, standortLL);
+		Belegung belegungBB = new Belegung(date, standortBB);
+		Belegung belegungLL = new Belegung(date, standortLL);
 
 		Kapazität kapazitätEG = new Kapazität(80, 0, 0, 0, 12);
 		Kapazität kapazität1ZG = new Kapazität(80, 0, 0, 0, 0);
@@ -344,6 +340,33 @@ public class TestDaten {
 		stockwerkLL.addCarrels(carrelsLL4);
 		stockwerkLL.addCarrels(carrelsLL5);
 		stockwerkLL.addCarrels(carrelsLL6);
+		
+		
+		belegungDB.insertBelegung(belegungBB);
+		belegungDB.insertBelegung(belegungLL);
+		
+		
+		for(Belegung belegung : belegungDB.selectAllBelegungen()) {
+			System.out.println(belegung.getBelegungs_ID());
+			for(Stockwerk stockwerk : belegung.getStockwerkListe()) {
+				System.out.println(stockwerk.getName());
+				for(Arbeitsplätze a : stockwerk.getArbeitsplatzListe()) {
+					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+				}
+				for(SektorA a : stockwerk.getSektorAListe()) {
+					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+				}
+				for(SektorB a : stockwerk.getSektorBListe()) {
+					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+				}
+				for(Gruppenräume a : stockwerk.getGruppenräumeListe()) {
+					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
+				}
+				for(Carrels a : stockwerk.getCarrelsListe()) {
+					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) {

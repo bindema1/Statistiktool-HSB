@@ -1,5 +1,7 @@
 package belegung.view;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,9 +31,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
+import allgemein.db.StandortDatenbank;
+import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
 import belegung.bean.TagesübersichtBelegungBean;
+import belegung.db.BelegungsDatenbank2;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
 import belegung.model.Carrels;
@@ -60,6 +65,9 @@ public class TagesübersichtBelegungView {
 	private Button bEG;
 	private Belegung belegung;
 	private StockwerkEnum stockwerkEnum;
+	private Date date;
+	private BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
+	private StandortDatenbank standortDB = new StandortDatenbank();
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -85,7 +93,12 @@ public class TagesübersichtBelegungView {
 	}
 
 	private void initData() {
-
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
+		try {
+			date = sdf2.parse("22.10.2018");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Initialisieren der GUI Komponente
@@ -152,16 +165,16 @@ public class TagesübersichtBelegungView {
 		b2ZG.addClickListener(createClickListener(mainView));
 
 		Image image = null;
-		if(stockwerkEnum == StockwerkEnum.EG) {
+		if (stockwerkEnum == StockwerkEnum.EG) {
 			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		}else if(stockwerkEnum == StockwerkEnum.ZG1) {
+		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
 			image = new Image(null, new ClassResource("/belegung/1.ZG-lang.png"));
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		}else if(stockwerkEnum == StockwerkEnum.ZG2) {
+		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
 			image = new Image(null, new ClassResource("/belegung/2.ZG-lang.png"));
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		}else if(stockwerkEnum == StockwerkEnum.LL) {
+		} else if (stockwerkEnum == StockwerkEnum.LL) {
 			image = new Image(null, new ClassResource("/belegung/LL-lang.png"));
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		}
@@ -311,23 +324,19 @@ public class TagesübersichtBelegungView {
 				}
 
 				if (e.getSource() == bLL) {
-					//TODO Belegung von LL aus DB holen
-//					mainView.setContent(new TagesübersichtBelegungView(belegung, StockwerkEnum.LL).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_LL)), StockwerkEnum.LL).init(mainView));
 				}
 
 				if (e.getSource() == b2ZG) {
-					//TODO Belegung von EG aus DB holen
-					mainView.setContent(new TagesübersichtBelegungView(belegung, StockwerkEnum.ZG2).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG2).init(mainView));
 				}
 
 				if (e.getSource() == b1ZG) {
-					//TODO Belegung von EG aus DB holen
-					mainView.setContent(new TagesübersichtBelegungView(belegung, StockwerkEnum.ZG1).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG1).init(mainView));
 				}
 
 				if (e.getSource() == bEG) {
-					//TODO Belegung von EG aus DB holen
-					mainView.setContent(new TagesübersichtBelegungView(belegung, StockwerkEnum.EG).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.EG).init(mainView));
 				}
 
 			}

@@ -1,17 +1,39 @@
 package belegung.model;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man den SektorB in
  * die Tabelle 'SektorB' der Datenbank schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@Entity
+@Table(name = "sektorB")
 public class SektorB {
 
-	int sektorB_ID;
-	int anzahlPersonen;
-	UhrzeitEnum uhrzeit;
-	Stockwerk stockwerk;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long sektorB_ID;
+	
+	private int anzahlPersonen;
+
+	@Enumerated(EnumType.STRING)
+	private UhrzeitEnum uhrzeit;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stockwerk_ID")
+	private Stockwerk stockwerk;
 	
 	// Für Hibernate
 	public SektorB() {
@@ -24,7 +46,7 @@ public class SektorB {
 		this.stockwerk = stockwerk;
 	}
 
-	public int getSektorB_ID() {
+	public Long getSektorB_ID() {
 		return sektorB_ID;
 	}
 
@@ -42,7 +64,7 @@ public class SektorB {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setSektorB_ID(int sektorB_ID) {
+	public void setSektorB_ID(Long sektorB_ID) {
 		this.sektorB_ID = sektorB_ID;
 	}
 
@@ -63,7 +85,7 @@ public class SektorB {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + anzahlPersonen;
-		result = prime * result + sektorB_ID;
+		result = prime * result + ((sektorB_ID == null) ? 0 : sektorB_ID.hashCode());
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -80,7 +102,10 @@ public class SektorB {
 		SektorB other = (SektorB) obj;
 		if (anzahlPersonen != other.anzahlPersonen)
 			return false;
-		if (sektorB_ID != other.sektorB_ID)
+		if (sektorB_ID == null) {
+			if (other.sektorB_ID != null)
+				return false;
+		} else if (!sektorB_ID.equals(other.sektorB_ID))
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)

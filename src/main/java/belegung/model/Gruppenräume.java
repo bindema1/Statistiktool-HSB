@@ -1,18 +1,40 @@
 package belegung.model;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man die Gruppenräume in
  * die Tabelle 'Gruppenräume' der Datenbank schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@Entity
+@Table(name = "gruppenräume")
 public class Gruppenräume {
 
-	int gruppenräume_ID;
-	int anzahlPersonen;
-	int anzahlRäume;
-	UhrzeitEnum uhrzeit;
-	Stockwerk stockwerk;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long gruppenräume_ID;
+	
+	private int anzahlPersonen;
+	private int anzahlRäume;
+
+	@Enumerated(EnumType.STRING)
+	private UhrzeitEnum uhrzeit;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stockwerk_ID")
+	private Stockwerk stockwerk;
+	
 	
 	// Für Hibernate
 	public Gruppenräume() {
@@ -26,7 +48,7 @@ public class Gruppenräume {
 		this.stockwerk = stockwerk;
 	}
 
-	public int getGruppenräume_ID() {
+	public Long getGruppenräume_ID() {
 		return gruppenräume_ID;
 	}
 	
@@ -48,7 +70,7 @@ public class Gruppenräume {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setGruppenräume_ID(int gruppenräume_ID) {
+	public void setGruppenräume_ID(Long gruppenräume_ID) {
 		this.gruppenräume_ID = gruppenräume_ID;
 	}
 
@@ -74,7 +96,7 @@ public class Gruppenräume {
 		int result = 1;
 		result = prime * result + anzahlPersonen;
 		result = prime * result + anzahlRäume;
-		result = prime * result + gruppenräume_ID;
+		result = prime * result + ((gruppenräume_ID == null) ? 0 : gruppenräume_ID.hashCode());
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -93,7 +115,10 @@ public class Gruppenräume {
 			return false;
 		if (anzahlRäume != other.anzahlRäume)
 			return false;
-		if (gruppenräume_ID != other.gruppenräume_ID)
+		if (gruppenräume_ID == null) {
+			if (other.gruppenräume_ID != null)
+				return false;
+		} else if (!gruppenräume_ID.equals(other.gruppenräume_ID))
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)
@@ -105,4 +130,5 @@ public class Gruppenräume {
 		return true;
 	}
 
+	
 }

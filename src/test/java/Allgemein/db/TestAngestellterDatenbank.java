@@ -1,4 +1,4 @@
-package Allgemein.db;
+package allgemein.db;
 
 import static org.junit.Assert.assertEquals;
 
