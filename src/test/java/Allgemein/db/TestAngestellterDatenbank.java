@@ -24,7 +24,7 @@ public class TestAngestellterDatenbank {
 
 	AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
 	Angestellter angestellter;
-	Standort standort = new Standort(StandortEnum.Test);
+	Standort standort = new Standort(StandortEnum.TEST);
 	StandortDatenbank standortDB = new StandortDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	

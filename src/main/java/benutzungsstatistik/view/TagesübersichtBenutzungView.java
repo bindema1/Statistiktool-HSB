@@ -29,7 +29,7 @@ import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
-import benutzungsstatistik.bean.TagesübersichtBean;
+import benutzungsstatistik.bean.TagesübersichtBenutzungBean;
 import benutzungsstatistik.bean.WintikurierBean;
 import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
@@ -51,7 +51,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtView {
+public class TagesübersichtBenutzungView {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
@@ -76,7 +76,7 @@ public class TagesübersichtView {
 		return absolutLayout;
 	}
 
-	public TagesübersichtView(Benutzungsstatistik benutzungsstatistik) {
+	public TagesübersichtBenutzungView(Benutzungsstatistik benutzungsstatistik) {
 		this.benutzungsstatistik = benutzungsstatistik;
 	}
 
@@ -124,12 +124,12 @@ public class TagesübersichtView {
 		lGruppen.setValue("Gruppen");
 		lGruppen.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
 		
-		Grid<TagesübersichtBean> tabelleUhrzeiten = new Grid<TagesübersichtBean>();
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getUhrzeit).setCaption("Uhrzeit");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getKontakt).setCaption("Benutzer");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getIntensiv).setCaption("Intensiv");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getEmail).setCaption("Email");
-		tabelleUhrzeiten.addColumn(TagesübersichtBean::getTelefon).setCaption("Telefon");
+		Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten = new Grid<TagesübersichtBenutzungBean>();
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getUhrzeit).setCaption("Uhrzeit");
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getKontakt).setCaption("Benutzer");
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getIntensiv).setCaption("Intensiv");
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getEmail).setCaption("Email");
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getTelefon).setCaption("Telefon");
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
 		
 		Grid<WintikurierBean> tabelleWintikurier = new Grid<WintikurierBean>();
@@ -151,7 +151,7 @@ public class TagesübersichtView {
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 			
-			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
 			
 			//Alle Werte anpassen
 			fülleTabelleGruppen(tabelleGruppen);
@@ -249,7 +249,7 @@ public class TagesübersichtView {
 		}
 	}
 
-	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBean> tabelleUhrzeiten) {
+	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten) {
 
 		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
 		List<Intensivfrage> intensivfragenListe = intensivFrageDB
@@ -264,10 +264,10 @@ public class TagesübersichtView {
 		List<Emailkontakt> emailkontaktListe = emailKontaktDB
 				.selectAllEmailkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 
-		List<TagesübersichtBean> tagesübersichtListe = new ArrayList<>();
+		List<TagesübersichtBenutzungBean> tagesübersichtListe = new ArrayList<>();
 
 		for (int i = 8; i <= 19; i++) {
-			TagesübersichtBean tb = new TagesübersichtBean();
+			TagesübersichtBenutzungBean tb = new TagesübersichtBenutzungBean();
 			int plus = i + 1;
 			tb.setUhrzeit(i + "-" + plus);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("HH");

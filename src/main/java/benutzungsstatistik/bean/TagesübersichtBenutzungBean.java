@@ -7,15 +7,15 @@ import java.io.Serializable;
  * @author Marvin Bindemann
  *
  */
-public class TagesübersichtBean implements Serializable{
+public class TagesübersichtBenutzungBean implements Serializable{
 
 	private String uhrzeit;
-	private Integer kontakt;
-	private Integer intensiv;
-	private Integer email;
-	private Integer telefon;
+	private int kontakt;
+	private int intensiv;
+	private int email;
+	private int telefon;
 	
-	public TagesübersichtBean() {
+	public TagesübersichtBenutzungBean() {
 		
 	}
 
@@ -27,35 +27,35 @@ public class TagesübersichtBean implements Serializable{
 		this.uhrzeit = uhrzeit;
 	}
 
-	public Integer getKontakt() {
+	public int getKontakt() {
 		return kontakt;
 	}
 
-	public void setKontakt(Integer kontakt) {
+	public void setKontakt(int kontakt) {
 		this.kontakt = kontakt;
 	}
 
-	public Integer getIntensiv() {
+	public int getIntensiv() {
 		return intensiv;
 	}
 
-	public void setIntensiv(Integer intensiv) {
+	public void setIntensiv(int intensiv) {
 		this.intensiv = intensiv;
 	}
 
-	public Integer getEmail() {
+	public int getEmail() {
 		return email;
 	}
 
-	public void setEmail(Integer email) {
+	public void setEmail(int email) {
 		this.email = email;
 	}
 
-	public Integer getTelefon() {
+	public int getTelefon() {
 		return telefon;
 	}
 
-	public void setTelefon(Integer telefon) {
+	public void setTelefon(int telefon) {
 		this.telefon = telefon;
 	}
 	

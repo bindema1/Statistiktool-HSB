@@ -24,6 +24,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
+import allgemein.view.StartseiteView;
 import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.db.EmailkontaktDatenbank;
@@ -88,7 +89,7 @@ public class BenutzungsstatistikView {
 	}
 
 	private void initData() {
-		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
 	}
 
 	// Initialisieren der GUI Komponente
@@ -96,7 +97,7 @@ public class BenutzungsstatistikView {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
-		bZurueck.setEnabled(false);
+//		bZurueck.setEnabled(false);
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener(mainView));
 
@@ -219,6 +220,7 @@ public class BenutzungsstatistikView {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					Notification.show("Zurück", Type.WARNING_MESSAGE);
+					mainView.setContent(new StartseiteView().init(mainView));
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
@@ -282,7 +284,7 @@ public class BenutzungsstatistikView {
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					mainView.setContent(new TagesübersichtView(benutzungsstatistik).init(mainView));
+					mainView.setContent(new TagesübersichtBenutzungView(benutzungsstatistik).init(mainView));
 				}
 
 			}

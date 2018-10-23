@@ -31,7 +31,7 @@ public class TestExterneGruppeDatenbank {
 
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.Test);
+		Standort standort = new Standort(StandortEnum.TEST);
 		standortDB.insertStandort(standort);
 		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);

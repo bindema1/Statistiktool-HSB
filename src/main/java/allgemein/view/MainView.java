@@ -10,7 +10,7 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
 
 import Testdaten.TestDaten;
-import benutzungsstatistik.view.BenutzungsstatistikView;
+import belegung.view.TagesübersichtBelegungView;
 
 /**
  * MainView setzt den Content und gibt seine eigene MainView an die entsprechende View weiter
@@ -34,9 +34,9 @@ public class MainView extends UI {
 //	    navigator.addView("dashboard", new Dashboard());
 //	    navigator.navigateTo("login");
 		
-		new TestDaten();
-		
-		return new BenutzungsstatistikView().init(this);
+//		return new BenutzungsstatistikView().init(this);
+//		return new TagesübersichtBelegungView(testdaten.getBelegungLL()).init(this);
+		return new StartseiteView().init(this);
 	}
 	
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)

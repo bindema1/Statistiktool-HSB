@@ -107,7 +107,7 @@ public class WintikurierView {
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 			
-			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
 			wintikurier = benutzungsstatistik.getWintikurier();
 			lWirtschaftTotal.setValue(""+wintikurier.getAnzahl_Wirtschaft());
 			lTechnikTotal.setValue(""+wintikurier.getAnzahl_Technik());

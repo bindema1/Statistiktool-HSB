@@ -31,7 +31,7 @@ public class TestWintikurierDatenbank {
 
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.Test);
+		Standort standort = new Standort(StandortEnum.TEST);
 		standortDB.insertStandort(standort);
 		
 		wintikurier = new Wintikurier(5, 7, 2, 10);

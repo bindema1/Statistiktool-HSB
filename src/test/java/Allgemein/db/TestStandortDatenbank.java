@@ -24,7 +24,7 @@ public class TestStandortDatenbank {
 
 	@Before
 	public void initComponents() {
-		standort = new Standort(StandortEnum.Test);
+		standort = new Standort(StandortEnum.TEST);
 	}
 
 	@Test
@@ -46,9 +46,9 @@ public class TestStandortDatenbank {
 	public void testgetStandort() {
 		standortDB.insertStandort(standort);
 		
-		Standort s = standortDB.getStandort(StandortEnum.Test);
+		Standort s = standortDB.getStandort(StandortEnum.TEST);
 		
-		assertEquals(s.getName(), StandortEnum.Test);
+		assertEquals(s.getName(), StandortEnum.TEST);
 	}
 	
 }

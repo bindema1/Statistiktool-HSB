@@ -350,7 +350,7 @@ public class KorrekturView implements Serializable {
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
-			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.Winterthur_BB));
+			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
 			
 			//Alle Werte anpassen
 			if (benutzungsstatistik.isKassenbeleg()) {

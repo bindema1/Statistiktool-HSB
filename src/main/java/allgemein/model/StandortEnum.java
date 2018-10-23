@@ -13,6 +13,6 @@ package allgemein.model;
  */
 public enum StandortEnum {
 
-	Winterthur_BB, Winterthur_LL, Wädenswil, Test
+	WINTERTHUR_BB, WINTERTHUR_LL, WÄDENSWIL, TEST
 	
 }
