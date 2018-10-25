@@ -12,7 +12,10 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import belegung.model.Belegung;
+import belegung.model.Stockwerk;
+import belegung.model.StockwerkEnum;
 import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -170,19 +173,20 @@ public class BelegungsDatenbank2 {
 		}
 		
 		//Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
-//		if(belegung == null) {
-//			WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
-//			Wintikurier wintikurier = new Wintikurier(0, 0, 0, 0);
-//			wintikurierDB.insertWintikurier(wintikurier);
-//			
-//			belegung = new Belegung(date, 0, false, standort, wintikurier);
-//			insertBelegung(belegung);
-//			System.out.println("Belegung gespeichert "+belegung.getBelegung_ID());
-//			
-//			for(Belegung b : selectAllBelegungen()) {
-//				System.out.println(b.getBelegung_ID() +"   " +b.getDatum());
-//			}
-//		}
+		if(belegung == null) {
+			belegung = new Belegung(date, standort);
+			
+			if(standort.getName() == StandortEnum.WINTERTHUR_BB) {
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.EG, false, false, true, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.EG)));
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG1, false, false, false, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG1)));
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG2, false, false, false, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG2)));
+			}else if (standort.getName() == StandortEnum.WINTERTHUR_LL) {
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.LL, true, true, true, true, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.LL)));
+			}			
+			
+			insertBelegung(belegung);
+			System.out.println("Belegung gespeichert "+belegung.getBelegungs_ID());
+		}
 
 		return belegung;
 	}

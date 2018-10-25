@@ -41,7 +41,7 @@ public class Belegung {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Standort standort;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, targetEntity=Stockwerk.class)
 	@JoinTable(name = "Belegung_Stockwerk", joinColumns = @JoinColumn(name = "belegungs_ID"), inverseJoinColumns = @JoinColumn(name = "stockwerk_ID"))
 	private List<Stockwerk> stockwerkListe = new ArrayList<>();
 	

@@ -177,10 +177,6 @@ public class BenutzungsstatistikDatenbank {
 			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier);
 			insertBenutzungsstatistik(benutzungsstatistik);
 			System.out.println("Benutzungsstatistik gespeichert "+benutzungsstatistik.getBenutzungsstatistik_ID());
-			
-			for(Benutzungsstatistik b : selectAllBenutzungsstatistiken()) {
-				System.out.println(b.getBenutzungsstatistik_ID() +"   " +b.getDatum());
-			}
 		}
 
 		return benutzungsstatistik;

@@ -1,8 +1,6 @@
 package belegung.view;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -68,6 +66,7 @@ public class TagesübersichtBelegungView {
 	private Date date;
 	private BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
 	private StandortDatenbank standortDB = new StandortDatenbank();
+	private Image image;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -93,12 +92,7 @@ public class TagesübersichtBelegungView {
 	}
 
 	private void initData() {
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
-		try {
-			date = sdf2.parse("22.10.2018");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		date = belegung.getDatum();
 	}
 
 	// Initialisieren der GUI Komponente
@@ -118,17 +112,6 @@ public class TagesübersichtBelegungView {
 		bErfassung.addStyleName(ValoTheme.BUTTON_LARGE);
 		bErfassung.addClickListener(createClickListener(mainView));
 
-		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
-		datefield.setDateFormat("dd.MM.yyyy");
-		datefield.addValueChangeListener(event -> {
-			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
-
-			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
-			Date date = Date.from(zdt.toInstant());
-
-		});
-
 		Grid<TagesübersichtBelegungBean> tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
 		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
 		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
@@ -147,6 +130,30 @@ public class TagesübersichtBelegungView {
 		second.join(carrelColumn1, carrelColumn2).setText("Carrels");
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
 
+		DateTimeField datefield = new DateTimeField();
+		datefield.setValue(Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+		datefield.setDateFormat("dd.MM.yyyy");
+		datefield.addValueChangeListener(event -> {
+			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
+
+			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			date = Date.from(zdt.toInstant());
+
+			if (stockwerkEnum == StockwerkEnum.LL) {
+				belegung = belegungDB.selectBelegungForDateAndStandort(date,
+						standortDB.getStandort(StandortEnum.WINTERTHUR_LL));
+			} else if (stockwerkEnum == StockwerkEnum.WÄDI) {
+				belegung = belegungDB.selectBelegungForDateAndStandort(date,
+						standortDB.getStandort(StandortEnum.WÄDENSWIL));
+			} else {
+				belegung = belegungDB.selectBelegungForDateAndStandort(date,
+						standortDB.getStandort(StandortEnum.WINTERTHUR_BB));
+			}
+
+			// Alle Werte anpassen
+			fülleTabelleUhrzeiten(tabelleUhrzeiten);
+		});
+
 		bLL = new Button();
 		bLL.setCaption("LL");
 		bLL.addStyleName(ValoTheme.BUTTON_LARGE);
@@ -164,7 +171,7 @@ public class TagesübersichtBelegungView {
 		b2ZG.addStyleName(ValoTheme.BUTTON_LARGE);
 		b2ZG.addClickListener(createClickListener(mainView));
 
-		Image image = null;
+		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
 			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -324,19 +331,23 @@ public class TagesübersichtBelegungView {
 				}
 
 				if (e.getSource() == bLL) {
-					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_LL)), StockwerkEnum.LL).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date,
+							standortDB.getStandort(StandortEnum.WINTERTHUR_LL)), StockwerkEnum.LL).init(mainView));
 				}
 
 				if (e.getSource() == b2ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG2).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date,
+							standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG2).init(mainView));
 				}
 
 				if (e.getSource() == b1ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG1).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date,
+							standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.ZG1).init(mainView));
 				}
 
 				if (e.getSource() == bEG) {
-					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date, standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.EG).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(belegungDB.selectBelegungForDateAndStandort(date,
+							standortDB.getStandort(StandortEnum.WINTERTHUR_BB)), StockwerkEnum.EG).init(mainView));
 				}
 
 			}

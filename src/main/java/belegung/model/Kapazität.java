@@ -1,6 +1,8 @@
 package belegung.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,9 @@ public class Kapazität {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long kapzität_ID;
 	
+	@Enumerated(EnumType.STRING)
+	private StockwerkEnum stockwerk;
+	
 	private int maxArbeitsplätze;
 	private int maxSektorA;
 	private int maxSektorB;
@@ -33,12 +38,17 @@ public class Kapazität {
 
 	}
 
-	public Kapazität(int maxArbeitsplätze, int maxSektorA, int maxSektorB, int maxCarrels, int maxGruppenräume) {
+	public Kapazität(StockwerkEnum stockwerk, int maxArbeitsplätze, int maxSektorA, int maxSektorB, int maxCarrels, int maxGruppenräume) {
+		this.stockwerk = stockwerk;
 		this.maxArbeitsplätze = maxArbeitsplätze;
 		this.maxSektorA = maxSektorA;
 		this.maxSektorB = maxSektorB;
 		this.maxCarrels = maxCarrels;
 		this.maxGruppenräume = maxGruppenräume;
+	}
+	
+	public StockwerkEnum getStockwerk() {
+		return stockwerk;
 	}
 
 	public Long getKapzität_ID() {
@@ -67,6 +77,10 @@ public class Kapazität {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
+	public void setStockwerk(StockwerkEnum stockwerk) {
+		this.stockwerk = stockwerk;
+	}
+	
 	public void setKapzität_ID(Long kapzität_ID) {
 		this.kapzität_ID = kapzität_ID;
 	}
@@ -101,6 +115,7 @@ public class Kapazität {
 		result = prime * result + maxGruppenräume;
 		result = prime * result + maxSektorA;
 		result = prime * result + maxSektorB;
+		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		return result;
 	}
 
@@ -127,6 +142,8 @@ public class Kapazität {
 		if (maxSektorA != other.maxSektorA)
 			return false;
 		if (maxSektorB != other.maxSektorB)
+			return false;
+		if (stockwerk != other.stockwerk)
 			return false;
 		return true;
 	}

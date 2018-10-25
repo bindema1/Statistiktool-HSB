@@ -195,6 +195,41 @@ public class TagesübersichtBenutzungView {
 		
 
 		mainLayout.addComponent(overallLayout);
+		
+//		GridLayout grid = new GridLayout(6, 12);
+//		grid.addStyleName("gridlayout");
+//		grid.setSizeFull();
+//		grid.addComponent(bZurueck, 0, 0);
+//		grid.addComponent(lText, 1, 0, 2, 0);
+//		grid.addComponent(datefield, 3, 0, 4, 0);
+//		grid.addComponent(bKorrektur, 5, 0);
+//		grid.addComponent(tabelleUhrzeiten, 0, 1, 2, 11);
+//		grid.addComponent(lRechercheberatung, 3, 1, 5, 1);
+//		grid.addComponent(lKassenbeleg, 3, 2);
+//		grid.addComponent(kassenbeleg, 4, 2, 5, 2);
+//		grid.addComponent(lWintikurier, 3, 3, 5, 3);
+//		grid.addComponent(tabelleWintikurier, 3, 4, 5, 7);
+//		grid.addComponent(lGruppen, 3, 8, 5, 8);
+//		grid.addComponent(tabelleGruppen, 3, 9, 5, 11);
+//
+//		for (int col = 0; col < grid.getColumns(); col++) {
+//			for (int row = 0; row < grid.getRows(); row++) {
+//				Component c = grid.getComponent(col, row);
+//				grid.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
+//
+//				// Button grösser machen
+//				if (row == 0) {
+//					if (col == 1 || col == 2) {
+//						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
+//					}
+//				} else {
+//					c.setHeight("90%");
+//					c.setWidth("90%");
+//				}
+//			}
+//		}
+//
+//		mainLayout.addComponent(grid);
 	}
 
 	private void fülleTabelleWintikurier(Grid<WintikurierBean> tabelleWintikurier) {

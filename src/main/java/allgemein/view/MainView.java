@@ -1,5 +1,7 @@
 package allgemein.view;
 
+import java.util.logging.Level;
+
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -9,9 +11,6 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
 
-import Testdaten.TestDaten;
-import belegung.view.TagesübersichtBelegungView;
-
 /**
  * MainView setzt den Content und gibt seine eigene MainView an die entsprechende View weiter
  * 
@@ -20,6 +19,7 @@ import belegung.view.TagesübersichtBelegungView;
 @Theme("mytheme")
 public class MainView extends UI {
 
+	
 	protected void init(VaadinRequest request) {
 		setContent(buildMainLayout());
 	}
@@ -36,6 +36,7 @@ public class MainView extends UI {
 		
 //		return new BenutzungsstatistikView().init(this);
 //		return new TagesübersichtBelegungView(testdaten.getBelegungLL()).init(this);
+		java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 		return new StartseiteView().init(this);
 	}
 	

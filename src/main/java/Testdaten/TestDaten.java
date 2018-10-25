@@ -52,6 +52,7 @@ public class TestDaten {
 	Date date;
 
 	public TestDaten() {
+		
 		try {
 			initAllgemein();
 			initBenutzungsstatistik();
@@ -211,15 +212,16 @@ public class TestDaten {
 
 	    BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
 		
-		date = sdf2.parse("22.10.2018");
+//		date = sdf2.parse("22.10.2018");
+	    date = new Date();
 
 		Belegung belegungBB = new Belegung(date, standortBB);
 		Belegung belegungLL = new Belegung(date, standortLL);
 
-		Kapazität kapazitätEG = new Kapazität(80, 0, 0, 0, 12);
-		Kapazität kapazität1ZG = new Kapazität(80, 0, 0, 0, 0);
-		Kapazität kapazität2ZG = new Kapazität(160, 0, 0, 0, 0);
-		Kapazität kapazitätLL = new Kapazität(0, 120, 135, 12, 24);
+		Kapazität kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 12);
+		Kapazität kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0);
+		Kapazität kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0);
+		Kapazität kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 24);
 
 		Stockwerk stockwerkEG = new Stockwerk(StockwerkEnum.EG, false, false, true, false, kapazitätEG);
 		Stockwerk stockwerk1ZG = new Stockwerk(StockwerkEnum.ZG1, false, false, false, false, kapazität1ZG);
