@@ -10,11 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Intensivfrage;
 
@@ -27,14 +23,11 @@ public class TestIntensivfrageDatenbank {
 
 	IntensivfrageDatenbank intensivfrageDB = new IntensivfrageDatenbank();
 	Intensivfrage intensivfrage;
-	StandortDatenbank standortDB = new StandortDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.TEST);
-		standortDB.insertStandort(standort);
-		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort);
+		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 		
 		intensivfrage = new Intensivfrage(Timestamp.valueOf("2018-10-10 10:10:10.0"), benutzungsstatistik);

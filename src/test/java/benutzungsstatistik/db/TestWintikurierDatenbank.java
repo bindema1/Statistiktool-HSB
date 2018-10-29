@@ -9,11 +9,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -26,17 +22,13 @@ public class TestWintikurierDatenbank {
 
 	WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 	Wintikurier wintikurier;
-	StandortDatenbank standortDB = new StandortDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.TEST);
-		standortDB.insertStandort(standort);
-		
 		wintikurier = new Wintikurier(5, 7, 2, 10);
 		
-		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort, wintikurier);
+		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST, wintikurier);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 
 	}

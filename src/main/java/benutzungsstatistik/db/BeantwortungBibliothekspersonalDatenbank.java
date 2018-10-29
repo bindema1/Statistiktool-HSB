@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -150,20 +151,43 @@ public class BeantwortungBibliothekspersonalDatenbank {
 	/**
 	 * @return Liste von allen BeantwortungBibliothekspersonalen für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<BeantwortungBibliothekspersonal> selectAllBeantwortungBibliothekspersonalenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
-		// BeantwortungBibliothekspersonal aus der DB auslesen
-		final BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
-		List<BeantwortungBibliothekspersonal> beantwortungBibliothekspersonalenListe = beantwortungBibliothekspersonalDB.selectAllBeantwortungBibliothekspersonalen();
-		final List<BeantwortungBibliothekspersonal> beantwortungBibliothekspersonalenListeFuerBenutzungsstatistik = new ArrayList<BeantwortungBibliothekspersonal>();
-		
-		for (final BeantwortungBibliothekspersonal beantwortungBibliothekspersonal : beantwortungBibliothekspersonalenListe) {
-			if (beantwortungBibliothekspersonal.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				beantwortungBibliothekspersonalenListeFuerBenutzungsstatistik.add(beantwortungBibliothekspersonal);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<BeantwortungBibliothekspersonal> beantwortungBibliothekspersonalenListe = new ArrayList<BeantwortungBibliothekspersonal>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			String hql = "FROM Beantwortungbibliothekspersonal T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			beantwortungBibliothekspersonalenListe = query.list();
+			
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
-		
-		return beantwortungBibliothekspersonalenListeFuerBenutzungsstatistik;
+
+		return beantwortungBibliothekspersonalenListe;
 	}
 	
 }

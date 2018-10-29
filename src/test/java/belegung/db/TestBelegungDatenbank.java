@@ -11,8 +11,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
@@ -24,7 +22,6 @@ import belegung.model.SektorB;
 import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
 import belegung.model.UhrzeitEnum;
-import benutzungsstatistik.model.Benutzungsstatistik;
 
 /**
  * Testet alle Methoden der BenutzungsstatistikDatenbank
@@ -34,8 +31,6 @@ import benutzungsstatistik.model.Benutzungsstatistik;
 public class TestBelegungDatenbank {
 
 	BelegungsDatenbank2 belegungsDB = new BelegungsDatenbank2();
-	Standort standort = new Standort(StandortEnum.TEST);
-	StandortDatenbank standortDB = new StandortDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	Date date;
 	Belegung belegung;
@@ -43,7 +38,6 @@ public class TestBelegungDatenbank {
 	@Before
 	public void initComponents() {
 		date = new Date();
-		standortDB.insertStandort(standort);
 		
 		try {
 			date = sdf.parse("22.10.2018");
@@ -51,7 +45,7 @@ public class TestBelegungDatenbank {
 			e.printStackTrace();
 		}
 
-		belegung = new Belegung(date, standort);
+		belegung = new Belegung(date, StandortEnum.TEST);
 
 		Kapazität kapazität = new Kapazität(StockwerkEnum.TEST, 80, 120, 135, 12, 24);
 		Stockwerk stockwerk = new Stockwerk(StockwerkEnum.TEST, true, true, true, true, kapazität);
@@ -90,7 +84,7 @@ public class TestBelegungDatenbank {
 		List<Belegung> belegungsListe = new ArrayList<Belegung>();
 		belegungsListe = belegungsDB.selectAllBelegungen();
 
-		assertEquals(belegungsListe.get(1).getStandort().getName(), belegung.getStandort().getName());
+		assertEquals(belegungsListe.get(1).getStandort(), belegung.getStandort());
 		assertEquals(belegungsListe.get(1).getStockwerkListe().get(0).getName(), belegung.getStockwerkListe().get(0).getName());
 		assertEquals(sdf.format(belegungsListe.get(1).getDatum()), sdf.format(belegung.getDatum()));
 	}
@@ -110,7 +104,7 @@ public class TestBelegungDatenbank {
 		List<Belegung> belegungsListe = new ArrayList<Belegung>();
 		belegungsListe = belegungsDB.selectAllBelegungen();
 
-		assertEquals(belegungsListe.get(0).getStandort().getName(), belegung.getStandort().getName());
+		assertEquals(belegungsListe.get(0).getStandort(), belegung.getStandort());
 		assertEquals(belegungsListe.get(0).getStockwerkListe().get(0).getName(), belegung.getStockwerkListe().get(0).getName());
 		assertEquals(sdf.format(belegungsListe.get(0).getDatum()), sdf.format(belegung.getDatum()));
 	}
@@ -119,9 +113,9 @@ public class TestBelegungDatenbank {
 	public void testselectBenutzungsstatistikForDateAndStandort() {
 		belegungsDB.insertBelegung(belegung);
 		
-		Belegung b = belegungsDB.selectBelegungForDateAndStandort(date, standort);
+		Belegung b = belegungsDB.selectBelegungForDateAndStandort(date, StandortEnum.TEST);
 
-		assertEquals(b.getStandort().getName(), belegung.getStandort().getName());
+		assertEquals(b.getStandort(), belegung.getStandort());
 		assertEquals(b.getStockwerkListe().get(0).getName(), belegung.getStockwerkListe().get(0).getName());
 		assertEquals(sdf.format(b.getDatum()), sdf.format(belegung.getDatum()));
 	}

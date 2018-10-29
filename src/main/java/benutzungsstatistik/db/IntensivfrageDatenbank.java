@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -150,20 +151,44 @@ public class IntensivfrageDatenbank {
 	/**
 	 * @return Liste von allen Intensivfragen für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<Intensivfrage> selectAllIntensivfragenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Intensivfragen aus der DB auslesen
-		final IntensivfrageDatenbank intensivfrageDB = new IntensivfrageDatenbank();
-		List<Intensivfrage> intensivfragenListe = intensivfrageDB.selectAllIntensivfragen();
-		final List<Intensivfrage> intensivfragenListeFuerBenutzungsstatistik = new ArrayList<Intensivfrage>();
-		
-		for (final Intensivfrage intensivfrage : intensivfragenListe) {
-			if (intensivfrage.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				intensivfragenListeFuerBenutzungsstatistik.add(intensivfrage);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Intensivfrage> intensivfragenListe = new ArrayList<Intensivfrage>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			String hql = "FROM Intensivfrage T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			intensivfragenListe = query.list();
+			
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
-		
-		return intensivfragenListeFuerBenutzungsstatistik;
+
+		return intensivfragenListe;
 	}
 	
 }

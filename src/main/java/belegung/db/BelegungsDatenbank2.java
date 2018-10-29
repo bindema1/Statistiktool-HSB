@@ -1,23 +1,20 @@
 package belegung.db;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
 import belegung.model.Belegung;
 import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
-import benutzungsstatistik.db.WintikurierDatenbank;
-import benutzungsstatistik.model.Wintikurier;
 
 /**
  * Das ist die DAO-Klasse (Data Access Object) von der Belegung. Man kann damit
@@ -36,8 +33,7 @@ public class BelegungsDatenbank2 {
 	 */
 	public BelegungsDatenbank2() {
 		if (sessionFactory == null) {
-			sessionFactory = new Configuration().configure()
-					.buildSessionFactory();
+			sessionFactory = new Configuration().configure().buildSessionFactory();
 		}
 	}
 
@@ -130,8 +126,7 @@ public class BelegungsDatenbank2 {
 		try {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
-			belegungenListe = tempSession.createQuery("From Belegung")
-					.list();
+			belegungenListe = tempSession.createQuery("From Belegung").list();
 			tempTransaction.commit();
 
 		} catch (final HibernateException ex) {
@@ -154,42 +149,73 @@ public class BelegungsDatenbank2 {
 
 		return belegungenListe;
 	}
-	
+
 	/**
 	 * @return Belegung für ein bestimmtes Datum an einem bestimmten Standort
 	 */
-	public Belegung selectBelegungForDateAndStandort(Date date, Standort standort) {
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	public Belegung selectBelegungForDateAndStandort(Date date, StandortEnum standort) {
 
-		List<Belegung> belegungenListe = selectAllBelegungen();
-		Belegung belegung = null;
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Belegung> belegungenListe = new ArrayList<Belegung>();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		for(Belegung b : belegungenListe) {
-			if(b.getStandort().getName().equals(standort.getName())) {
-				if(sdf.format(b.getDatum()).equals(sdf.format(date))){
-					belegung = b;
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+			String hql = "FROM Belegung B WHERE B.datum = :datum AND B.standort = :standort";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("datum", date);
+			query.setParameter("standort", standort);
+			belegungenListe = query.list();
+
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
 				}
 			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
+			}
 		}
-		
-		//Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
-		if(belegung == null) {
+
+		Belegung belegung = null;
+
+		for (Belegung b : belegungenListe) {
+			belegung = b;
+		}
+
+		// Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
+		if (belegung == null) {
 			belegung = new Belegung(date, standort);
-			
-			if(standort.getName() == StandortEnum.WINTERTHUR_BB) {
-				belegung.addStockwerk(new Stockwerk(StockwerkEnum.EG, false, false, true, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.EG)));
-				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG1, false, false, false, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG1)));
-				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG2, false, false, false, false, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG2)));
-			}else if (standort.getName() == StandortEnum.WINTERTHUR_LL) {
-				belegung.addStockwerk(new Stockwerk(StockwerkEnum.LL, true, true, true, true, new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.LL)));
-			}			
-			
+
+			if (standort == StandortEnum.WINTERTHUR_BB) {
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.EG, false, false, true, false,
+						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.EG)));
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG1, false, false, false, false,
+						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG1)));
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG2, false, false, false, false,
+						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG2)));
+			} else if (standort == StandortEnum.WINTERTHUR_LL) {
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.LL, true, true, true, true,
+						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.LL)));
+			}
+
 			insertBelegung(belegung);
-			System.out.println("Belegung gespeichert "+belegung.getBelegungs_ID());
+			System.out.println("Belegung gespeichert " + belegung.getBelegungs_ID());
 		}
 
 		return belegung;
 	}
 
-	
 }

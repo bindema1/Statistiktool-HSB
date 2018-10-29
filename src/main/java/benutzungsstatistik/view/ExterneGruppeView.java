@@ -26,7 +26,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
@@ -102,7 +101,7 @@ public class ExterneGruppeView {
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
-					new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
+					StandortEnum.WINTERTHUR_BB);
 
 			// Alle Werte anpassen
 			fülleGruppenTabelle();
@@ -161,7 +160,6 @@ public class ExterneGruppeView {
 //			ConfirmDialog dialog = new ConfirmDialog("Meeting starting",
 //	        "Your next meeting starts in 5 minutes", "OK", this::onOK);
 
-
 			externeGruppeBeanListe.remove(clickEvent.getItem());
 
 			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
@@ -175,8 +173,6 @@ public class ExterneGruppeView {
 			}
 
 			tabelle.setItems(externeGruppeBeanListe);
-			
-			
 
 		})).setCaption("Löschfunktion");
 		fülleGruppenTabelle();

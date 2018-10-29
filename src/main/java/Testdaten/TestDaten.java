@@ -5,10 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
+
 import allgemein.db.AngestellterDatenbank;
-import allgemein.db.StandortDatenbank;
 import allgemein.model.Angestellter;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank2;
 import belegung.model.Arbeitsplätze;
@@ -46,14 +47,14 @@ import benutzungsstatistik.model.Wintikurier;
  */
 public class TestDaten {
 
-	Standort standortBB;
-	Standort standortLL;
 	SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 	Date date;
+	Logger logger = LoggerFactory.getLogger(TestDaten.class);
 
 	public TestDaten() {
 		
 		try {
+			logger.info("Testdaten werden eingelesen");
 			initAllgemein();
 			initBenutzungsstatistik();
 			initBelegung();
@@ -67,24 +68,16 @@ public class TestDaten {
 	private void initAllgemein() throws ParseException {
 		
 		AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
-		StandortDatenbank standortDB = new StandortDatenbank();
-		
-		standortBB = new Standort(StandortEnum.WINTERTHUR_BB);
-		standortLL = new Standort(StandortEnum.WINTERTHUR_LL);
-		Standort standortWädi = new Standort(StandortEnum.WÄDENSWIL);
-		standortDB.insertStandort(standortBB);
-		standortDB.insertStandort(standortLL);
-		standortDB.insertStandort(standortWädi);
 
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = sdf2.parse("10.10.2018");
 
-		Angestellter angestellter1 = new Angestellter("Mitarbeiter Winterthur", "123", date, false, standortBB);
+		Angestellter angestellter1 = new Angestellter("Mitarbeiter Winterthur", "123", date, false, StandortEnum.WINTERTHUR_BB);
 		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeiter Winterthur", "123", date, false,
-				standortLL);
-		Angestellter angestellter3 = new Angestellter("Admin Winterthur", "123", date, true, standortBB);
-		Angestellter angestellter4 = new Angestellter("Mitarbeiter Wädenswil", "123", date, false, standortWädi);
-		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", "123", date, true, standortWädi);
+				StandortEnum.WINTERTHUR_LL);
+		Angestellter angestellter3 = new Angestellter("Admin Winterthur", "123", date, true, StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter4 = new Angestellter("Mitarbeiter Wädenswil", "123", date, false, StandortEnum.WÄDENSWIL);
+		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", "123", date, true, StandortEnum.WÄDENSWIL);
 		angestelltenDB.insertAngestellter(angestellter1);
 		angestelltenDB.insertAngestellter(angestellter2);
 		angestelltenDB.insertAngestellter(angestellter3);
@@ -108,7 +101,7 @@ public class TestDaten {
 		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
 		wintikurierDB.insertWintikurier(wintikurier1);
 
-		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, standortBB, wintikurier1);
+		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, wintikurier1);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik1);
 
 //		Timestamp timestamp = new Timestamp(date.getTime());
@@ -215,8 +208,8 @@ public class TestDaten {
 //		date = sdf2.parse("22.10.2018");
 	    date = new Date();
 
-		Belegung belegungBB = new Belegung(date, standortBB);
-		Belegung belegungLL = new Belegung(date, standortLL);
+		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
+		Belegung belegungLL = new Belegung(date, StandortEnum.WINTERTHUR_LL);
 
 		Kapazität kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 12);
 		Kapazität kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0);
@@ -348,27 +341,27 @@ public class TestDaten {
 		belegungDB.insertBelegung(belegungLL);
 		
 		
-		for(Belegung belegung : belegungDB.selectAllBelegungen()) {
-			System.out.println(belegung.getBelegungs_ID());
-			for(Stockwerk stockwerk : belegung.getStockwerkListe()) {
-				System.out.println(stockwerk.getName());
-				for(Arbeitsplätze a : stockwerk.getArbeitsplatzListe()) {
-					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
-				}
-				for(SektorA a : stockwerk.getSektorAListe()) {
-					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
-				}
-				for(SektorB a : stockwerk.getSektorBListe()) {
-					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
-				}
-				for(Gruppenräume a : stockwerk.getGruppenräumeListe()) {
-					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
-				}
-				for(Carrels a : stockwerk.getCarrelsListe()) {
-					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
-				}
-			}
-		}
+//		for(Belegung belegung : belegungDB.selectAllBelegungen()) {
+//			System.out.println(belegung.getBelegungs_ID());
+//			for(Stockwerk stockwerk : belegung.getStockwerkListe()) {
+//				System.out.println(stockwerk.getName());
+//				for(Arbeitsplätze a : stockwerk.getArbeitsplatzListe()) {
+//					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+//				}
+//				for(SektorA a : stockwerk.getSektorAListe()) {
+//					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+//				}
+//				for(SektorB a : stockwerk.getSektorBListe()) {
+//					System.out.println(a.getAnzahlPersonen() + "   " +a.getUhrzeit());
+//				}
+//				for(Gruppenräume a : stockwerk.getGruppenräumeListe()) {
+//					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
+//				}
+//				for(Carrels a : stockwerk.getCarrelsListe()) {
+//					System.out.println(a.getAnzahlPersonen() + "   " +a.getAnzahlRäume() +"   " +a.getUhrzeit());
+//				}
+//			}
+//		}
 	}
 
 	public static void main(String[] args) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -189,20 +190,44 @@ public class ExterneGruppeDatenbank {
 	/**
 	 * @return Liste von allen ExterneGruppen für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<ExterneGruppe> selectAllExterneGruppenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// ExterneGruppe aus der DB auslesen
-		final ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-		List<ExterneGruppe> externeGruppenListe = externeGruppeDB.selectAllExterneGruppen();
-		final List<ExterneGruppe> externeGruppenListeFuerBenutzungsstatistik = new ArrayList<ExterneGruppe>();
-		
-		for (final ExterneGruppe externeGruppe : externeGruppenListe) {
-			if (externeGruppe.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				externeGruppenListeFuerBenutzungsstatistik.add(externeGruppe);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<ExterneGruppe> externeGruppenListe = new ArrayList<ExterneGruppe>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			String hql = "FROM ExterneGruppe T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			externeGruppenListe = query.list();
+			
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
-		
-		return externeGruppenListeFuerBenutzungsstatistik;
+
+		return externeGruppenListe;
 	}
 	
 }

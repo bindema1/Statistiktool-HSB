@@ -1,25 +1,25 @@
 package benutzungsstatistik.db;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
 
 /**
- * Das ist die DAO-Klasse (Data Access Object) von der Benutzungsstatistik. Man kann damit
- * die Tabelle 'Benutzungsstatistik' verwalten. Sie öffnet Connections, schliesst diese
- * wieder und hat alle Funktionen implementiert. (Delete, Insert, Update,
- * Select)
+ * Das ist die DAO-Klasse (Data Access Object) von der Benutzungsstatistik. Man
+ * kann damit die Tabelle 'Benutzungsstatistik' verwalten. Sie öffnet
+ * Connections, schliesst diese wieder und hat alle Funktionen implementiert.
+ * (Delete, Insert, Update, Select)
  * 
  * @author Marvin Bindemann
  */
@@ -32,8 +32,7 @@ public class BenutzungsstatistikDatenbank {
 	 */
 	public BenutzungsstatistikDatenbank() {
 		if (sessionFactory == null) {
-			sessionFactory = new Configuration().configure()
-					.buildSessionFactory();
+			sessionFactory = new Configuration().configure().buildSessionFactory();
 		}
 	}
 
@@ -126,8 +125,7 @@ public class BenutzungsstatistikDatenbank {
 		try {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
-			benutzungsstatistikenListe = tempSession.createQuery("From Benutzungsstatistik")
-					.list();
+			benutzungsstatistikenListe = tempSession.createQuery("From Benutzungsstatistik").list();
 			tempTransaction.commit();
 
 		} catch (final HibernateException ex) {
@@ -150,37 +148,66 @@ public class BenutzungsstatistikDatenbank {
 
 		return benutzungsstatistikenListe;
 	}
-	
+
 	/**
-	 * @return Benutzungsstatistik für ein bestimmtes Datum an einem bestimmten Standort
+	 * @return Benutzungsstatistik für ein bestimmtes Datum an einem bestimmten
+	 *         Standort
 	 */
-	public Benutzungsstatistik selectBenutzungsstatistikForDateAndStandort(Date date, Standort standort) {
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	public Benutzungsstatistik selectBenutzungsstatistikForDateAndStandort(Date date, StandortEnum standort) {
 
-		List<Benutzungsstatistik> benutzungsstatistikenListe = selectAllBenutzungsstatistiken();
-		Benutzungsstatistik benutzungsstatistik = null;
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Benutzungsstatistik> benutzungsstatistikenListe = new ArrayList<Benutzungsstatistik>();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		for(Benutzungsstatistik b : benutzungsstatistikenListe) {
-			if(b.getStandort().getName().equals(standort.getName())) {
-				if(sdf.format(b.getDatum()).equals(sdf.format(date))){
-					benutzungsstatistik = b;
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+			String hql = "FROM Benutzungsstatistik B WHERE B.datum = :datum AND B.standort = :standort";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("datum", date);
+			query.setParameter("standort", standort);
+			benutzungsstatistikenListe = query.list();
+
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
 				}
 			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
+			}
 		}
-		
-		//Falls es keine Benutzungsstatistik für das Datum gibt, erstelle eine Benutzungsstatistik
-		if(benutzungsstatistik == null) {
+
+		Benutzungsstatistik benutzungsstatistik = null;
+
+		for (Benutzungsstatistik b : benutzungsstatistikenListe) {
+			benutzungsstatistik = b;
+		}
+
+		// Falls es keine Benutzungsstatistik für das Datum gibt, erstelle eine
+		// Benutzungsstatistik
+		if (benutzungsstatistik == null) {
 			WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 			Wintikurier wintikurier = new Wintikurier(0, 0, 0, 0);
 			wintikurierDB.insertWintikurier(wintikurier);
-			
+
 			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier);
 			insertBenutzungsstatistik(benutzungsstatistik);
-			System.out.println("Benutzungsstatistik gespeichert "+benutzungsstatistik.getBenutzungsstatistik_ID());
+			System.out.println("Benutzungsstatistik gespeichert " + benutzungsstatistik.getBenutzungsstatistik_ID());
 		}
 
 		return benutzungsstatistik;
 	}
 
-	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -147,20 +148,43 @@ public class BenutzerkontaktDatenbank {
 	/**
 	 * @return Liste von allen Benutzerkontakten für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<Benutzerkontakt> selectAllBenutzerkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
-		// Benutzerkontakt aus der DB auslesen
-		final BenutzerkontaktDatenbank benutzerkontaktDB = new BenutzerkontaktDatenbank();
-		List<Benutzerkontakt> benutzerkontaktenListe = benutzerkontaktDB.selectAllBenutzerkontakte();
-		final List<Benutzerkontakt> benutzerkontaktenListeFuerBenutzungsstatistik = new ArrayList<Benutzerkontakt>();
-		
-		for (final Benutzerkontakt benutzerkontakt : benutzerkontaktenListe) {
-			if (benutzerkontakt.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				benutzerkontaktenListeFuerBenutzungsstatistik.add(benutzerkontakt);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Benutzerkontakt> benutzerkontaktenListe = new ArrayList<Benutzerkontakt>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			String hql = "FROM Benutzerkontakt T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			benutzerkontaktenListe = query.list();
+			
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
-		
-		return benutzerkontaktenListeFuerBenutzungsstatistik;
+
+		return benutzerkontaktenListe;
 	}
 	
 }

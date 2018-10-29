@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -150,20 +151,44 @@ public class TelefonkontaktDatenbank {
 	/**
 	 * @return Liste von allen Telefonkontakten für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<Telefonkontakt> selectAllTelefonkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Telefonkontakt aus der DB auslesen
-		final TelefonkontaktDatenbank telefonkontaktDB = new TelefonkontaktDatenbank();
-		List<Telefonkontakt> telefonkontaktenListe = telefonkontaktDB.selectAllTelefonkontakte();
-		final List<Telefonkontakt> telefonkontaktenListeFuerBenutzungsstatistik = new ArrayList<Telefonkontakt>();
-		
-		for (final Telefonkontakt telefonkontakt : telefonkontaktenListe) {
-			if (telefonkontakt.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				telefonkontaktenListeFuerBenutzungsstatistik.add(telefonkontakt);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Telefonkontakt> telefonkontaktenListe = new ArrayList<Telefonkontakt>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+			
+			String hql = "FROM Telefonkontakt T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			telefonkontaktenListe = query.list();
+
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
 		
-		return telefonkontaktenListeFuerBenutzungsstatistik;
+		return telefonkontaktenListe;
 	}
 	
 }

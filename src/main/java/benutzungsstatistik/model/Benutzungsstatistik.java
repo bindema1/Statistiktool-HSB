@@ -3,7 +3,7 @@ package benutzungsstatistik.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine Benutzungsstatistik in
@@ -17,7 +17,7 @@ public class Benutzungsstatistik implements Serializable {
 	Date datum;
 	int anzahl_Rechercheberatung;
 	boolean kassenbeleg;
-	Standort standort;
+	StandortEnum standort;
 	Wintikurier wintikurier;
 
 	// Für Hibernate
@@ -25,7 +25,7 @@ public class Benutzungsstatistik implements Serializable {
 
 	}
 
-	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, Standort standort,
+	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort,
 			Wintikurier wintikurier) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
@@ -35,7 +35,7 @@ public class Benutzungsstatistik implements Serializable {
 	}
 	
 	//Ohne Wintikurier für Testzwecke
-	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, Standort standort) {
+	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
 		this.kassenbeleg = kassenbeleg;
@@ -58,7 +58,7 @@ public class Benutzungsstatistik implements Serializable {
 		return kassenbeleg;
 	}
 
-	public Standort getStandort() {
+	public StandortEnum getStandort() {
 		return standort;
 	}
 
@@ -83,7 +83,7 @@ public class Benutzungsstatistik implements Serializable {
 		this.kassenbeleg = kassenbeleg;
 	}
 
-	public void setStandort(Standort standort) {
+	public void setStandort(StandortEnum standort) {
 		this.standort = standort;
 	}
 
@@ -96,8 +96,8 @@ public class Benutzungsstatistik implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + anzahl_Rechercheberatung;
-		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
 		result = prime * result + benutzungsstatistik_ID;
+		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
 		result = prime * result + (kassenbeleg ? 1231 : 1237);
 		result = prime * result + ((standort == null) ? 0 : standort.hashCode());
 		result = prime * result + ((wintikurier == null) ? 0 : wintikurier.hashCode());
@@ -115,19 +115,16 @@ public class Benutzungsstatistik implements Serializable {
 		Benutzungsstatistik other = (Benutzungsstatistik) obj;
 		if (anzahl_Rechercheberatung != other.anzahl_Rechercheberatung)
 			return false;
+		if (benutzungsstatistik_ID != other.benutzungsstatistik_ID)
+			return false;
 		if (datum == null) {
 			if (other.datum != null)
 				return false;
 		} else if (!datum.equals(other.datum))
 			return false;
-		if (benutzungsstatistik_ID != other.benutzungsstatistik_ID)
-			return false;
 		if (kassenbeleg != other.kassenbeleg)
 			return false;
-		if (standort == null) {
-			if (other.standort != null)
-				return false;
-		} else if (!standort.equals(other.standort))
+		if (standort != other.standort)
 			return false;
 		if (wintikurier == null) {
 			if (other.wintikurier != null)
@@ -137,4 +134,5 @@ public class Benutzungsstatistik implements Serializable {
 		return true;
 	}
 
+	
 }

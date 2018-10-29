@@ -1,5 +1,7 @@
 package allgemein.view;
 
+import java.util.Date;
+
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -10,7 +12,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import Testdaten.TestDaten;
-import belegung.db.BelegungsDatenbank2;
 import belegung.model.StockwerkEnum;
 import belegung.view.TagesübersichtBelegungView;
 import benutzungsstatistik.view.BenutzungsstatistikView;
@@ -89,7 +90,7 @@ public class StartseiteView {
 				}
 
 				if (e.getSource() == bBelegung) {
-					mainView.setContent(new TagesübersichtBelegungView(new BelegungsDatenbank2().selectAllBelegungen().get(0), StockwerkEnum.EG).init(mainView));
+					mainView.setContent(new TagesübersichtBelegungView(new Date(), StockwerkEnum.EG).init(mainView));
 				}
 
 			}

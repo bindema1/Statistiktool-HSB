@@ -10,11 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
-import benutzungsstatistik.db.BeantwortungBibliothekspersonalDatenbank;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
 import benutzungsstatistik.model.Benutzungsstatistik;
 
@@ -27,14 +23,11 @@ public class TestBeantwortungBibliothekspersonalDatenbank {
 
 	BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
 	BeantwortungBibliothekspersonal beantwortungBibliothekspersonal;
-	StandortDatenbank standortDB = new StandortDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.TEST);
-		standortDB.insertStandort(standort);
-		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort);
+		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 		
 		beantwortungBibliothekspersonal = new BeantwortungBibliothekspersonal(Timestamp.valueOf("2018-10-10 10:10:10.0"), benutzungsstatistik);

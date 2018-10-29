@@ -9,13 +9,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.StandortDatenbank;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
-import benutzungsstatistik.db.ExterneGruppeDatenbank;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Benutzungsstatistik;
+import benutzungsstatistik.model.ExterneGruppe;
 
 /**
  * Testet alle Methoden der ExterneGruppeDatenbank
@@ -26,14 +22,11 @@ public class TestExterneGruppeDatenbank {
 
 	ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
 	ExterneGruppe externeGruppe;
-	StandortDatenbank standortDB = new StandortDatenbank();
 	BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
 	@Before
 	public void initComponents() {
-		Standort standort = new Standort(StandortEnum.TEST);
-		standortDB.insertStandort(standort);
-		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, standort);
+		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 
 		externeGruppe = new ExterneGruppe("Test Gruppe", 10, benutzungsstatistik);

@@ -31,7 +31,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
-import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.db.BenutzerkontaktDatenbank;
@@ -350,9 +349,10 @@ public class KorrekturView implements Serializable {
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
-			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
-			
-			//Alle Werte anpassen
+			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date,
+					StandortEnum.WINTERTHUR_BB);
+
+			// Alle Werte anpassen
 			if (benutzungsstatistik.isKassenbeleg()) {
 				kassenbeleg.setValue(true);
 			} else {
@@ -373,7 +373,7 @@ public class KorrekturView implements Serializable {
 			lIntensivFrage.setValue("0");
 			lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
 		});
-		
+
 		GridLayout grid = new GridLayout(5, 8);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();

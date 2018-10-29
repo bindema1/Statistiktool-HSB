@@ -45,17 +45,16 @@ import belegung.model.StockwerkEnum;
 import belegung.model.UhrzeitEnum;
 
 /**
- * View der Tagesübersicht. Zeigt alle Button, Label, Felder etc. in einem
- * Layout an.
+ * View der Belegung. Zeigt alle Button, Label, Felder etc. in einem Layout an.
  * 
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtBelegungView {
+public class BelegungErfassenView {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
-	private Button bErfassung;
+	private Button bTagesübersicht;
 	private Button bLL;
 	private Button b1ZG;
 	private Button b2ZG;
@@ -65,6 +64,7 @@ public class TagesübersichtBelegungView {
 	private Date date;
 	private BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
 	private Image image;
+	private int stockwerkzaehler = 0;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -84,14 +84,14 @@ public class TagesübersichtBelegungView {
 		return absolutLayout;
 	}
 
-	public TagesübersichtBelegungView(Date date, StockwerkEnum stockwerkenum) {
-		
-		if(stockwerkenum == StockwerkEnum.LL) {
+	public BelegungErfassenView(StockwerkEnum stockwerkenum) {
+
+		if (stockwerkenum == StockwerkEnum.LL) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL);
-		}else {
+		} else {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
 		}
-		
+
 		this.stockwerkEnum = stockwerkenum;
 	}
 
@@ -111,28 +111,10 @@ public class TagesübersichtBelegungView {
 		lText.setValue("Tagesübersicht Belegung vom ");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		bErfassung = new Button();
-		bErfassung.setCaption("Erfassung");
-		bErfassung.addStyleName(ValoTheme.BUTTON_LARGE);
-		bErfassung.addClickListener(createClickListener(mainView));
-
-		Grid<TagesübersichtBelegungBean> tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorA).setCaption("Sektor A");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorB).setCaption("Sektor B");
-		Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
-		Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
-		Column<TagesübersichtBelegungBean, ?> carrelColumn1 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getCarrelsPersonen).setCaption("Personen");
-		Column<TagesübersichtBelegungBean, ?> carrelColumn2 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getCarrels).setCaption("Räume");
-		HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
-		second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
-		second.join(carrelColumn1, carrelColumn2).setText("Carrels");
-		fülleTabelleUhrzeiten(tabelleUhrzeiten);
+		bTagesübersicht = new Button();
+		bTagesübersicht.setCaption("Tagesübersicht");
+		bTagesübersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bTagesübersicht.addClickListener(createClickListener(mainView));
 
 		DateTimeField datefield = new DateTimeField();
 		datefield.setValue(
@@ -153,7 +135,7 @@ public class TagesübersichtBelegungView {
 			}
 
 			// Alle Werte anpassen
-			fülleTabelleUhrzeiten(tabelleUhrzeiten);
+
 		});
 
 		bLL = new Button();
@@ -195,9 +177,8 @@ public class TagesübersichtBelegungView {
 		headerLayout.addComponent(bZurueck);
 		headerLayout.addComponent(lText);
 		headerLayout.addComponent(datefield);
-		headerLayout.addComponent(bErfassung);
+		headerLayout.addComponent(bTagesübersicht);
 		overallLayout.addComponent(headerLayout);
-		overallLayout.addComponent(tabelleUhrzeiten);
 
 		GridLayout grid = new GridLayout(2, 4);
 		grid.setSizeFull();
@@ -232,92 +213,6 @@ public class TagesübersichtBelegungView {
 		mainLayout.addComponent(overallLayout);
 	}
 
-	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
-
-		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
-		List<UhrzeitEnum> enumListe = new ArrayList<>();
-		enumListe.add(UhrzeitEnum.NEUN);
-		enumListe.add(UhrzeitEnum.ELF);
-		enumListe.add(UhrzeitEnum.DREIZEHN);
-		enumListe.add(UhrzeitEnum.FÜNFZEHN);
-		enumListe.add(UhrzeitEnum.SIEBZEHN);
-		enumListe.add(UhrzeitEnum.NEUNZEHN);
-
-		Stockwerk stockwerk = null;
-		for (Stockwerk s : belegung.getStockwerkListe()) {
-			if (s.getName() == stockwerkEnum) {
-				stockwerk = s;
-			}
-		}
-
-		for (UhrzeitEnum uhrzeitEnum : enumListe) {
-
-			TagesübersichtBelegungBean t = new TagesübersichtBelegungBean();
-			String uhrzeitEnumString = "";
-
-			switch (uhrzeitEnum) {
-			case NEUN:
-				uhrzeitEnumString = 9 + "";
-				break;
-			case ELF:
-				uhrzeitEnumString = 11 + "";
-				break;
-			case DREIZEHN:
-				uhrzeitEnumString = 13 + "";
-				break;
-			case FÜNFZEHN:
-				uhrzeitEnumString = 15 + "";
-				break;
-			case SIEBZEHN:
-				uhrzeitEnumString = 17 + "";
-				break;
-			case NEUNZEHN:
-				uhrzeitEnumString = 19 + "";
-				break;
-			}
-			uhrzeitEnumString = uhrzeitEnumString + " Uhr";
-			t.setUhrzeit(uhrzeitEnumString);
-
-			for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
-				if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
-					t.setArbeitsplätze(arbeitsplätze.getAnzahlPersonen());
-				}
-			}
-
-			for (SektorA sektorA : stockwerk.getSektorAListe()) {
-				if (uhrzeitEnum == sektorA.getUhrzeit()) {
-					t.setSektorA(sektorA.getAnzahlPersonen());
-				}
-			}
-
-			for (SektorB sektorB : stockwerk.getSektorBListe()) {
-				if (uhrzeitEnum == sektorB.getUhrzeit()) {
-					t.setSektorB(sektorB.getAnzahlPersonen());
-				}
-			}
-
-			for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
-				if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
-					t.setGruppenräume(gruppenräume.getAnzahlRäume());
-					t.setGruppenräumePersonen(gruppenräume.getAnzahlPersonen());
-				}
-			}
-
-			for (Carrels carrels : stockwerk.getCarrelsListe()) {
-				if (uhrzeitEnum == carrels.getUhrzeit()) {
-					t.setCarrels(carrels.getAnzahlRäume());
-					t.setCarrelsPersonen(carrels.getAnzahlPersonen());
-				}
-			}
-
-			beanListe.add(t);
-		}
-
-		tabelleUhrzeiten.setWidth("100%");
-		tabelleUhrzeiten.setHeightByRows(beanListe.size());
-		tabelleUhrzeiten.setItems(beanListe);
-	}
-
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
@@ -328,24 +223,37 @@ public class TagesübersichtBelegungView {
 					mainView.setContent(new StartseiteView().init(mainView));
 				}
 
-				if (e.getSource() == bErfassung) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG).init(mainView));
+				if (e.getSource() == bTagesübersicht) {
+					switch (stockwerkzaehler) {
+					case 0:
+						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
+						break;
+					case 1:
+						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
+						break;
+					case 2:
+						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
+						break;
+					case 3:
+						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
+						break;
+					}
 				}
 
 				if (e.getSource() == bLL) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
+					stockwerkzaehler = 3;
 				}
 
 				if (e.getSource() == b2ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
+					stockwerkzaehler = 2;
 				}
 
 				if (e.getSource() == b1ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
+					stockwerkzaehler = 1;
 				}
 
 				if (e.getSource() == bEG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
+					stockwerkzaehler = 0;
 				}
 
 			}

@@ -16,14 +16,14 @@ public class Angestellter implements Serializable {
 	String passwort;
 	Date passwort_datum;
 	boolean rechteAdmin;
-	Standort standort;
+	StandortEnum standort;
 
 	// Für Hibernate
 	public Angestellter(){
 				
 	}
 
-	public Angestellter(String name, String passwort, Date passwort_datum, boolean rechteAdmin, Standort standort) {
+	public Angestellter(String name, String passwort, Date passwort_datum, boolean rechteAdmin, StandortEnum standort) {
 		this.name = name;
 		this.passwort = passwort;
 		this.passwort_datum = passwort_datum;
@@ -51,7 +51,7 @@ public class Angestellter implements Serializable {
 		return rechteAdmin;
 	}
 
-	public Standort getStandort() {
+	public StandortEnum getStandort() {
 		return standort;
 	}
 	
@@ -76,7 +76,7 @@ public class Angestellter implements Serializable {
 		this.rechteAdmin = rechteAdmin;
 	}
 
-	public void setStandort(Standort standort) {
+	public void setStandort(StandortEnum standort) {
 		this.standort = standort;
 	}
 
@@ -121,12 +121,10 @@ public class Angestellter implements Serializable {
 			return false;
 		if (rechteAdmin != other.rechteAdmin)
 			return false;
-		if (standort == null) {
-			if (other.standort != null)
-				return false;
-		} else if (!standort.equals(other.standort))
+		if (standort != other.standort)
 			return false;
 		return true;
 	}
+
 
 }

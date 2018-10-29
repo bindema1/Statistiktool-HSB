@@ -13,6 +13,10 @@ package allgemein.model;
  */
 public enum StandortEnum {
 
-	WINTERTHUR_BB, WINTERTHUR_LL, WÄDENSWIL, TEST
+	WINTERTHUR_BB, WINTERTHUR_LL, WÄDENSWIL, TEST;
 	
+	@Override
+	public String toString() {
+		return name().toUpperCase();
+	}
 }

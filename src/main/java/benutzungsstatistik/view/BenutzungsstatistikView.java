@@ -21,7 +21,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
-import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
@@ -89,7 +88,7 @@ public class BenutzungsstatistikView {
 	}
 
 	private void initData() {
-		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
+		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
 	}
 
 	// Initialisieren der GUI Komponente

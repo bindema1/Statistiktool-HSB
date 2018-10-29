@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -150,20 +151,44 @@ public class EmailkontaktDatenbank {
 	/**
 	 * @return Liste von allen Emailkontakten für eine Benutzungsstatistik
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public List<Emailkontakt> selectAllEmailkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Emailkontakte aus der DB auslesen
-		final EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-		List<Emailkontakt> emailkontaktenListe = emailKontaktDB.selectAllEmailkontakte();
-		final List<Emailkontakt> emailkontaktenListeFuerBenutzungsstatistik = new ArrayList<Emailkontakt>();
-		
-		for (final Emailkontakt emailkontakt : emailkontaktenListe) {
-			if (emailkontakt.getBenutzungsstatistik().getBenutzungsstatistik_ID() == benutzungsstatistik_ID) {
-				emailkontaktenListeFuerBenutzungsstatistik.add(emailkontakt);
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Emailkontakt> emailkontaktenListe = new ArrayList<Emailkontakt>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			String hql = "FROM Emailkontakt T WHERE T.benutzungsstatistik.id = :id";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("id", benutzungsstatistik_ID);
+			emailkontaktenListe = query.list();
+			
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
 			}
 		}
-		
-		return emailkontaktenListeFuerBenutzungsstatistik;
+
+		return emailkontaktenListe;
 	}
 	
 }

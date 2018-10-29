@@ -10,10 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import allgemein.db.AngestellterDatenbank;
-import allgemein.db.StandortDatenbank;
 import allgemein.model.Angestellter;
-import allgemein.model.Standort;
 import allgemein.model.StandortEnum;
 /**
  * Testet alle Methoden der AngestellterDatenbank
@@ -24,15 +21,12 @@ public class TestAngestellterDatenbank {
 
 	AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
 	Angestellter angestellter;
-	Standort standort = new Standort(StandortEnum.TEST);
-	StandortDatenbank standortDB = new StandortDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Before
 	public void initComponents() {
 		Date date = new Date();
-		standortDB.insertStandort(standort);
-		angestellter = new Angestellter("Hans Müller", "123", date, true, standortDB.selectAllStandorte().get(0));
+		angestellter = new Angestellter("Hans Müller", "123", date, true, StandortEnum.TEST);
 	}
 
 	@Test
@@ -50,7 +44,7 @@ public class TestAngestellterDatenbank {
 		assertEquals(angestellterListe.get(0).getName(), angestellter.getName());
 		assertEquals(angestellterListe.get(0).getPasswort(), angestellter.getPasswort());
 		assertEquals(sdf.format(angestellterListe.get(0).getPasswort_datum()), sdf.format(angestellter.getPasswort_datum()));
-		assertEquals(angestellterListe.get(0).getStandort().getStandort_ID(), angestellter.getStandort().getStandort_ID());
+		assertEquals(angestellterListe.get(0).getStandort(), angestellter.getStandort());
 	}
 	
 	@Test

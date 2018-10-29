@@ -20,8 +20,11 @@
 		<property name="kassenbeleg" column="Kassenbeleg" not-null="true"
 			type="boolean" />
 			
-		<many-to-one name="standort" column="Standort_ID" not-null="true"
-			class="allgemein.model.Standort" />
+		<property name="standort" column="Standort_Name" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">allgemein.model.StandortEnum</param>
+			</type>
+		</property>
 			
 		<one-to-one name="wintikurier" class="benutzungsstatistik.model.Wintikurier" 
 			cascade="save-update"></one-to-one>

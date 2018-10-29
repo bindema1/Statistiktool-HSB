@@ -7,18 +7,19 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import allgemein.model.Standort;
+import allgemein.model.StandortEnum;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine Belegung in
@@ -38,8 +39,8 @@ public class Belegung {
 	@Temporal(TemporalType.DATE)
 	private Date datum;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	private Standort standort;
+	@Enumerated(EnumType.STRING)
+	private StandortEnum standort;
 	
 	@ManyToMany(cascade = CascadeType.ALL, targetEntity=Stockwerk.class)
 	@JoinTable(name = "Belegung_Stockwerk", joinColumns = @JoinColumn(name = "belegungs_ID"), inverseJoinColumns = @JoinColumn(name = "stockwerk_ID"))
@@ -50,7 +51,7 @@ public class Belegung {
 		
 	}
 	
-	public Belegung(Date datum, Standort standort) {
+	public Belegung(Date datum, StandortEnum standort) {
 		this.datum = datum;
 		this.standort = standort;
 	}
@@ -63,7 +64,7 @@ public class Belegung {
 		return datum;
 	}
 
-	public Standort getStandort() {
+	public StandortEnum getStandort() {
 		return standort;
 	}
 	
@@ -89,7 +90,7 @@ public class Belegung {
 		this.datum = datum;
 	}
 
-	public void setStandort(Standort standort) {
+	public void setStandort(StandortEnum standort) {
 		this.standort = standort;
 	}
 
@@ -123,10 +124,7 @@ public class Belegung {
 				return false;
 		} else if (!datum.equals(other.datum))
 			return false;
-		if (standort == null) {
-			if (other.standort != null)
-				return false;
-		} else if (!standort.equals(other.standort))
+		if (standort != other.standort)
 			return false;
 		if (stockwerkListe == null) {
 			if (other.stockwerkListe != null)
@@ -136,5 +134,4 @@ public class Belegung {
 		return true;
 	}
 
-	
 }

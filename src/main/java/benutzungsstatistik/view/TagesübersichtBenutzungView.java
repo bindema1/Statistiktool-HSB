@@ -25,7 +25,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import allgemein.db.StandortDatenbank;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
@@ -86,7 +85,7 @@ public class TagesübersichtBenutzungView {
 
 	// Initialisieren der GUI Komponente
 	private void initComponents(MainView mainView) {
-		
+
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
@@ -94,36 +93,36 @@ public class TagesübersichtBenutzungView {
 
 		Label lText = new Label();
 		lText.setValue("Tagesübersicht Belegungsstatistik vom ");
-		lText.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
+		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.addClickListener(createClickListener(mainView));
-		
+
 		Label lKassenbeleg = new Label();
 		lKassenbeleg.setValue("Kassenbeleg");
-		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
+		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+
 		Switch kassenbeleg = new Switch();
 		kassenbeleg.setEnabled(false);
-		if(benutzungsstatistik.isKassenbeleg()) {
+		if (benutzungsstatistik.isKassenbeleg()) {
 			kassenbeleg.setValue(true);
-		}else {
+		} else {
 			kassenbeleg.setValue(false);
 		}
-		
+
 		Label lRechercheberatung = new Label();
-		lRechercheberatung.setValue("Rechercheberatung: " +benutzungsstatistik.getAnzahl_Rechercheberatung());
-		lRechercheberatung.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
+		lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
+		lRechercheberatung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+
 		Label lWintikurier = new Label();
 		lWintikurier.setValue("Wintikurier");
-		lWintikurier.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
+		lWintikurier.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+
 		Label lGruppen = new Label();
 		lGruppen.setValue("Gruppen");
-		lGruppen.addStyleName(ValoTheme.LABEL_LARGE +" " +ValoTheme.LABEL_BOLD);
-		
+		lGruppen.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+
 		Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten = new Grid<TagesübersichtBenutzungBean>();
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getUhrzeit).setCaption("Uhrzeit");
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getKontakt).setCaption("Benutzer");
@@ -131,54 +130,55 @@ public class TagesübersichtBenutzungView {
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getEmail).setCaption("Email");
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getTelefon).setCaption("Telefon");
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
-		
+
 		Grid<WintikurierBean> tabelleWintikurier = new Grid<WintikurierBean>();
 		tabelleWintikurier.addColumn(WintikurierBean::getDepartment).setCaption("Department");
 		tabelleWintikurier.addColumn(WintikurierBean::getAnzahl).setCaption("Anzahl");
 		fülleTabelleWintikurier(tabelleWintikurier);
-		
+
 		Grid<ExterneGruppeBean> tabelleGruppen = new Grid<ExterneGruppeBean>();
 		tabelleGruppen.addColumn(ExterneGruppeBean::getName).setCaption("Name").setId("GruppenName");
 		tabelleGruppen.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Personen");
 		fülleTabelleGruppen(tabelleGruppen);
-		
+
 		DateTimeField datefield = new DateTimeField();
 		datefield.setValue(LocalDateTime.now());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
-			
+
 			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
-			
-			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date, new StandortDatenbank().getStandort(StandortEnum.WINTERTHUR_BB));
-			
-			//Alle Werte anpassen
+
+			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
+					StandortEnum.WINTERTHUR_BB);
+
+			// Alle Werte anpassen
 			fülleTabelleGruppen(tabelleGruppen);
 			fülleTabelleUhrzeiten(tabelleUhrzeiten);
 			fülleTabelleWintikurier(tabelleWintikurier);
-			if(benutzungsstatistik.isKassenbeleg()) {
+			if (benutzungsstatistik.isKassenbeleg()) {
 				kassenbeleg.setValue(true);
-			}else {
+			} else {
 				kassenbeleg.setValue(false);
 			}
-			lRechercheberatung.setValue("Rechercheberatung: " +benutzungsstatistik.getAnzahl_Rechercheberatung());
+			lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
 		});
-		
+
 		VerticalLayout overallLayout = new VerticalLayout();
 		overallLayout.setSpacing(true);
-		
+
 		HorizontalLayout headerLayout = new HorizontalLayout();
 		headerLayout.addComponent(bZurueck);
 		headerLayout.addComponent(lText);
 		headerLayout.addComponent(datefield);
 		headerLayout.addComponent(bKorrektur);
 		overallLayout.addComponent(headerLayout);
-		
+
 		HorizontalLayout contentLayout = new HorizontalLayout();
 		overallLayout.addComponent(contentLayout);
 		contentLayout.addComponent(tabelleUhrzeiten);
-		
+
 		VerticalLayout rightLayout = new VerticalLayout();
 		rightLayout.setSizeUndefined();
 		rightLayout.addComponent(lRechercheberatung);
@@ -192,10 +192,9 @@ public class TagesübersichtBenutzungView {
 		rightLayout.addComponent(tabelleGruppen);
 		rightLayout.setSpacing(true);
 		contentLayout.addComponent(rightLayout);
-		
 
 		mainLayout.addComponent(overallLayout);
-		
+
 //		GridLayout grid = new GridLayout(6, 12);
 //		grid.addStyleName("gridlayout");
 //		grid.setSizeFull();
@@ -277,7 +276,7 @@ public class TagesübersichtBenutzungView {
 		tabelleGruppen.setWidth("400px");
 		if (externeGruppeBeanListe.size() >= 4) {
 			tabelleGruppen.setHeight("150px");
-		} else if(externeGruppeBeanListe.size() > 0){
+		} else if (externeGruppeBeanListe.size() > 0) {
 			tabelleGruppen.setHeightByRows(externeGruppeBeanListe.size());
 		} else {
 			tabelleGruppen.setHeight("85px");
