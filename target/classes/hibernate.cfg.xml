@@ -5,7 +5,7 @@
 <hibernate-configuration>
 	<session-factory>
 		
-		<!-- HsqlDB lokale Datenbank 
+		<!-- HsqlDB lokale Datenbank -->
 	    <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
 	  	<property name="connection.url">jdbc:hsqldb:mem:testdb</property>
 		<property name="connection.username">sa</property>
@@ -15,9 +15,9 @@
 		<property name="connection.pool_size">2</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.jdbc.batch_size">0</property>
-		<property name="hibernate.enable_lazy_load_no_trans">true</property>-->
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>
 
-		<!-- MYSQL Server/Workbench-->
+		<!-- MYSQL Server/Workbench
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 	  	<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool</property>
 		<property name="connection.username">root</property>
@@ -27,7 +27,7 @@
 		<property name="connection.pool_size">10</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.jdbc.batch_size">0</property>
-		<property name="hibernate.enable_lazy_load_no_trans">true</property> 
+		<property name="hibernate.enable_lazy_load_no_trans">true</property> -->
 		
 		<!-- Nur Unidirectional Associations -->
 		<mapping resource="Angestellter.hbm.xml"></mapping>

@@ -1,7 +1,6 @@
 package allgemein.view;
 
-import java.util.Date;
-
+import com.vaadin.navigator.View;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -13,15 +12,14 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import Testdaten.TestDaten;
 import belegung.model.StockwerkEnum;
-import belegung.view.TagesübersichtBelegungView;
-import benutzungsstatistik.view.BenutzungsstatistikView;
+import belegung.view.BelegungErfassenView;
+import benutzungsstatistik.view.BenutzungsstatistikBBView;
 
-public class StartseiteView {
+public class StartseiteView implements View{
 
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistik;
 	private Button bBelegung;
-	private TestDaten testdaten;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -42,7 +40,7 @@ public class StartseiteView {
 	}
 	
 	public StartseiteView() {
-		this.testdaten = new TestDaten();
+		new TestDaten();
 	}
 
 	private void initData() {
@@ -86,11 +84,11 @@ public class StartseiteView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bBenutzungsstatistik) {
-					mainView.setContent(new BenutzungsstatistikView().init(mainView));
+					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
 				}
 
 				if (e.getSource() == bBelegung) {
-					mainView.setContent(new TagesübersichtBelegungView(new Date(), StockwerkEnum.EG).init(mainView));
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false).init(mainView));
 				}
 
 			}

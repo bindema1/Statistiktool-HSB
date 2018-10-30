@@ -56,6 +56,7 @@ public class TagesübersichtBelegungView {
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bErfassung;
+	private Button bKorrektur;
 	private Button bLL;
 	private Button b1ZG;
 	private Button b2ZG;
@@ -85,13 +86,13 @@ public class TagesübersichtBelegungView {
 	}
 
 	public TagesübersichtBelegungView(Date date, StockwerkEnum stockwerkenum) {
-		
-		if(stockwerkenum == StockwerkEnum.LL) {
+
+		if (stockwerkenum == StockwerkEnum.LL) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL);
-		}else {
+		} else {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
 		}
-		
+
 		this.stockwerkEnum = stockwerkenum;
 	}
 
@@ -116,22 +117,12 @@ public class TagesübersichtBelegungView {
 		bErfassung.addStyleName(ValoTheme.BUTTON_LARGE);
 		bErfassung.addClickListener(createClickListener(mainView));
 
+		bKorrektur = new Button();
+		bKorrektur.setCaption("Korrektur");
+		bKorrektur.addStyleName(ValoTheme.BUTTON_LARGE);
+		bKorrektur.addClickListener(createClickListener(mainView));
+
 		Grid<TagesübersichtBelegungBean> tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorA).setCaption("Sektor A");
-		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorB).setCaption("Sektor B");
-		Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
-		Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
-		Column<TagesübersichtBelegungBean, ?> carrelColumn1 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getCarrelsPersonen).setCaption("Personen");
-		Column<TagesübersichtBelegungBean, ?> carrelColumn2 = tabelleUhrzeiten
-				.addColumn(TagesübersichtBelegungBean::getCarrels).setCaption("Räume");
-		HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
-		second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
-		second.join(carrelColumn1, carrelColumn2).setText("Carrels");
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
 
 		DateTimeField datefield = new DateTimeField();
@@ -192,10 +183,12 @@ public class TagesübersichtBelegungView {
 
 		HorizontalLayout headerLayout = new HorizontalLayout();
 		headerLayout.setWidth("100%");
+		headerLayout.setSpacing(true);
 		headerLayout.addComponent(bZurueck);
 		headerLayout.addComponent(lText);
 		headerLayout.addComponent(datefield);
 		headerLayout.addComponent(bErfassung);
+		headerLayout.addComponent(bKorrektur);
 		overallLayout.addComponent(headerLayout);
 		overallLayout.addComponent(tabelleUhrzeiten);
 
@@ -233,6 +226,35 @@ public class TagesübersichtBelegungView {
 	}
 
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
+
+		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
+		if (stockwerkEnum == StockwerkEnum.LL) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorA).setCaption("Sektor A");
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorB).setCaption("Sektor B");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
+			Column<TagesübersichtBelegungBean, ?> carrelColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getCarrelsPersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> carrelColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getCarrels).setCaption("Räume");
+			HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
+			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
+			second.join(carrelColumn1, carrelColumn2).setText("Carrels");
+			
+		} else if (stockwerkEnum == StockwerkEnum.ZG1 || stockwerkEnum == StockwerkEnum.ZG2) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
+			
+		} else if (stockwerkEnum == StockwerkEnum.EG) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
+			HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
+			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
+		}
 
 		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
 		List<UhrzeitEnum> enumListe = new ArrayList<>();
@@ -324,12 +346,15 @@ public class TagesübersichtBelegungView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					Notification.show("Zurück", Type.WARNING_MESSAGE);
 					mainView.setContent(new StartseiteView().init(mainView));
 				}
 
 				if (e.getSource() == bErfassung) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG).init(mainView));
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false).init(mainView));
+				}
+
+				if (e.getSource() == bKorrektur) {
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, true).init(mainView));
 				}
 
 				if (e.getSource() == bLL) {

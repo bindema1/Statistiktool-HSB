@@ -351,7 +351,7 @@ public class TagesübersichtBenutzungView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikView().init(mainView));
+					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
 				}
 
 				if (e.getSource() == bKorrektur) {

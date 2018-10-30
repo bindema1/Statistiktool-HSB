@@ -1,14 +1,14 @@
 package belegung.view;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -17,8 +17,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateTimeField;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -26,23 +24,14 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
-import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank2;
-import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
-import belegung.model.Carrels;
-import belegung.model.Gruppenräume;
-import belegung.model.SektorA;
-import belegung.model.SektorB;
-import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
-import belegung.model.UhrzeitEnum;
 
 /**
  * View der Belegung. Zeigt alle Button, Label, Felder etc. in einem Layout an.
@@ -50,7 +39,7 @@ import belegung.model.UhrzeitEnum;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class BelegungErfassenView {
+public class BelegungErfassenView implements View{
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
@@ -59,6 +48,7 @@ public class BelegungErfassenView {
 	private Button b1ZG;
 	private Button b2ZG;
 	private Button bEG;
+	private boolean korrektur;
 	private Belegung belegung;
 	private StockwerkEnum stockwerkEnum;
 	private Date date;
@@ -84,7 +74,7 @@ public class BelegungErfassenView {
 		return absolutLayout;
 	}
 
-	public BelegungErfassenView(StockwerkEnum stockwerkenum) {
+	public BelegungErfassenView(StockwerkEnum stockwerkenum, boolean korrektur) {
 
 		if (stockwerkenum == StockwerkEnum.LL) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL);
@@ -93,6 +83,7 @@ public class BelegungErfassenView {
 		}
 
 		this.stockwerkEnum = stockwerkenum;
+		this.korrektur = korrektur;
 	}
 
 	private void initData() {
@@ -108,7 +99,11 @@ public class BelegungErfassenView {
 		bZurueck.addClickListener(createClickListener(mainView));
 
 		Label lText = new Label();
-		lText.setValue("Tagesübersicht Belegung vom ");
+		if(korrektur == true) {
+			lText.setValue("Belegung erfassen vom ");
+		}else {
+			lText.setValue("Belegung erfassen vom " + new SimpleDateFormat("dd.MM.yyyy").format(belegung.getDatum()));
+		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		bTagesübersicht = new Button();
@@ -176,7 +171,9 @@ public class BelegungErfassenView {
 		headerLayout.setWidth("100%");
 		headerLayout.addComponent(bZurueck);
 		headerLayout.addComponent(lText);
-		headerLayout.addComponent(datefield);
+		if(korrektur == true) {
+			headerLayout.addComponent(datefield);
+		}
 		headerLayout.addComponent(bTagesübersicht);
 		overallLayout.addComponent(headerLayout);
 
@@ -219,25 +216,15 @@ public class BelegungErfassenView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					Notification.show("Zurück", Type.WARNING_MESSAGE);
-					mainView.setContent(new StartseiteView().init(mainView));
+					if(korrektur == true) {
+						leiteZurTagesübersichtFürStockwerk(mainView);
+					}else {
+						mainView.setContent(new StartseiteView().init(mainView));
+					}
 				}
 
 				if (e.getSource() == bTagesübersicht) {
-					switch (stockwerkzaehler) {
-					case 0:
-						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
-						break;
-					case 1:
-						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
-						break;
-					case 2:
-						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
-						break;
-					case 3:
-						mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
-						break;
-					}
+					leiteZurTagesübersichtFürStockwerk(mainView);
 				}
 
 				if (e.getSource() == bLL) {
@@ -256,6 +243,23 @@ public class BelegungErfassenView {
 					stockwerkzaehler = 0;
 				}
 
+			}
+
+			private void leiteZurTagesübersichtFürStockwerk(final MainView mainView) {
+				switch (stockwerkzaehler) {
+				case 0:
+					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
+					break;
+				case 1:
+					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
+					break;
+				case 2:
+					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
+					break;
+				case 3:
+					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
+					break;
+				}
 			}
 		};
 

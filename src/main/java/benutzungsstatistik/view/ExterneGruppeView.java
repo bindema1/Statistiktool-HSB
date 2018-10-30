@@ -1,6 +1,7 @@
 package benutzungsstatistik.view;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ExterneGruppeView {
 	private Button bSpeichern;
 	private TextField tName;
 	private TextField tPersonenzahl;
+	private boolean korrektur;
 	private Grid<ExterneGruppeBean> tabelle;
 	private List<ExterneGruppeBean> externeGruppeBeanListe;
 	private Benutzungsstatistik benutzungsstatistik;
@@ -71,8 +73,9 @@ public class ExterneGruppeView {
 		return absolutLayout;
 	}
 
-	public ExterneGruppeView(Benutzungsstatistik benutzungsstatistik) {
+	public ExterneGruppeView(Benutzungsstatistik benutzungsstatistik, boolean korrektur) {
 		this.benutzungsstatistik = benutzungsstatistik;
+		this.korrektur = korrektur;
 	}
 
 	private void initData() {
@@ -89,11 +92,15 @@ public class ExterneGruppeView {
 		bZurueck.addClickListener(createClickListener(mainView));
 
 		Label lText = new Label();
-		lText.setValue("Externe Gruppen erfassen vom ");
+		if(korrektur == true) {
+			lText.setValue("Externe Gruppen erfassen vom ");
+		}else {
+			lText.setValue("Externe Gruppen erfassen vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
+		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
@@ -181,8 +188,12 @@ public class ExterneGruppeView {
 		grid.setSizeFull();
 		grid.setSpacing(true);
 		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 2, 0);
-		grid.addComponent(datefield, 3, 0, 4, 0);
+		if(korrektur == true) {
+			grid.addComponent(lText, 1, 0, 2, 0);
+			grid.addComponent(datefield, 3, 0, 4, 0);
+		}else {
+			grid.addComponent(lText, 1, 0, 4, 0);
+		}
 		grid.addComponent(tName, 0, 1, 2, 1);
 		grid.addComponent(tPersonenzahl, 3, 1, 4, 1);
 		grid.addComponent(lBeschreibung, 0, 2, 2, 2);
@@ -197,8 +208,10 @@ public class ExterneGruppeView {
 
 				// Button grösser machen
 				if (row == 0) {
-					if (col == 1 || col == 2 || col == 3) {
-						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
+					if(korrektur == true) {
+						if (col == 1 || col == 2 || col == 3) {
+							grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
+						}
 					}
 				} else if (row >= 3) {
 					c.setHeight("90%");
@@ -237,7 +250,11 @@ public class ExterneGruppeView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikView().init(mainView));
+					if(korrektur == true) {
+						mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+					}else {
+						mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+					}
 				}
 
 				if (e.getSource() == bSpeichern) {

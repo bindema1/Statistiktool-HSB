@@ -9,6 +9,7 @@ import org.vaadin.teemu.switchui.Switch;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -42,7 +43,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class BenutzungsstatistikView {
+public class BenutzungsstatistikBBView implements View{
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
@@ -83,7 +84,7 @@ public class BenutzungsstatistikView {
 		return absolutLayout;
 	}
 
-	public BenutzungsstatistikView() {
+	public BenutzungsstatistikBBView() {
 
 	}
 
@@ -218,7 +219,6 @@ public class BenutzungsstatistikView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					Notification.show("Zurück", Type.WARNING_MESSAGE);
 					mainView.setContent(new StartseiteView().init(mainView));
 				}
 
@@ -228,7 +228,6 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
 
-					Notification.show("Benutzerkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 				}
 
@@ -238,7 +237,6 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					intensivFrageDB.insertIntensivfrage(intensivfrage);
 
-					Notification.show("Intensivfrage erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Intensivfrage", Type.TRAY_NOTIFICATION);
 				}
 
@@ -247,8 +245,6 @@ public class BenutzungsstatistikView {
 							.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() + 1);
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-					Notification.show("Weiterleitung Recherche-Beratung erfasst, insgesamt "
-							+ benutzungsstatistik.getAnzahl_Rechercheberatung(), Type.WARNING_MESSAGE);
 					Notification.show("+1 Rechercheberatung", Type.TRAY_NOTIFICATION);
 				}
 
@@ -257,7 +253,6 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					emailKontaktDB.insertEmailkontakt(emailkontakt);
 
-					Notification.show("Emailkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
 				}
 
@@ -266,16 +261,15 @@ public class BenutzungsstatistikView {
 							benutzungsstatistik);
 					telefonKontaktDB.insertTelefonkontakt(telefonkontakt);
 
-					Notification.show("Telefonkontakt erfasst ", Type.WARNING_MESSAGE);
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bWintikurier) {
-					mainView.setContent(new WintikurierView(benutzungsstatistik).init(mainView));
+					mainView.setContent(new WintikurierView(benutzungsstatistik, false).init(mainView));
 				}
 
 				if (e.getSource() == bExterneGruppe) {
-					mainView.setContent(new ExterneGruppeView(benutzungsstatistik).init(mainView));
+					mainView.setContent(new ExterneGruppeView(benutzungsstatistik, false).init(mainView));
 				}
 
 				if (e.getSource() == bKorrektur) {

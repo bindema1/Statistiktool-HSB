@@ -1,7 +1,5 @@
 package allgemein.view;
 
-import java.util.logging.Level;
-
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -12,14 +10,14 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
 
 /**
- * MainView setzt den Content und gibt seine eigene MainView an die entsprechende View weiter
+ * MainView setzt den Content und gibt seine eigene MainView an die
+ * entsprechende View weiter
  * 
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
 public class MainView extends UI {
 
-	
 	protected void init(VaadinRequest request) {
 		setContent(buildMainLayout());
 	}
@@ -28,21 +26,32 @@ public class MainView extends UI {
 		// top-level component properties
 		setWidth("100.0%");
 		setHeight("100.0%");
-		
+
 //		Navigator navigator = new Navigator(this, this);
-//	    navigator.addView("login", new Login());
-//	    navigator.addView("dashboard", new Dashboard());
-//	    navigator.navigateTo("login");
-		
-//		return new BenutzungsstatistikView().init(this);
-//		return new TagesübersichtBelegungView(testdaten.getBelegungLL()).init(this);
-		java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
+//		navigator.addView("", StartseiteView.class);
+//		navigator.addView("belegung", BelegungErfassenView.class);
+//		navigator.addView("benutzung", BenutzungsstatistikBBView.class);
+//
+//		// push state:
+//		Button button = new Button("Go to page 1");
+//		button.addClickListener(e -> {
+//			// URL will change to .../page1
+//			Page.getCurrent().pushState("page1");
+//		});
+//
+//		// pop state:
+//		Page.getCurrent().addPopStateListener(event -> {
+//			String uri = event.getUri();
+//			// ... update the UI accordingly
+//		});
+
+//		java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 		return new StartseiteView().init(this);
 	}
-	
+
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MainView.class, productionMode = false)
-    public static class MyServlet extends VaadinServlet {
-    }
+	@VaadinServletConfiguration(ui = MainView.class, productionMode = false)
+	public static class MyServlet extends VaadinServlet {
+	}
 
 }

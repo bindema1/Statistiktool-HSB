@@ -1,6 +1,7 @@
 package benutzungsstatistik.view;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -54,6 +55,7 @@ public class WintikurierView {
 	private Label lTotal;
 	private Label lPlatzhalter;
 	private DateTimeField datefield;
+	private boolean korrektur;
 	private WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 	private Wintikurier wintikurier;
 	private Benutzungsstatistik benutzungsstatistik;
@@ -76,9 +78,10 @@ public class WintikurierView {
 		return absolutLayout;
 	}
 
-	public WintikurierView(Benutzungsstatistik benutzungsstatistik) {
+	public WintikurierView(Benutzungsstatistik benutzungsstatistik, boolean korrektur) {
 		this.benutzungsstatistik = benutzungsstatistik;
 		wintikurier = benutzungsstatistik.getWintikurier();
+		this.korrektur = korrektur;
 	}
 
 	private void initData() {
@@ -94,11 +97,15 @@ public class WintikurierView {
 		bZurueck.addClickListener(createClickListener(mainView));
 
 		lText = new Label();
-		lText.setValue("Benutzungsstatistik vom ");
+		if(korrektur == true) {
+			lText.setValue("Wintikurier vom ");
+		}else {
+			lText.setValue("Wintikurier vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
+		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-
+		
 		datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
@@ -220,8 +227,12 @@ public class WintikurierView {
 		grid.setWidth("100%");
 		grid.setHeight("90%");
 		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 3, 0);
-		grid.addComponent(datefield, 4, 0, 7, 0);
+		if(korrektur == true) {
+			grid.addComponent(lText, 1, 0, 3, 0);
+			grid.addComponent(datefield, 4, 0, 7, 0);
+		}else {
+			grid.addComponent(lText, 1, 0, 7, 0);
+		}
 		grid.addComponent(bGesundheit, 0, 1, 1, 4);
 		grid.addComponent(bLinguistik, 2, 1, 3, 4);
 		grid.addComponent(bTechnik, 4, 1, 5, 4);
@@ -253,8 +264,10 @@ public class WintikurierView {
 
 				// Button grösser machen
 				if (row == 0) {
-					if (col == 1 || col == 2 || col == 3) {
-						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
+					if(korrektur == true) {
+						if (col == 1 || col == 2 || col == 3) {
+							grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
+						}
 					}
 				} else if (row == 5) {
 					// Zeile 5 sind label, dort darf die Grösse nicht verändert werden, da das
@@ -280,7 +293,11 @@ public class WintikurierView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikView().init(mainView));
+					if(korrektur == true) {
+						mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+					}else {
+						mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+					}
 				}
 
 				if (e.getSource() == bGesundheit) {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -341,7 +341,7 @@ public class KorrekturView implements Serializable {
 		bKorrekturGruppen.addClickListener(createClickListener(mainView));
 
 		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(LocalDateTime.now());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
@@ -440,7 +440,7 @@ public class KorrekturView implements Serializable {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikView().init(mainView));
+					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
@@ -641,11 +641,11 @@ public class KorrekturView implements Serializable {
 				}
 
 				if (e.getSource() == bKorrekturWintikurier) {
-					mainView.setContent(new WintikurierView(benutzungsstatistik).init(mainView));
+					mainView.setContent(new WintikurierView(benutzungsstatistik, true).init(mainView));
 				}
 
 				if (e.getSource() == bKorrekturGruppen) {
-					mainView.setContent(new ExterneGruppeView(benutzungsstatistik).init(mainView));
+					mainView.setContent(new ExterneGruppeView(benutzungsstatistik, true).init(mainView));
 				}
 
 			}
