@@ -40,5 +40,10 @@ $v-shadow-opacity: 5%;
 	}
 	
 
+	.transparent .v-button-caption {
+	background: none;
+    border: 1px solid white;
+	color: green;
+}
   		
 }

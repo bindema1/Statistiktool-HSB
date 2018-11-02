@@ -30,7 +30,7 @@ import belegung.model.UhrzeitEnum;
  */
 public class TestBelegungDatenbank {
 
-	BelegungsDatenbank2 belegungsDB = new BelegungsDatenbank2();
+	BelegungsDatenbank belegungsDB = new BelegungsDatenbank();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	Date date;
 	Belegung belegung;

@@ -19,14 +19,14 @@ import belegung.model.StockwerkEnum;
  * 
  * @author Marvin Bindemann
  */
-public class KapazitätDatenbank2 {
+public class KapazitätDatenbank {
 
 	private static SessionFactory sessionFactory;
 
 	/**
 	 * Konstruktor der BelegungDatenbank
 	 */
-	public KapazitätDatenbank2() {
+	public KapazitätDatenbank() {
 		if (sessionFactory == null) {
 			sessionFactory = new Configuration().configure()
 					.buildSessionFactory();

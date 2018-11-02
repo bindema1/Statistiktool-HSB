@@ -11,7 +11,7 @@ import com.vaadin.external.org.slf4j.LoggerFactory;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.StandortEnum;
-import belegung.db.BelegungsDatenbank2;
+import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
 import belegung.model.Carrels;
@@ -70,7 +70,7 @@ public class TestDaten {
 		AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
 
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
-		Date date = sdf2.parse("10.10.2018");
+		Date date = sdf2.parse("01.11.2018");
 
 		Angestellter angestellter1 = new Angestellter("Mitarbeiter Winterthur", "123", date, false, StandortEnum.WINTERTHUR_BB);
 		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeiter Winterthur", "123", date, false,
@@ -96,7 +96,7 @@ public class TestDaten {
 		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 		
-		date = sdf2.parse("10.10.2018");
+		date = sdf2.parse("10.11.2018");
 
 		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
 		wintikurierDB.insertWintikurier(wintikurier1);
@@ -203,10 +203,10 @@ public class TestDaten {
 
 	private void initBelegung() throws ParseException {
 
-	    BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
+	    BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 		
-//		date = sdf2.parse("22.10.2018");
-	    date = new Date();
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = sdf2.parse("01.11.2018");
 
 		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
 		Belegung belegungLL = new Belegung(date, StandortEnum.WINTERTHUR_LL);

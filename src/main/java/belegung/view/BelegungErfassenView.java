@@ -21,22 +21,27 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
-import belegung.db.BelegungsDatenbank2;
+import belegung.db.BelegungsDatenbank;
+import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
+import belegung.model.Carrels;
+import belegung.model.Gruppenräume;
+import belegung.model.SektorA;
+import belegung.model.SektorB;
+import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
+import belegung.model.UhrzeitEnum;
 
 /**
  * View der Belegung. Zeigt alle Button, Label, Felder etc. in einem Layout an.
@@ -59,18 +64,23 @@ public class BelegungErfassenView implements View {
 	private Button bPersonenMinus;
 	private Button bRäume;
 	private Button bRäumeMinus;
-	private Button bWeiter;
+	private Button bSpeichern;
+	private Button bArbeitsplätze;
+	private Button bSektorA;
+	private Button bSektorB;
+	private Button bGruppenräume;
+	private Button bCarrels;
 	private TextField tTotalPersonen;
 	private TextField tTotalRäume;
-	private int ausgewählteUhrzeit;
+	private UhrzeitEnum ausgewählteUhrzeit;
 	private boolean korrektur;
 	private boolean räumeVorhanden;
 	private Belegung belegung;
 	private StockwerkEnum stockwerkEnum;
 	private Date date;
-	private BelegungsDatenbank2 belegungDB = new BelegungsDatenbank2();
+	private BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 	private Image image;
-	private int stockwerkzaehler = 0;
+	private int erfassungsSchritt;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -90,7 +100,7 @@ public class BelegungErfassenView implements View {
 		return absolutLayout;
 	}
 
-	public BelegungErfassenView(StockwerkEnum stockwerkenum, boolean korrektur) {
+	public BelegungErfassenView(StockwerkEnum stockwerkenum, boolean korrektur, int erfassungsSchritt) {
 
 		if (stockwerkenum == StockwerkEnum.LL) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL);
@@ -100,13 +110,18 @@ public class BelegungErfassenView implements View {
 
 		this.stockwerkEnum = stockwerkenum;
 		this.korrektur = korrektur;
+		this.erfassungsSchritt = erfassungsSchritt;
+
+		if (erfassungsSchritt == 0 || erfassungsSchritt == 3 || erfassungsSchritt == 4) {
+			räumeVorhanden = false;
+		} else {
+			// Bei Schritt 1 und 2 sind Gruppenräume und Carrels
+			räumeVorhanden = true;
+		}
 	}
 
 	private void initData() {
 		date = belegung.getDatum();
-
-		// Automatisch Start mit EG
-		räumeVorhanden = true;
 	}
 
 	// Initialisieren der GUI Komponente
@@ -148,12 +163,12 @@ public class BelegungErfassenView implements View {
 				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
 			}
 
-			// Alle Werte anpassen
+			//TODO Alle Werte anpassen
 
 		});
 
 		bPersonen = new Button();
-		bPersonen.setCaption("Arbeitsplätze/Personen");
+		bPersonen.setCaption("Arbeitsplätze");
 		bPersonen.addStyleName(ValoTheme.BUTTON_LARGE);
 		bPersonen.addClickListener(createClickListener(mainView));
 
@@ -182,13 +197,17 @@ public class BelegungErfassenView implements View {
 		bRäumeMinus.addStyleName(ValoTheme.BUTTON_DANGER);
 		bRäumeMinus.addClickListener(createClickListener(mainView));
 
-		bWeiter = new Button();
-		bWeiter.setCaption("Weiter/Beenden");
-		bWeiter.addStyleName(ValoTheme.BUTTON_LARGE);
-		bWeiter.addClickListener(createClickListener(mainView));
+		bSpeichern = new Button();
+		bSpeichern.addStyleName(ValoTheme.BUTTON_LARGE);
+		bSpeichern.setCaption("Speichern");
+		bSpeichern.addClickListener(createClickListener(mainView));
 
-		tTotalPersonen = new TextField("Total Personen");
-		tTotalRäume = new TextField("Total Räume");
+		tTotalPersonen = new TextField();
+		tTotalPersonen.setPlaceholder("Total Personen");
+		tTotalPersonen.setValue("0");
+		tTotalRäume = new TextField();
+		tTotalRäume.setPlaceholder("Total Räume");
+		tTotalRäume.setValue("0");
 
 		List<String> data = null;
 		ListSelect<String> uhrzeitListSelect;
@@ -205,46 +224,55 @@ public class BelegungErfassenView implements View {
 			int time = Integer.parseInt(new SimpleDateFormat("HH").format(new Date()));
 			if (time <= 9) {
 				uhrzeitListSelect.select(data.get(0));
+				ausgewählteUhrzeit = UhrzeitEnum.NEUN;
 			} else if (time <= 11) {
 				uhrzeitListSelect.select(data.get(1));
+				ausgewählteUhrzeit = UhrzeitEnum.ELF;
 			} else if (time <= 13) {
 				uhrzeitListSelect.select(data.get(2));
+				ausgewählteUhrzeit = UhrzeitEnum.DREIZEHN;
 			} else if (time <= 15) {
 				uhrzeitListSelect.select(data.get(3));
-			}
-			if (time <= 17) {
+				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
+			} else if (time <= 17) {
 				uhrzeitListSelect.select(data.get(4));
+				ausgewählteUhrzeit = UhrzeitEnum.SIEBZEHN;
 			} else if (time >= 18) {
 				uhrzeitListSelect.select(data.get(5));
+				ausgewählteUhrzeit = UhrzeitEnum.NEUNZEHN;
 			}
 		}
 
 		uhrzeitListSelect.setWidth(100.0f, Unit.PERCENTAGE);
+		if (korrektur == true) {
+			uhrzeitListSelect.setEnabled(true);
+		} else {
+			uhrzeitListSelect.setEnabled(false);
+		}
 		uhrzeitListSelect.addValueChangeListener(event -> {
-
-			ausgewählteUhrzeit = 0;
 
 			switch (String.valueOf(event.getValue())) {
 			case "[9 Uhr]":
-				ausgewählteUhrzeit = 9;
+				ausgewählteUhrzeit = UhrzeitEnum.NEUN;
 				break;
 			case "[11 Uhr]":
-				ausgewählteUhrzeit = 11;
+				ausgewählteUhrzeit = UhrzeitEnum.ELF;
 				break;
 			case "[13 Uhr]":
-				ausgewählteUhrzeit = 13;
+				ausgewählteUhrzeit = UhrzeitEnum.DREIZEHN;
 				break;
 			case "[15 Uhr]":
-				ausgewählteUhrzeit = 15;
+				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
 				break;
 			case "[17 Uhr]":
-				ausgewählteUhrzeit = 17;
+				ausgewählteUhrzeit = UhrzeitEnum.SIEBZEHN;
 				break;
 			case "[19 Uhr]":
-				ausgewählteUhrzeit = 19;
+				ausgewählteUhrzeit = UhrzeitEnum.NEUNZEHN;
 				break;
 			}
 
+			//TODO programmieren was danach passiert
 		});
 
 		// Unteres Grid
@@ -265,47 +293,46 @@ public class BelegungErfassenView implements View {
 		b2ZG.addStyleName(ValoTheme.BUTTON_LARGE);
 		b2ZG.addClickListener(createClickListener(mainView));
 
-		image = null;
-		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
-			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1.ZG-lang.png"));
-			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2.ZG-lang.png"));
-			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-lang.png"));
-			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		}
-
-		
-		GridLayout grid = new GridLayout(5, 10);
+		GridLayout grid = new GridLayout(5, 11);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
-		
 		grid.addComponent(bZurueck, 0, 0);
 		if (korrektur == true) {
-			grid.addComponent(lText, 1, 0, 2, 0);
-			grid.addComponent(datefield, 3, 0);
-		}else {
+			grid.addComponent(lText, 1, 0);
+			grid.addComponent(datefield, 2, 0, 3, 0);
+		} else {
 			grid.addComponent(lText, 1, 0, 3, 0);
-		}	
+		}
 		grid.addComponent(bTagesübersicht, 4, 0);
 		grid.addComponent(uhrzeitListSelect, 0, 1, 0, 5);
-		grid.addComponent(bPersonen, 1, 1, 2, 4);
-		grid.addComponent(tTotalPersonen, 1, 5);
-		grid.addComponent(bPersonenMinus, 2, 5);
-		grid.addComponent(bRäume, 3, 1, 4, 3);
-		grid.addComponent(tTotalRäume, 3, 4);
-		grid.addComponent(bRäumeMinus, 4, 4);
-		grid.addComponent(bWeiter, 3, 5, 4, 5);
+
+		if (räumeVorhanden == true) {
+			grid.addComponent(bPersonen, 1, 1, 2, 4);
+			grid.addComponent(tTotalPersonen, 1, 5);
+			grid.addComponent(bPersonenMinus, 2, 5);
+			grid.addComponent(bRäume, 3, 1, 4, 3);
+			grid.addComponent(tTotalRäume, 3, 4);
+			grid.addComponent(bRäumeMinus, 4, 4);
+			grid.addComponent(bSpeichern, 3, 5, 4, 5);
+		} else {
+			grid.addComponent(bPersonen, 1, 1, 3, 4);
+			grid.addComponent(tTotalPersonen, 1, 5, 3, 5);
+			grid.addComponent(bPersonen10, 4, 1);
+			grid.addComponent(bPersonen5, 4, 2);
+			grid.addComponent(bPersonenMinus, 4, 3);
+			grid.addComponent(bSpeichern, 4, 4, 4, 5);
+		}
 		grid.addComponent(bLL, 0, 6);
 		grid.addComponent(b2ZG, 0, 7);
 		grid.addComponent(b1ZG, 0, 8);
 		grid.addComponent(bEG, 0, 9);
-		grid.addComponent(image, 1, 6, 4, 9);
+		grid.addComponent(new Label(), 0, 10);
+		grid.addComponent(createAbsoluteLayoutForImage(mainView), 1, 6, 4, 10);
+		grid.setColumnExpandRatio(0, 0.2f);
+		grid.setColumnExpandRatio(1, 0.2f);
+		grid.setColumnExpandRatio(2, 0.2f);
+		grid.setColumnExpandRatio(3, 0.2f);
+		grid.setColumnExpandRatio(4, 0.2f);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -317,16 +344,33 @@ public class BelegungErfassenView implements View {
 					if (col == 1 || col == 2) {
 						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
 					}
-				}else {
-					c.setHeight("80%");
-					c.setWidth("80%");
-					
-					if(row >= 6) {
+				} else {
+
+					if (räumeVorhanden == true) {
+						if (row == 5 && col == 1 || row == 5 && col == 2 || row == 4 && col == 3
+								|| row == 4 && col == 4) {
+							c.setHeight("90%");
+							c.setWidth("80%");
+						} else {
+							c.setHeight("90%");
+							c.setWidth("90%");
+						}
+					} else {
+						if (row == 5 && col == 1 || row == 5 && col == 2 || row == 5 && col == 3) {
+							c.setHeight("90%");
+							// c.setWidth("80%");
+						} else {
+							c.setHeight("90%");
+							c.setWidth("90%");
+						}
+					}
+
+					if (row >= 6) {
 						if (col == 0) {
 							c.setHeight("100%");
-							c.setWidth("30%");
+							c.setWidth("50%");
 						} else {
-							c.setHeight("100%");
+							c.setHeight("90%");
 							c.setWidth("100%");
 						}
 					}
@@ -337,6 +381,218 @@ public class BelegungErfassenView implements View {
 		mainLayout.addComponent(grid);
 	}
 
+	/**
+	 * Erstellt ein AbsoluteLayout, welches das Bild als hintergrund hat sowie
+	 * Button darauf, welche per Pixel angeordnet sind
+	 * 
+	 * @return Component
+	 */
+	private Component createAbsoluteLayoutForImage(MainView mainView) {
+
+		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
+		bArbeitsplätze = new Button("Arbeitsplätze");
+		bArbeitsplätze.addClickListener(createClickListener(mainView));
+		bSektorA = new Button("Sektor A");
+		bSektorA.addClickListener(createClickListener(mainView));
+		bSektorB = new Button("Sektor B");
+		bSektorB.addClickListener(createClickListener(mainView));
+		bGruppenräume = new Button("Gruppenräume");
+		bGruppenräume.addClickListener(createClickListener(mainView));
+		bCarrels = new Button("Carrels");
+		bCarrels.addClickListener(createClickListener(mainView));
+
+		if (räumeVorhanden == true) {
+			bPersonen.setCaption("Personen");
+		}
+
+		image = null;
+		if (stockwerkEnum == StockwerkEnum.EG) {
+			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
+			absoluteLayout.addComponent(image);
+			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 200px;");
+			absoluteLayout.addComponent(bGruppenräume, "top: 200px; left: 100px;");
+
+			if (erfassungsSchritt == 0) {
+				bArbeitsplätze.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
+							if (a.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + a.getAnzahlPersonen());
+							}
+						}
+					}
+				}
+			} else {
+				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (Gruppenräume g : s.getGruppenräumeListe()) {
+							if (g.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + g.getAnzahlPersonen());
+								tTotalRäume.setValue("" + g.getAnzahlRäume());
+							}
+						}
+					}
+				}
+			}
+
+		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
+			image = new Image(null, new ClassResource("/belegung/1.ZG-lang.png"));
+			absoluteLayout.addComponent(image);
+			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
+			bArbeitsplätze.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+			for (Stockwerk s : belegung.getStockwerkListe()) {
+				if (s.getName() == stockwerkEnum) {
+					for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
+						if (a.getUhrzeit() == ausgewählteUhrzeit) {
+							tTotalPersonen.setValue("" + a.getAnzahlPersonen());
+						}
+					}
+				}
+			}
+
+		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
+			image = new Image(null, new ClassResource("/belegung/2.ZG-lang.png"));
+			absoluteLayout.addComponent(image);
+			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
+			bArbeitsplätze.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+			for (Stockwerk s : belegung.getStockwerkListe()) {
+				if (s.getName() == stockwerkEnum) {
+					for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
+						if (a.getUhrzeit() == ausgewählteUhrzeit) {
+							tTotalPersonen.setValue("" + a.getAnzahlPersonen());
+						}
+					}
+				}
+			}
+
+		} else if (stockwerkEnum == StockwerkEnum.LL) {
+			image = new Image(null, new ClassResource("/belegung/LL-lang.png"));
+			absoluteLayout.addComponent(image);
+			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
+			absoluteLayout.addComponent(bSektorA, "top: 20px; left: 10px;");
+			absoluteLayout.addComponent(bSektorB, "top: 20px; left: 500px;");
+			absoluteLayout.addComponent(bGruppenräume, "top: 200px; left: 400px;");
+			absoluteLayout.addComponent(bCarrels, "top: 100px; left: 800px;");
+
+			// Gruppenräume
+			if (erfassungsSchritt == 1) {
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (Gruppenräume g : s.getGruppenräumeListe()) {
+							if (g.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + g.getAnzahlPersonen());
+								tTotalRäume.setValue("" + g.getAnzahlRäume());
+							}
+						}
+					}
+				}
+
+				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
+				// Carrels
+			} else if (erfassungsSchritt == 2) {
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (Carrels g : s.getCarrelsListe()) {
+							if (g.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + g.getAnzahlPersonen());
+								tTotalRäume.setValue("" + g.getAnzahlRäume());
+							}
+						}
+					}
+				}
+				bCarrels.setStyleName(ValoTheme.BUTTON_PRIMARY);
+				// SektorA
+			} else if (erfassungsSchritt == 3) {
+				bPersonen.setCaption("Sektor A");
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (SektorA a : s.getSektorAListe()) {
+							if (a.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + a.getAnzahlPersonen());
+							}
+						}
+					}
+				}
+
+				bSektorA.setStyleName(ValoTheme.BUTTON_PRIMARY);
+				// SektorB
+			} else if (erfassungsSchritt == 4) {
+				bPersonen.setCaption("Sektor B");
+
+				for (Stockwerk s : belegung.getStockwerkListe()) {
+					if (s.getName() == stockwerkEnum) {
+						for (SektorB a : s.getSektorBListe()) {
+							if (a.getUhrzeit() == ausgewählteUhrzeit) {
+								tTotalPersonen.setValue("" + a.getAnzahlPersonen());
+							}
+						}
+					}
+				}
+
+				bSektorB.setStyleName(ValoTheme.BUTTON_PRIMARY);
+			}
+
+		}
+		alleButtonRotSetzenOhneZahlen();
+
+		return absoluteLayout;
+	}
+
+	private void alleButtonRotSetzenOhneZahlen() {
+		// Alle Button Rot setzen, welche Daten 0 sind
+		for (Stockwerk s : belegung.getStockwerkListe()) {
+			if (s.getName() == stockwerkEnum) {
+				for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
+					if (a.getUhrzeit() == ausgewählteUhrzeit) {
+						if (a.getAnzahlPersonen() == 0) {
+							bArbeitsplätze.setStyleName(ValoTheme.BUTTON_DANGER);
+						}
+					}
+				}
+				for (Gruppenräume a : s.getGruppenräumeListe()) {
+					if (a.getUhrzeit() == ausgewählteUhrzeit || a.getAnzahlRäume() == 0) {
+						if (a.getAnzahlPersonen() == 0) {
+							bGruppenräume.setStyleName(ValoTheme.BUTTON_DANGER);
+						}
+					}
+				}
+				for (Carrels a : s.getCarrelsListe()) {
+					if (a.getUhrzeit() == ausgewählteUhrzeit) {
+						if (a.getAnzahlPersonen() == 0 || a.getAnzahlRäume() == 0) {
+							bCarrels.setStyleName(ValoTheme.BUTTON_DANGER);
+						}
+					}
+				}
+				for (SektorA a : s.getSektorAListe()) {
+					if (a.getUhrzeit() == ausgewählteUhrzeit) {
+						if (a.getAnzahlPersonen() == 0) {
+							bSektorA.setStyleName(ValoTheme.BUTTON_DANGER);
+						}
+					}
+				}
+				for (SektorB a : s.getSektorBListe()) {
+					if (a.getUhrzeit() == ausgewählteUhrzeit) {
+						if (a.getAnzahlPersonen() == 0) {
+							bSektorB.setStyleName(ValoTheme.BUTTON_DANGER);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
@@ -344,54 +600,184 @@ public class BelegungErfassenView implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if (korrektur == true) {
-						leiteZurTagesübersichtFürStockwerk(mainView);
+						mainView.setContent(new TagesübersichtBelegungView(date, stockwerkEnum).init(mainView));
 					} else {
 						mainView.setContent(new StartseiteView().init(mainView));
 					}
 				}
 
+				if (e.getSource() == bPersonen) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalPersonen, 1);
+				}
+
+				if (e.getSource() == bPersonen5) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalPersonen, 5);
+				}
+
+				if (e.getSource() == bPersonen10) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalPersonen, 10);
+				}
+
+				if (e.getSource() == bPersonenMinus) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalPersonen, -1);
+				}
+
+				if (e.getSource() == bRäume) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalRäume, 1);
+				}
+
+				if (e.getSource() == bRäumeMinus) {
+					erhöheOderVermindereTextfieldNachNummer(tTotalRäume, -1);
+				}
+
+				if (e.getSource() == bSpeichern) {
+
+					try {
+						int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
+						int anzahlRäume = 0;
+						if (räumeVorhanden == true) {
+							anzahlRäume = Integer.parseInt(tTotalRäume.getValue());
+						}
+
+						if (anzahlPersonen == 0) {
+							Notification.show("Sie haben eine Zählung mit 0 gespeichert", Type.WARNING_MESSAGE);
+						}
+
+						if (stockwerkEnum == StockwerkEnum.EG) {
+							if (erfassungsSchritt == 0) {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										Arbeitsplätze a = new Arbeitsplätze(anzahlPersonen, ausgewählteUhrzeit, s);
+										s.addArbeitsplätze(a);
+									}
+								}
+							} else {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
+												ausgewählteUhrzeit, s);
+										s.addGruppenräume(gruppenräume);
+									}
+								}
+							}
+
+						} else if (stockwerkEnum == StockwerkEnum.ZG1) {
+							for (Stockwerk s : belegung.getStockwerkListe()) {
+								if (s.getName() == stockwerkEnum) {
+									Arbeitsplätze a = new Arbeitsplätze(anzahlPersonen, ausgewählteUhrzeit, s);
+									s.addArbeitsplätze(a);
+								}
+							}
+						} else if (stockwerkEnum == StockwerkEnum.ZG2) {
+							for (Stockwerk s : belegung.getStockwerkListe()) {
+								if (s.getName() == stockwerkEnum) {
+									Arbeitsplätze a = new Arbeitsplätze(anzahlPersonen, ausgewählteUhrzeit, s);
+									s.addArbeitsplätze(a);
+								}
+							}
+						} else if (stockwerkEnum == StockwerkEnum.LL) {
+							if (erfassungsSchritt == 1) {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
+												ausgewählteUhrzeit, s);
+										s.addGruppenräume(gruppenräume);
+									}
+								}
+							} else if (erfassungsSchritt == 2) {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										Carrels carrels = new Carrels(anzahlPersonen, anzahlRäume, ausgewählteUhrzeit,
+												s);
+										s.addCarrels(carrels);
+									}
+								}
+							} else if (erfassungsSchritt == 3) {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										SektorA sektorA = new SektorA(anzahlPersonen, ausgewählteUhrzeit, s);
+										s.addSektorA(sektorA);
+									}
+								}
+							} else if (erfassungsSchritt == 4) {
+								for (Stockwerk s : belegung.getStockwerkListe()) {
+									if (s.getName() == stockwerkEnum) {
+										SektorB sektorB = new SektorB(anzahlPersonen, ausgewählteUhrzeit, s);
+										s.addSektorB(sektorB);
+									}
+								}
+							}
+						}
+
+						belegungDB.updateBelegung(belegung);
+
+						Notification.show("Zählung gespeichert", Type.TRAY_NOTIFICATION);
+
+					} catch (NumberFormatException e1) {
+						// Not an integer
+						Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
+					}
+				}
+
 				if (e.getSource() == bTagesübersicht) {
-					leiteZurTagesübersichtFürStockwerk(mainView);
+					mainView.setContent(new TagesübersichtBelegungView(date, stockwerkEnum).init(mainView));
 				}
 
 				if (e.getSource() == bLL) {
-					stockwerkzaehler = 3;
-					räumeVorhanden = true;
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.LL, korrektur, 1).init(mainView));
 				}
 
 				if (e.getSource() == b2ZG) {
-					stockwerkzaehler = 2;
-					räumeVorhanden = false;
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.ZG2, korrektur, 0).init(mainView));
 				}
 
 				if (e.getSource() == b1ZG) {
-					stockwerkzaehler = 1;
-					räumeVorhanden = false;
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.ZG1, korrektur, 0).init(mainView));
 				}
 
 				if (e.getSource() == bEG) {
-					stockwerkzaehler = 0;
-					räumeVorhanden = true;
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, korrektur, 0).init(mainView));
+				}
+
+				if (e.getSource() == bArbeitsplätze) {
+					mainView.setContent(new BelegungErfassenView(stockwerkEnum, korrektur, 0).init(mainView));
+				}
+
+				if (e.getSource() == bGruppenräume) {
+					mainView.setContent(new BelegungErfassenView(stockwerkEnum, korrektur, 1).init(mainView));
+				}
+
+				if (e.getSource() == bCarrels) {
+					mainView.setContent(new BelegungErfassenView(stockwerkEnum, korrektur, 2).init(mainView));
+				}
+
+				if (e.getSource() == bSektorA) {
+					mainView.setContent(new BelegungErfassenView(stockwerkEnum, korrektur, 3).init(mainView));
+				}
+
+				if (e.getSource() == bSektorB) {
+					mainView.setContent(new BelegungErfassenView(stockwerkEnum, korrektur, 4).init(mainView));
 				}
 
 			}
 
-			private void leiteZurTagesübersichtFürStockwerk(final MainView mainView) {
-				switch (stockwerkzaehler) {
-				case 0:
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
-					break;
-				case 1:
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
-					break;
-				case 2:
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
-					break;
-				case 3:
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
-					break;
+			private void erhöheOderVermindereTextfieldNachNummer(TextField textfield, int i) {
+				try {
+					int anzahl = Integer.parseInt(textfield.getValue());
+					anzahl = anzahl + i;
+
+					if (anzahl >= 0) {
+						// Textfelder erhöhen
+						textfield.setValue("" + anzahl);
+					} else {
+						Notification.show("Die Eingabe darf keine Minuszahl sein", Type.WARNING_MESSAGE);
+					}
+				} catch (NumberFormatException e1) {
+					// Not an integer
+					Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
 				}
 			}
+
 		};
 
 	}

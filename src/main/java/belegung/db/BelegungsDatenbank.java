@@ -12,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import allgemein.model.StandortEnum;
+import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
 import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
@@ -24,14 +25,14 @@ import belegung.model.StockwerkEnum;
  * 
  * @author Marvin Bindemann
  */
-public class BelegungsDatenbank2 {
+public class BelegungsDatenbank {
 
 	private static SessionFactory sessionFactory;
 
 	/**
 	 * Konstruktor der BelegungDatenbank
 	 */
-	public BelegungsDatenbank2() {
+	public BelegungsDatenbank() {
 		if (sessionFactory == null) {
 			sessionFactory = new Configuration().configure().buildSessionFactory();
 		}
@@ -201,14 +202,14 @@ public class BelegungsDatenbank2 {
 
 			if (standort == StandortEnum.WINTERTHUR_BB) {
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.EG, false, false, true, false,
-						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.EG)));
+						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.EG)));
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG1, false, false, false, false,
-						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG1)));
+						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.ZG1)));
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.ZG2, false, false, false, false,
-						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.ZG2)));
+						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.ZG2)));
 			} else if (standort == StandortEnum.WINTERTHUR_LL) {
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.LL, true, true, true, true,
-						new KapazitätDatenbank2().selectKapazitätForStockwerk(StockwerkEnum.LL)));
+						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.LL)));
 			}
 
 			insertBelegung(belegung);
@@ -216,6 +217,6 @@ public class BelegungsDatenbank2 {
 		}
 
 		return belegung;
-	}
+	}	
 
 }

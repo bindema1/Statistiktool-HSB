@@ -88,7 +88,7 @@ public class StartseiteView implements View{
 				}
 
 				if (e.getSource() == bBelegung) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false).init(mainView));
+					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false, 0).init(mainView));
 				}
 
 			}

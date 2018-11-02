@@ -10,7 +10,7 @@ import belegung.model.StockwerkEnum;
 
 public class TestKapazitätDatenbank {
 
-	KapazitätDatenbank2 kapazitätsDB = new KapazitätDatenbank2();
+	KapazitätDatenbank kapazitätsDB = new KapazitätDatenbank();
 	Kapazität kapazitätTest;
 	Kapazität kapazitätEG;
 	Kapazität kapazität1ZG;
