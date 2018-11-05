@@ -1,5 +1,7 @@
 package belegung.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "arbeitsplätze")
-public class Arbeitsplätze {
+public class Arbeitsplätze implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,7 @@
 package allgemein.view;
 
+import java.util.Date;
+
 import com.vaadin.navigator.View;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -88,7 +90,7 @@ public class StartseiteView implements View{
 				}
 
 				if (e.getSource() == bBelegung) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false, 0).init(mainView));
+					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
 				}
 
 			}

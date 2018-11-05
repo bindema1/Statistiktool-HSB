@@ -1,5 +1,6 @@
 package belegung.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ import allgemein.model.StandortEnum;
  */
 @Entity
 @Table(name = "belegung")
-public class Belegung {
+public class Belegung implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

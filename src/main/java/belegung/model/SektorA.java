@@ -1,5 +1,7 @@
 package belegung.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,35 +13,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 /**
- * Das ist die Datenklasse mit allen Attributen, damit man den SektorA in
- * die Tabelle 'SektorA' der Datenbank schreiben kann.
+ * Das ist die Datenklasse mit allen Attributen, damit man den SektorA in die
+ * Tabelle 'SektorA' der Datenbank schreiben kann.
  * 
  * @author Marvin Bindemann
  */
 @Entity
 @Table(name = "sektorA")
-public class SektorA {
+public class SektorA implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long sektorA_ID;
-	
+
 	private int anzahlPersonen;
 
 	@Enumerated(EnumType.STRING)
 	private UhrzeitEnum uhrzeit;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stockwerk_ID")
+	@JoinColumn(name = "stockwerk_ID")
 	private Stockwerk stockwerk;
-	
+
 	// Für Hibernate
 	public SektorA() {
-		
+
 	}
-	
+
 	public SektorA(int anzahlPersonen, UhrzeitEnum uhrzeit, Stockwerk stockwerk) {
 		this.anzahlPersonen = anzahlPersonen;
 		this.uhrzeit = uhrzeit;
@@ -62,7 +63,6 @@ public class SektorA {
 		return stockwerk;
 	}
 
-	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
 	public void setSektorA_ID(Long sektorA_ID) {
 		this.sektorA_ID = sektorA_ID;
@@ -116,5 +116,5 @@ public class SektorA {
 			return false;
 		return true;
 	}
-	
+
 }

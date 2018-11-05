@@ -96,7 +96,7 @@ public class TestDaten {
 		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 		
-		date = sdf2.parse("10.11.2018");
+		date = sdf2.parse("01.11.2018");
 
 		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
 		wintikurierDB.insertWintikurier(wintikurier1);

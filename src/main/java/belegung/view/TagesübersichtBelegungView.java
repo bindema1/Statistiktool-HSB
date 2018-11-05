@@ -356,15 +356,15 @@ public class TagesübersichtBelegungView {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false, 0).init(mainView));
+					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
 				}
 
 				if (e.getSource() == bErfassung) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, false, 0).init(mainView));
+					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
 				}
 
 				if (e.getSource() == bKorrektur) {
-					mainView.setContent(new BelegungErfassenView(StockwerkEnum.EG, true, 0).init(mainView));
+					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.EG, true, 0).init(mainView));
 				}
 
 				if (e.getSource() == bLL) {

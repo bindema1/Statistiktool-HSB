@@ -1,12 +1,14 @@
 package benutzungsstatistik.model;
 
+import java.io.Serializable;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Wintikurier in
  * die Tabelle 'Wintikurier' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
-public class Wintikurier {
+public class Wintikurier implements Serializable {
 
 	int wintikurier_ID;
 	int anzahl_Gesundheit;

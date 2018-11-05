@@ -1,5 +1,6 @@
 package belegung.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "stockwerk")
-public class Stockwerk {
+public class Stockwerk implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
