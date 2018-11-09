@@ -1,7 +1,18 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen
@@ -10,18 +21,28 @@ import java.sql.Timestamp;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "beantwortungbibliothekspersonal")
 public class BeantwortungBibliothekspersonal implements Serializable {
 
-	int beantwortungBibliothekspersonal_ID;
-	Timestamp timestamp;
-	Benutzungsstatistik benutzungsstatistik;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int beantwortungBibliothekspersonal_ID;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timestamp;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "benutzungsstatistik_ID")
+	private Benutzungsstatistik benutzungsstatistik;
 
 	// Für Hibernate
 	public BeantwortungBibliothekspersonal(){
 				
 	}
 
-	public BeantwortungBibliothekspersonal(Timestamp timestamp, Benutzungsstatistik benutzungsstatistik) {
+	public BeantwortungBibliothekspersonal(Date timestamp, Benutzungsstatistik benutzungsstatistik) {
 		this.timestamp = timestamp;
 		this.benutzungsstatistik = benutzungsstatistik;
 	}
@@ -30,7 +51,7 @@ public class BeantwortungBibliothekspersonal implements Serializable {
 		return beantwortungBibliothekspersonal_ID;
 	}
 
-	public Timestamp getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
@@ -44,7 +65,7 @@ public class BeantwortungBibliothekspersonal implements Serializable {
 		this.beantwortungBibliothekspersonal_ID = beantwortungBibliothekspersonal_ID;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 

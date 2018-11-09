@@ -19,13 +19,14 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "carrels")
 public class Carrels implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long carrels_ID;
+	private int carrels_ID;
 	
 	private int anzahlPersonen;
 	private int anzahlRäume;
@@ -49,7 +50,7 @@ public class Carrels implements Serializable {
 		this.stockwerk = stockwerk;
 	}
 
-	public Long getCarrels_ID() {
+	public int getCarrels_ID() {
 		return carrels_ID;
 	}
 	
@@ -71,7 +72,7 @@ public class Carrels implements Serializable {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setCarrels_ID(Long carrels_ID) {
+	public void setCarrels_ID(int carrels_ID) {
 		this.carrels_ID = carrels_ID;
 	}
 
@@ -97,7 +98,7 @@ public class Carrels implements Serializable {
 		int result = 1;
 		result = prime * result + anzahlPersonen;
 		result = prime * result + anzahlRäume;
-		result = prime * result + ((carrels_ID == null) ? 0 : carrels_ID.hashCode());
+		result = prime * result + carrels_ID;
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -116,10 +117,7 @@ public class Carrels implements Serializable {
 			return false;
 		if (anzahlRäume != other.anzahlRäume)
 			return false;
-		if (carrels_ID == null) {
-			if (other.carrels_ID != null)
-				return false;
-		} else if (!carrels_ID.equals(other.carrels_ID))
+		if (carrels_ID != other.carrels_ID)
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)
@@ -131,5 +129,4 @@ public class Carrels implements Serializable {
 		return true;
 	}
 
-	
 }

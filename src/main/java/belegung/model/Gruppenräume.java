@@ -19,13 +19,14 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "gruppenräume")
 public class Gruppenräume implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long gruppenräume_ID;
+	private int gruppenräume_ID;
 	
 	private int anzahlPersonen;
 	private int anzahlRäume;
@@ -50,7 +51,7 @@ public class Gruppenräume implements Serializable {
 		this.stockwerk = stockwerk;
 	}
 
-	public Long getGruppenräume_ID() {
+	public int getGruppenräume_ID() {
 		return gruppenräume_ID;
 	}
 	
@@ -72,7 +73,7 @@ public class Gruppenräume implements Serializable {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setGruppenräume_ID(Long gruppenräume_ID) {
+	public void setGruppenräume_ID(int gruppenräume_ID) {
 		this.gruppenräume_ID = gruppenräume_ID;
 	}
 
@@ -98,7 +99,7 @@ public class Gruppenräume implements Serializable {
 		int result = 1;
 		result = prime * result + anzahlPersonen;
 		result = prime * result + anzahlRäume;
-		result = prime * result + ((gruppenräume_ID == null) ? 0 : gruppenräume_ID.hashCode());
+		result = prime * result + gruppenräume_ID;
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -117,10 +118,7 @@ public class Gruppenräume implements Serializable {
 			return false;
 		if (anzahlRäume != other.anzahlRäume)
 			return false;
-		if (gruppenräume_ID == null) {
-			if (other.gruppenräume_ID != null)
-				return false;
-		} else if (!gruppenräume_ID.equals(other.gruppenräume_ID))
+		if (gruppenräume_ID != other.gruppenräume_ID)
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)
@@ -132,5 +130,4 @@ public class Gruppenräume implements Serializable {
 		return true;
 	}
 
-	
 }

@@ -19,7 +19,7 @@
 
 		<!-- MYSQL Server/Workbench
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-	  	<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool</property>
+	  	<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool?serverTimezone=UTC</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">1234</property>
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -30,15 +30,15 @@
 		<property name="hibernate.enable_lazy_load_no_trans">true</property> -->
 		
 		<!-- Nur Unidirectional Associations -->
-		<mapping resource="Angestellter.hbm.xml"></mapping>
-		<mapping resource="Benutzungsstatistik.hbm.xml"></mapping>
-		<mapping resource="Benutzerkontakt.hbm.xml"></mapping>
-		<mapping resource="Emailkontakt.hbm.xml"></mapping>
-		<mapping resource="Telefonkontakt.hbm.xml"></mapping>
-		<mapping resource="Intensivfrage.hbm.xml"></mapping>
-		<mapping resource="BeantwortungBibliothekspersonal.hbm.xml"></mapping>
-		<mapping resource="ExterneGruppe.hbm.xml"></mapping>
-		<mapping resource="Wintikurier.hbm.xml"></mapping>
+		<mapping class="allgemein.model.Angestellter"></mapping>
+		<mapping class="benutzungsstatistik.model.Benutzungsstatistik"></mapping>
+		<mapping class="benutzungsstatistik.model.Benutzerkontakt"></mapping>
+		<mapping class="benutzungsstatistik.model.Emailkontakt"></mapping>
+		<mapping class="benutzungsstatistik.model.Telefonkontakt"></mapping>
+		<mapping class="benutzungsstatistik.model.Intensivfrage"></mapping>
+		<mapping class="benutzungsstatistik.model.BeantwortungBibliothekspersonal"></mapping>
+		<mapping class="benutzungsstatistik.model.ExterneGruppe"></mapping>
+		<mapping class="benutzungsstatistik.model.Wintikurier"></mapping>
 		<mapping class="belegung.model.Arbeitsplätze"/>
 		<mapping class="belegung.model.Belegung"/>
 		<mapping class="belegung.model.Carrels"/>

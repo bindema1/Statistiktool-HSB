@@ -24,7 +24,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.WintikurierDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -56,7 +55,8 @@ public class WintikurierView {
 	private Label lPlatzhalter;
 	private DateTimeField datefield;
 	private boolean korrektur;
-	private WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
+//	private WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
+	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	private Wintikurier wintikurier;
 	private Benutzungsstatistik benutzungsstatistik;
 
@@ -80,7 +80,7 @@ public class WintikurierView {
 
 	public WintikurierView(Benutzungsstatistik benutzungsstatistik, boolean korrektur) {
 		this.benutzungsstatistik = benutzungsstatistik;
-		wintikurier = benutzungsstatistik.getWintikurier();
+		this.wintikurier = benutzungsstatistik.getWintikurier();
 		this.korrektur = korrektur;
 	}
 
@@ -302,7 +302,7 @@ public class WintikurierView {
 
 				if (e.getSource() == bGesundheit) {
 					wintikurier.increaseAnzahl_Gesundheit();
-					wintikurierDB.updateWintikurier(wintikurier);
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Gesundheit +1", Type.TRAY_NOTIFICATION);
 					lGesundheitTotal.setValue("" + wintikurier.getAnzahl_Gesundheit());
 				}
@@ -310,7 +310,7 @@ public class WintikurierView {
 				if (e.getSource() == bGesundheitMinus) {
 					if (wintikurier.getAnzahl_Gesundheit() != 0) {
 						wintikurier.decreaseAnzahl_Gesundheit();
-						wintikurierDB.updateWintikurier(wintikurier);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Gesundheit -1", Type.TRAY_NOTIFICATION);
 						lGesundheitTotal.setValue("" + wintikurier.getAnzahl_Gesundheit());
 					} else {
@@ -320,7 +320,7 @@ public class WintikurierView {
 
 				if (e.getSource() == bLinguistik) {
 					wintikurier.increaseAnzahl_Linguistik();
-					wintikurierDB.updateWintikurier(wintikurier);
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Linguistik +1", Type.TRAY_NOTIFICATION);
 					lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
 				}
@@ -328,7 +328,7 @@ public class WintikurierView {
 				if (e.getSource() == bLinguistikMinus) {
 					if (wintikurier.getAnzahl_Linguistik() != 0) {
 						wintikurier.decreaseAnzahl_Linguistik();
-						wintikurierDB.updateWintikurier(wintikurier);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Linguistik -1", Type.TRAY_NOTIFICATION);
 						lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
 					} else {
@@ -338,7 +338,7 @@ public class WintikurierView {
 
 				if (e.getSource() == bTechnik) {
 					wintikurier.increaseAnzahl_Technik();
-					wintikurierDB.updateWintikurier(wintikurier);
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Technik +1", Type.TRAY_NOTIFICATION);
 					lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
 				}
@@ -346,7 +346,7 @@ public class WintikurierView {
 				if (e.getSource() == bTechnikMinus) {
 					if (wintikurier.getAnzahl_Technik() != 0) {
 						wintikurier.decreaseAnzahl_Technik();
-						wintikurierDB.updateWintikurier(wintikurier);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Technik -1", Type.TRAY_NOTIFICATION);
 						lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
 					} else {
@@ -356,7 +356,7 @@ public class WintikurierView {
 
 				if (e.getSource() == bWirtschaft) {
 					wintikurier.increaseAnzahl_Wirtschaft();
-					wintikurierDB.updateWintikurier(wintikurier);
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Wirtschaft +1", Type.TRAY_NOTIFICATION);
 					lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
 				}
@@ -364,7 +364,7 @@ public class WintikurierView {
 				if (e.getSource() == bWirtschaftMinus) {
 					if (wintikurier.getAnzahl_Wirtschaft() != 0) {
 						wintikurier.decreaseAnzahl_Wirtschaft();
-						wintikurierDB.updateWintikurier(wintikurier);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Wirtschaft -1", Type.TRAY_NOTIFICATION);
 						lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
 					} else {

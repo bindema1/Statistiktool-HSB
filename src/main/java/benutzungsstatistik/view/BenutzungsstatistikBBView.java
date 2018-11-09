@@ -25,11 +25,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
-import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.EmailkontaktDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
@@ -42,8 +38,9 @@ import benutzungsstatistik.model.Telefonkontakt;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Theme("mytheme")
-public class BenutzungsstatistikBBView implements View{
+public class BenutzungsstatistikBBView implements View {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
@@ -59,11 +56,11 @@ public class BenutzungsstatistikBBView implements View{
 	private Switch kassenbeleg;
 	private Label lText;
 	private Label lKassenbeleg;
-	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
+//	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
+//	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
+//	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
+//	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 
 	private AbsoluteLayout buildMainLayout() {
@@ -89,7 +86,8 @@ public class BenutzungsstatistikBBView implements View{
 	}
 
 	private void initData() {
-		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
+		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
+				StandortEnum.WINTERTHUR_BB);
 	}
 
 	// Initialisieren der GUI Komponente
@@ -213,7 +211,6 @@ public class BenutzungsstatistikBBView implements View{
 
 	}
 
-	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override
@@ -224,18 +221,18 @@ public class BenutzungsstatistikBBView implements View{
 
 				if (e.getSource() == bBenutzerkontakt) {
 
-					Benutzerkontakt benutzerkontakt = new Benutzerkontakt(new Timestamp(new Date().getTime()),
-							benutzungsstatistik);
-					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
+					benutzungsstatistik.addBenutzerkontakt(
+							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bIntensivFrage) {
 
-					Intensivfrage intensivfrage = new Intensivfrage(new Timestamp(new Date().getTime()),
-							benutzungsstatistik);
-					intensivFrageDB.insertIntensivfrage(intensivfrage);
+					benutzungsstatistik.addIntensivfrage(
+							new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					Notification.show("+1 Intensivfrage", Type.TRAY_NOTIFICATION);
 				}
@@ -249,17 +246,17 @@ public class BenutzungsstatistikBBView implements View{
 				}
 
 				if (e.getSource() == bEmailkontakt) {
-					Emailkontakt emailkontakt = new Emailkontakt(new Timestamp(new Date().getTime()),
-							benutzungsstatistik);
-					emailKontaktDB.insertEmailkontakt(emailkontakt);
+					benutzungsstatistik.addEmailkontakt(
+							new Emailkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bTelefonkontakt) {
-					Telefonkontakt telefonkontakt = new Telefonkontakt(new Timestamp(new Date().getTime()),
-							benutzungsstatistik);
-					telefonKontaktDB.insertTelefonkontakt(telefonkontakt);
+					benutzungsstatistik.addTelefonkontakt(
+							new Telefonkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);
 				}

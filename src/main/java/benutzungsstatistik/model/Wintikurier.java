@@ -2,19 +2,31 @@ package benutzungsstatistik.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Wintikurier in
  * die Tabelle 'Wintikurier' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "wintikurier")
 public class Wintikurier implements Serializable {
 
-	int wintikurier_ID;
-	int anzahl_Gesundheit;
-	int anzahl_Technik;
-	int anzahl_Wirtschaft;
-	int anzahl_Linguistik;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int wintikurier_ID;
+	
+	private int anzahl_Gesundheit;
+	private int anzahl_Technik;
+	private int anzahl_Wirtschaft;
+	private int anzahl_Linguistik;
 
 	// Für Hibernate
 	public Wintikurier() {

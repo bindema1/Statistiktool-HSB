@@ -12,7 +12,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import allgemein.model.StandortEnum;
-import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
 import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
@@ -25,6 +24,7 @@ import belegung.model.StockwerkEnum;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class BelegungsDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -117,7 +117,7 @@ public class BelegungsDatenbank {
 	/**
 	 * @return Liste von allen Belegungen
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Belegung> selectAllBelegungen() {
 
 		Session tempSession = null;
@@ -154,7 +154,7 @@ public class BelegungsDatenbank {
 	/**
 	 * @return Belegung für ein bestimmtes Datum an einem bestimmten Standort
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Belegung selectBelegungForDateAndStandort(Date date, StandortEnum standort) {
 
 		Session tempSession = null;

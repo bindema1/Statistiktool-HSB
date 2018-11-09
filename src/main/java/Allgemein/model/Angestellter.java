@@ -3,20 +3,41 @@ package allgemein.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Angestellten in
  * die Tabelle 'Angestellter' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "angestellter")
 public class Angestellter implements Serializable {
 
-	int angestellter_ID;
-	String name;
-	String passwort;
-	Date passwort_datum;
-	boolean rechteAdmin;
-	StandortEnum standort;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int angestellter_ID;
+	
+	private String name;
+	private String passwort;
+	
+	@Temporal(TemporalType.DATE)
+	private Date passwort_datum;
+	
+	private boolean rechteAdmin;
+	
+	@Enumerated(EnumType.STRING)
+	private StandortEnum standort;
 
 	// Für Hibernate
 	public Angestellter(){
@@ -126,5 +147,11 @@ public class Angestellter implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	
 
 }

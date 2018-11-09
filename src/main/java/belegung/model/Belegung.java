@@ -28,6 +28,7 @@ import allgemein.model.StandortEnum;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "belegung")
 public class Belegung implements Serializable {
@@ -35,7 +36,7 @@ public class Belegung implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="belegungs_ID")
-	private Long belegungs_ID;
+	private int belegungs_ID;
 	
 	@Temporal(TemporalType.DATE)
 	private Date datum;
@@ -57,7 +58,7 @@ public class Belegung implements Serializable {
 		this.standort = standort;
 	}
 
-	public Long getBelegungs_ID() {
+	public int getBelegungs_ID() {
 		return belegungs_ID;
 	}
 
@@ -83,7 +84,7 @@ public class Belegung implements Serializable {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setBelegungs_ID(Long belegungs_ID) {
+	public void setBelegungs_ID(int belegungs_ID) {
 		this.belegungs_ID = belegungs_ID;
 	}
 
@@ -99,7 +100,7 @@ public class Belegung implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((belegungs_ID == null) ? 0 : belegungs_ID.hashCode());
+		result = prime * result + belegungs_ID;
 		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
 		result = prime * result + ((standort == null) ? 0 : standort.hashCode());
 		result = prime * result + ((stockwerkListe == null) ? 0 : stockwerkListe.hashCode());
@@ -115,10 +116,7 @@ public class Belegung implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Belegung other = (Belegung) obj;
-		if (belegungs_ID == null) {
-			if (other.belegungs_ID != null)
-				return false;
-		} else if (!belegungs_ID.equals(other.belegungs_ID))
+		if (belegungs_ID != other.belegungs_ID)
 			return false;
 		if (datum == null) {
 			if (other.datum != null)

@@ -1,6 +1,5 @@
 package Testdaten;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,36 +86,33 @@ public class TestDaten {
 
 	private void initBenutzungsstatistik() throws ParseException {
 
-		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-		ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-		BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
+//		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
+//		ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
+//		BeantwortungBibliothekspersonalDatenbank beantwortungBibliothekspersonalDB = new BeantwortungBibliothekspersonalDatenbank();
 		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
-		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
+//		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
+//		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
+//		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
+//		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 		
 		date = sdf2.parse("01.11.2018");
 
-		Wintikurier wintikurier1 = new Wintikurier(6, 2, 9, 5);
-		wintikurierDB.insertWintikurier(wintikurier1);
-
-		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, wintikurier1);
-		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik1);
+		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, new Wintikurier(6, 2, 9, 5));
 
 //		Timestamp timestamp = new Timestamp(date.getTime());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String datumheute = sdf.format(date);
-		Timestamp timestamp8 = Timestamp.valueOf(datumheute + " 08:30:00.0");
-		Timestamp timestamp9 = Timestamp.valueOf(datumheute + " 09:59:00.0");
-		Timestamp timestamp10 = Timestamp.valueOf(datumheute + " 10:30:00.0");
-		Timestamp timestamp11 = Timestamp.valueOf(datumheute + " 11:30:00.0");
-		Timestamp timestamp12 = Timestamp.valueOf(datumheute + " 12:30:00.0");
-		Timestamp timestamp13 = Timestamp.valueOf(datumheute + " 13:30:00.0");
-		Timestamp timestamp14 = Timestamp.valueOf(datumheute + " 14:00:00.0");
-		Timestamp timestamp15 = Timestamp.valueOf(datumheute + " 15:30:00.0");
-		Timestamp timestamp16 = Timestamp.valueOf(datumheute + " 16:30:00.0");
-		Timestamp timestamp17 = Timestamp.valueOf(datumheute + " 17:30:00.0");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date timestamp8 = sdf2.parse(datumheute + " 08:30:00.0");
+		Date timestamp9 = sdf2.parse(datumheute + " 09:59:00.0");
+		Date timestamp10 = sdf2.parse(datumheute + " 10:30:00.0");
+		Date timestamp11 = sdf2.parse(datumheute + " 11:30:00.0");
+		Date timestamp12 = sdf2.parse(datumheute + " 12:30:00.0");
+		Date timestamp13 = sdf2.parse(datumheute + " 13:30:00.0");
+		Date timestamp14 = sdf2.parse(datumheute + " 14:00:00.0");
+		Date timestamp15 = sdf2.parse(datumheute + " 15:30:00.0");
+		Date timestamp16 = sdf2.parse(datumheute + " 16:30:00.0");
+		Date timestamp17 = sdf2.parse(datumheute + " 17:30:00.0");
 
 		Benutzerkontakt benutzerkontakt1 = new Benutzerkontakt(timestamp8, benutzungsstatistik1);
 		Benutzerkontakt benutzerkontakt2 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
@@ -125,13 +121,13 @@ public class TestDaten {
 		Benutzerkontakt benutzerkontakt5 = new Benutzerkontakt(timestamp14, benutzungsstatistik1);
 		Benutzerkontakt benutzerkontakt6 = new Benutzerkontakt(timestamp15, benutzungsstatistik1);
 		Benutzerkontakt benutzerkontakt7 = new Benutzerkontakt(timestamp16, benutzungsstatistik1);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt1);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt2);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt3);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt4);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt5);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt6);
-		benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt7);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt1);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt2);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt3);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt4);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt5);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt6);
+		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt7);
 
 		Intensivfrage intensivfrage1 = new Intensivfrage(timestamp9, benutzungsstatistik1);
 		Intensivfrage intensivfrage2 = new Intensivfrage(timestamp10, benutzungsstatistik1);
@@ -141,14 +137,14 @@ public class TestDaten {
 		Intensivfrage intensivfrage6 = new Intensivfrage(timestamp15, benutzungsstatistik1);
 		Intensivfrage intensivfrage7 = new Intensivfrage(timestamp16, benutzungsstatistik1);
 		Intensivfrage intensivfrage8 = new Intensivfrage(timestamp17, benutzungsstatistik1);
-		intensivFrageDB.insertIntensivfrage(intensivfrage1);
-		intensivFrageDB.insertIntensivfrage(intensivfrage2);
-		intensivFrageDB.insertIntensivfrage(intensivfrage3);
-		intensivFrageDB.insertIntensivfrage(intensivfrage4);
-		intensivFrageDB.insertIntensivfrage(intensivfrage5);
-		intensivFrageDB.insertIntensivfrage(intensivfrage6);
-		intensivFrageDB.insertIntensivfrage(intensivfrage7);
-		intensivFrageDB.insertIntensivfrage(intensivfrage8);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage1);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage2);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage3);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage4);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage5);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage6);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage7);
+		benutzungsstatistik1.addIntensivfrage(intensivfrage8);
 
 		Telefonkontakt telefonkontakt1 = new Telefonkontakt(timestamp8, benutzungsstatistik1);
 		Telefonkontakt telefonkontakt2 = new Telefonkontakt(timestamp10, benutzungsstatistik1);
@@ -159,15 +155,15 @@ public class TestDaten {
 		Telefonkontakt telefonkontakt7 = new Telefonkontakt(timestamp16, benutzungsstatistik1);
 		Telefonkontakt telefonkontakt8 = new Telefonkontakt(timestamp16, benutzungsstatistik1);
 		Telefonkontakt telefonkontakt9 = new Telefonkontakt(timestamp17, benutzungsstatistik1);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt1);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt2);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt3);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt4);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt5);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt6);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt7);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt8);
-		telefonKontaktDB.insertTelefonkontakt(telefonkontakt9);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt1);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt2);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt3);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt4);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt5);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt6);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt7);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt8);
+		benutzungsstatistik1.addTelefonkontakt(telefonkontakt9);
 
 		Emailkontakt emailkontakt1 = new Emailkontakt(timestamp8, benutzungsstatistik1);
 		Emailkontakt emailkontakt2 = new Emailkontakt(timestamp9, benutzungsstatistik1);
@@ -178,27 +174,29 @@ public class TestDaten {
 		Emailkontakt emailkontakt7 = new Emailkontakt(timestamp14, benutzungsstatistik1);
 		Emailkontakt emailkontakt8 = new Emailkontakt(timestamp15, benutzungsstatistik1);
 		Emailkontakt emailkontakt9 = new Emailkontakt(timestamp17, benutzungsstatistik1);
-		emailKontaktDB.insertEmailkontakt(emailkontakt1);
-		emailKontaktDB.insertEmailkontakt(emailkontakt2);
-		emailKontaktDB.insertEmailkontakt(emailkontakt3);
-		emailKontaktDB.insertEmailkontakt(emailkontakt4);
-		emailKontaktDB.insertEmailkontakt(emailkontakt5);
-		emailKontaktDB.insertEmailkontakt(emailkontakt6);
-		emailKontaktDB.insertEmailkontakt(emailkontakt7);
-		emailKontaktDB.insertEmailkontakt(emailkontakt8);
-		emailKontaktDB.insertEmailkontakt(emailkontakt9);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt1);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt2);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt3);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt4);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt5);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt6);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt7);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt8);
+		benutzungsstatistik1.addEmailkontakt(emailkontakt9);
 
 		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal1 = new BeantwortungBibliothekspersonal(
 				timestamp8, benutzungsstatistik1);
-		beantwortungBibliothekspersonalDB.insertBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
+		benutzungsstatistik1.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
 
 		ExterneGruppe externeGruppe1 = new ExterneGruppe("Test Gruppe", 10, benutzungsstatistik1);
 		ExterneGruppe externeGruppe2 = new ExterneGruppe("Winterthur Stadtführung", 14, benutzungsstatistik1);
 		ExterneGruppe externeGruppe3 = new ExterneGruppe("Fussballverein Winterthur", 7, benutzungsstatistik1);
-		externeGruppeDB.insertExterneGruppe(externeGruppe1);
-		externeGruppeDB.insertExterneGruppe(externeGruppe2);
-		externeGruppeDB.insertExterneGruppe(externeGruppe3);
+		benutzungsstatistik1.addExterneGruppe(externeGruppe1);
+		benutzungsstatistik1.addExterneGruppe(externeGruppe2);
+		benutzungsstatistik1.addExterneGruppe(externeGruppe3);
 
+		
+		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik1);
 	}
 
 	private void initBelegung() throws ParseException {

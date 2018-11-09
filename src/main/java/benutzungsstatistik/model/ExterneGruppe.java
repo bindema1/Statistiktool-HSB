@@ -2,18 +2,36 @@ package benutzungsstatistik.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine ExterneGruppe in
  * die Tabelle 'ExterneGruppe' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "externeGruppe")
 public class ExterneGruppe implements Serializable {
 
-	int externeGruppe_ID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int externeGruppe_ID;
+	
 	String name;
-	int anzahl_Personen;
-	Benutzungsstatistik benutzungsstatistik;
+	private int anzahl_Personen;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "benutzungsstatistik_ID")
+	private Benutzungsstatistik benutzungsstatistik;
 	
 	// Für Hibernate
 	public ExterneGruppe(){

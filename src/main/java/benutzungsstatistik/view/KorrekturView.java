@@ -33,11 +33,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
-import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.EmailkontaktDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
@@ -77,10 +73,6 @@ public class KorrekturView implements Serializable {
 	private int emailzaehler = 0;
 	private int intensivzaehler = 0;
 	private int telefonzaehler = 0;
-	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 	private SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd-yyyy");
@@ -276,29 +268,25 @@ public class KorrekturView implements Serializable {
 				emailzaehler = 0;
 				intensivzaehler = 0;
 				telefonzaehler = 0;
-				for (Benutzerkontakt b : benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(
-						benutzungsstatistik.getBenutzungsstatistik_ID())) {
+				for (Benutzerkontakt b : benutzungsstatistik.getBenutzerkontaktListe()) {
 					if (Integer.parseInt(dateFormat.format(b.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						benutzerzaehler++;
 					}
 				}
 				lBenutzerkontakt.setValue("" + benutzerzaehler);
-				for (Emailkontakt e : emailKontaktDB.selectAllEmailkontakteForBenutzungsstatistik(
-						benutzungsstatistik.getBenutzungsstatistik_ID())) {
+				for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
 					if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						emailzaehler++;
 					}
 				}
 				lEmailkontakt.setValue("" + emailzaehler);
-				for (Intensivfrage i : intensivFrageDB.selectAllIntensivfragenForBenutzungsstatistik(
-						benutzungsstatistik.getBenutzungsstatistik_ID())) {
+				for (Intensivfrage i : benutzungsstatistik.getIntensivfrageListe()) {
 					if (Integer.parseInt(dateFormat.format(i.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						intensivzaehler++;
 					}
 				}
 				lIntensivFrage.setValue("" + intensivzaehler);
-				for (Telefonkontakt t : telefonKontaktDB.selectAllTelefonkontakteForBenutzungsstatistik(
-						benutzungsstatistik.getBenutzungsstatistik_ID())) {
+				for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
 					if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						telefonzaehler++;
 					}
@@ -341,7 +329,8 @@ public class KorrekturView implements Serializable {
 		bKorrekturGruppen.addClickListener(createClickListener(mainView));
 
 		DateTimeField datefield = new DateTimeField();
-		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
+				.toLocalDateTime());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
@@ -456,9 +445,9 @@ public class KorrekturView implements Serializable {
 						e1.printStackTrace();
 					}
 
-					Benutzerkontakt benutzerkontakt = new Benutzerkontakt(new Timestamp(date.getTime()),
-							benutzungsstatistik);
-					benutzerKontaktDB.insertBenutzerkontakt(benutzerkontakt);
+					benutzungsstatistik.addBenutzerkontakt(
+							new Benutzerkontakt(new Timestamp(date.getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					benutzerzaehler++;
 					lBenutzerkontakt.setValue("" + benutzerzaehler);
@@ -469,13 +458,13 @@ public class KorrekturView implements Serializable {
 
 					if (benutzerzaehler != 0) {
 						Benutzerkontakt benutzerkontakt = null;
-						for (Benutzerkontakt b : benutzerKontaktDB.selectAllBenutzerkontakteForBenutzungsstatistik(
-								benutzungsstatistik.getBenutzungsstatistik_ID())) {
+						for (Benutzerkontakt b : benutzungsstatistik.getBenutzerkontaktListe()) {
 							if (Integer.parseInt(dateFormat.format(b.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								benutzerkontakt = b;
 							}
 						}
-						benutzerKontaktDB.deleteBenutzerkontakt(benutzerkontakt);
+						benutzungsstatistik.removeBenutzerkontakt(benutzerkontakt);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						benutzerzaehler--;
 						lBenutzerkontakt.setValue("" + benutzerzaehler);
@@ -498,8 +487,9 @@ public class KorrekturView implements Serializable {
 						e1.printStackTrace();
 					}
 
-					Intensivfrage intensivfrage = new Intensivfrage(new Timestamp(date.getTime()), benutzungsstatistik);
-					intensivFrageDB.insertIntensivfrage(intensivfrage);
+					benutzungsstatistik
+							.addIntensivfrage(new Intensivfrage(new Timestamp(date.getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					intensivzaehler++;
 					lIntensivFrage.setValue("" + intensivzaehler);
@@ -510,13 +500,13 @@ public class KorrekturView implements Serializable {
 
 					if (intensivzaehler != 0) {
 						Intensivfrage intensivfrage = null;
-						for (Intensivfrage i : intensivFrageDB.selectAllIntensivfragenForBenutzungsstatistik(
-								benutzungsstatistik.getBenutzungsstatistik_ID())) {
+						for (Intensivfrage i : benutzungsstatistik.getIntensivfrageListe()) {
 							if (Integer.parseInt(dateFormat.format(i.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								intensivfrage = i;
 							}
 						}
-						intensivFrageDB.deleteIntensivfrage(intensivfrage);
+						benutzungsstatistik.removeIntensivfrage(intensivfrage);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						intensivzaehler--;
 						lIntensivFrage.setValue("" + intensivzaehler);
@@ -539,8 +529,9 @@ public class KorrekturView implements Serializable {
 						e1.printStackTrace();
 					}
 
-					Emailkontakt emailkontakt = new Emailkontakt(new Timestamp(date.getTime()), benutzungsstatistik);
-					emailKontaktDB.insertEmailkontakt(emailkontakt);
+					benutzungsstatistik
+							.addEmailkontakt(new Emailkontakt(new Timestamp(date.getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					emailzaehler++;
 					lEmailkontakt.setValue("" + emailzaehler);
@@ -551,14 +542,14 @@ public class KorrekturView implements Serializable {
 
 					if (emailzaehler != 0) {
 						Emailkontakt emailkontakt = null;
-						for (Emailkontakt e1 : emailKontaktDB.selectAllEmailkontakteForBenutzungsstatistik(
-								benutzungsstatistik.getBenutzungsstatistik_ID())) {
+						for (Emailkontakt e1 : benutzungsstatistik.getEmailkontaktListe()) {
 							if (Integer
 									.parseInt(dateFormat.format(e1.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								emailkontakt = e1;
 							}
 						}
-						emailKontaktDB.deleteEmailkontakt(emailkontakt);
+						benutzungsstatistik.removeEmailkontakt(emailkontakt);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						emailzaehler--;
 						lEmailkontakt.setValue("" + emailzaehler);
@@ -581,9 +572,9 @@ public class KorrekturView implements Serializable {
 						e1.printStackTrace();
 					}
 
-					Telefonkontakt telefonkontakt = new Telefonkontakt(new Timestamp(date.getTime()),
-							benutzungsstatistik);
-					telefonKontaktDB.insertTelefonkontakt(telefonkontakt);
+					benutzungsstatistik
+							.addTelefonkontakt(new Telefonkontakt(new Timestamp(date.getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					telefonzaehler++;
 					lTelefonkontakt.setValue("" + telefonzaehler);
@@ -594,13 +585,13 @@ public class KorrekturView implements Serializable {
 
 					if (telefonzaehler != 0) {
 						Telefonkontakt telefonkontakt = null;
-						for (Telefonkontakt t : telefonKontaktDB.selectAllTelefonkontakteForBenutzungsstatistik(
-								benutzungsstatistik.getBenutzungsstatistik_ID())) {
+						for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
 							if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								telefonkontakt = t;
 							}
 						}
-						telefonKontaktDB.deleteTelefonkontakt(telefonkontakt);
+						benutzungsstatistik.removeTelefonkontakt(telefonkontakt);
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						telefonzaehler--;
 						lTelefonkontakt.setValue("" + telefonzaehler);

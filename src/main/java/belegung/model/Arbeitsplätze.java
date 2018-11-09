@@ -19,13 +19,14 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "arbeitsplätze")
 public class Arbeitsplätze implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long arbeitsplätze_ID;
+	private int arbeitsplätze_ID;
 	
 	private int anzahlPersonen;
 
@@ -47,7 +48,7 @@ public class Arbeitsplätze implements Serializable {
 		this.stockwerk = stockwerk;
 	}
 
-	public Long getArbeitsplätze_ID() {
+	public int getArbeitsplätze_ID() {
 		return arbeitsplätze_ID;
 	}
 
@@ -65,7 +66,7 @@ public class Arbeitsplätze implements Serializable {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setArbeitsplätze_ID(Long arbeitsplätze_ID) {
+	public void setArbeitsplätze_ID(int arbeitsplätze_ID) {
 		this.arbeitsplätze_ID = arbeitsplätze_ID;
 	}
 
@@ -86,7 +87,7 @@ public class Arbeitsplätze implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + anzahlPersonen;
-		result = prime * result + ((arbeitsplätze_ID == null) ? 0 : arbeitsplätze_ID.hashCode());
+		result = prime * result + arbeitsplätze_ID;
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -103,10 +104,7 @@ public class Arbeitsplätze implements Serializable {
 		Arbeitsplätze other = (Arbeitsplätze) obj;
 		if (anzahlPersonen != other.anzahlPersonen)
 			return false;
-		if (arbeitsplätze_ID == null) {
-			if (other.arbeitsplätze_ID != null)
-				return false;
-		} else if (!arbeitsplätze_ID.equals(other.arbeitsplätze_ID))
+		if (arbeitsplätze_ID != other.arbeitsplätze_ID)
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)

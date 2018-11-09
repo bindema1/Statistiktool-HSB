@@ -23,6 +23,7 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "stockwerk")
 public class Stockwerk implements Serializable {
@@ -30,7 +31,7 @@ public class Stockwerk implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "stockwerk_ID")
-	private Long stockwerk_ID;
+	private int stockwerk_ID;
 
 	@Enumerated(EnumType.STRING)
 	private StockwerkEnum name;
@@ -77,7 +78,7 @@ public class Stockwerk implements Serializable {
 		this.name = name;
 	}
 
-	public Long getStockwerk_ID() {
+	public int getStockwerk_ID() {
 		return stockwerk_ID;
 	}
 
@@ -201,7 +202,7 @@ public class Stockwerk implements Serializable {
 
 
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setStockwerk_ID(Long stockwerk_ID) {
+	public void setStockwerk_ID(int stockwerk_ID) {
 		this.stockwerk_ID = stockwerk_ID;
 	}
 	
@@ -238,6 +239,7 @@ public class Stockwerk implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((arbeitsplatzListe == null) ? 0 : arbeitsplatzListe.hashCode());
+		result = prime * result + ((belegungsListe == null) ? 0 : belegungsListe.hashCode());
 		result = prime * result + ((carrelsListe == null) ? 0 : carrelsListe.hashCode());
 		result = prime * result + ((gruppenräumeListe == null) ? 0 : gruppenräumeListe.hashCode());
 		result = prime * result + (hatCarrels ? 1231 : 1237);
@@ -248,7 +250,7 @@ public class Stockwerk implements Serializable {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((sektorAListe == null) ? 0 : sektorAListe.hashCode());
 		result = prime * result + ((sektorBListe == null) ? 0 : sektorBListe.hashCode());
-		result = prime * result + ((stockwerk_ID == null) ? 0 : stockwerk_ID.hashCode());
+		result = prime * result + stockwerk_ID;
 		return result;
 	}
 
@@ -265,6 +267,11 @@ public class Stockwerk implements Serializable {
 			if (other.arbeitsplatzListe != null)
 				return false;
 		} else if (!arbeitsplatzListe.equals(other.arbeitsplatzListe))
+			return false;
+		if (belegungsListe == null) {
+			if (other.belegungsListe != null)
+				return false;
+		} else if (!belegungsListe.equals(other.belegungsListe))
 			return false;
 		if (carrelsListe == null) {
 			if (other.carrelsListe != null)
@@ -301,12 +308,11 @@ public class Stockwerk implements Serializable {
 				return false;
 		} else if (!sektorBListe.equals(other.sektorBListe))
 			return false;
-		if (stockwerk_ID == null) {
-			if (other.stockwerk_ID != null)
-				return false;
-		} else if (!stockwerk_ID.equals(other.stockwerk_ID))
+		if (stockwerk_ID != other.stockwerk_ID)
 			return false;
 		return true;
 	}
+
+	
 
 }

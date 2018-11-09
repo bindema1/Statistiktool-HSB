@@ -514,7 +514,8 @@ public class BelegungErfassenView implements View {
 				}
 			} else {
 //				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
-
+				bRäume.setCaption("Gruppenäume");
+				
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
 						for (Gruppenräume g : s.getGruppenräumeListe()) {
@@ -555,7 +556,8 @@ public class BelegungErfassenView implements View {
 
 			// Gruppenräume
 			if (erfassungsSchritt == 1) {
-
+				bRäume.setCaption("Gruppenäume");
+				
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
 						for (Gruppenräume g : s.getGruppenräumeListe()) {
@@ -570,6 +572,7 @@ public class BelegungErfassenView implements View {
 //				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// Carrels
 			} else if (erfassungsSchritt == 2) {
+				bRäume.setCaption("Carrels");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {

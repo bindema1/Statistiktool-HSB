@@ -1,6 +1,4 @@
-package allgemein.view;
-
-import java.util.Date;
+package administrator.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.ui.AbsoluteLayout;
@@ -12,21 +10,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import Testdaten.TestDaten;
-import administrator.view.ExportView;
-import administrator.view.PasswortView;
-import belegung.model.StockwerkEnum;
-import belegung.view.BelegungErfassenView;
+import allgemein.view.MainView;
 import benutzungsstatistik.view.BenutzungsstatistikBBView;
 
 @SuppressWarnings("serial")
-public class StartseiteView implements View{
+public class ExportView implements View{
 
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistik;
-	private Button bBelegung;
-	private Button bExport;
-	private Button bPasswort;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -46,8 +37,8 @@ public class StartseiteView implements View{
 		return absolutLayout;
 	}
 	
-	public StartseiteView() {
-		new TestDaten();
+	public ExportView() {
+
 	}
 
 	private void initData() {
@@ -62,27 +53,9 @@ public class StartseiteView implements View{
 		bBenutzungsstatistik.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistik.addClickListener(createClickListener(mainView));
 
-		bBelegung = new Button();
-		bBelegung.setCaption("Belegung");
-		bBelegung.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBelegung.addClickListener(createClickListener(mainView));
-		
-		bExport = new Button();
-		bExport.setCaption("Export");
-		bExport.addStyleName(ValoTheme.BUTTON_LARGE);
-		bExport.addClickListener(createClickListener(mainView));
-		
-		bPasswort = new Button();
-		bPasswort.setCaption("Passwörter ändern");
-		bPasswort.addStyleName(ValoTheme.BUTTON_LARGE);
-		bPasswort.addClickListener(createClickListener(mainView));
-
-		GridLayout grid = new GridLayout(2, 2);
+		GridLayout grid = new GridLayout(1, 1);
 		grid.setSizeFull();
 		grid.addComponent(bBenutzungsstatistik, 0, 0);
-		grid.addComponent(bBelegung, 1, 0);
-		grid.addComponent(bExport, 0, 1);
-		grid.addComponent(bPasswort, 1, 1);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -97,7 +70,6 @@ public class StartseiteView implements View{
 		mainLayout.addComponent(grid);
 	}
 
-	@SuppressWarnings("serial")
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override
@@ -106,20 +78,9 @@ public class StartseiteView implements View{
 					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
 				}
 
-				if (e.getSource() == bBelegung) {
-					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
-				}
-				
-				if (e.getSource() == bExport) {
-					mainView.setContent(new ExportView().init(mainView));
-				}
-				
-				if (e.getSource() == bPasswort) {
-					mainView.setContent(new PasswortView().init(mainView));
-				}
-
 			}
 		};
 
 	}
+	
 }

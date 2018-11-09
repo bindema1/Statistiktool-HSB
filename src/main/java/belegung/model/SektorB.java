@@ -20,13 +20,14 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "sektorB")
 public class SektorB implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long sektorB_ID;
+	private int sektorB_ID;
 	
 	private int anzahlPersonen;
 
@@ -48,7 +49,7 @@ public class SektorB implements Serializable {
 		this.stockwerk = stockwerk;
 	}
 
-	public Long getSektorB_ID() {
+	public int getSektorB_ID() {
 		return sektorB_ID;
 	}
 
@@ -66,7 +67,7 @@ public class SektorB implements Serializable {
 
 	
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
-	public void setSektorB_ID(Long sektorB_ID) {
+	public void setSektorB_ID(int sektorB_ID) {
 		this.sektorB_ID = sektorB_ID;
 	}
 
@@ -87,7 +88,7 @@ public class SektorB implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + anzahlPersonen;
-		result = prime * result + ((sektorB_ID == null) ? 0 : sektorB_ID.hashCode());
+		result = prime * result + sektorB_ID;
 		result = prime * result + ((stockwerk == null) ? 0 : stockwerk.hashCode());
 		result = prime * result + ((uhrzeit == null) ? 0 : uhrzeit.hashCode());
 		return result;
@@ -104,10 +105,7 @@ public class SektorB implements Serializable {
 		SektorB other = (SektorB) obj;
 		if (anzahlPersonen != other.anzahlPersonen)
 			return false;
-		if (sektorB_ID == null) {
-			if (other.sektorB_ID != null)
-				return false;
-		} else if (!sektorB_ID.equals(other.sektorB_ID))
+		if (sektorB_ID != other.sektorB_ID)
 			return false;
 		if (stockwerk == null) {
 			if (other.stockwerk != null)
@@ -118,5 +116,6 @@ public class SektorB implements Serializable {
 			return false;
 		return true;
 	}
+
 	
 }

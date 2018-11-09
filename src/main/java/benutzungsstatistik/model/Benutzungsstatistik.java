@@ -1,7 +1,23 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import allgemein.model.StandortEnum;
 
@@ -11,14 +27,45 @@ import allgemein.model.StandortEnum;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "benutzungsstatistik")
 public class Benutzungsstatistik implements Serializable {
 
-	int benutzungsstatistik_ID;
-	Date datum;
-	int anzahl_Rechercheberatung;
-	boolean kassenbeleg;
-	StandortEnum standort;
-	Wintikurier wintikurier;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="benutzungsstatistik_ID")
+	private int benutzungsstatistik_ID;
+	
+	@Temporal(TemporalType.DATE)
+	private Date datum;
+	
+	private int anzahl_Rechercheberatung;
+	private boolean kassenbeleg;
+	
+	@Enumerated(EnumType.STRING)
+	private StandortEnum standort;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Wintikurier wintikurier;
+	
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Benutzerkontakt> benutzerkontaktListe = new ArrayList<>();
+
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<BeantwortungBibliothekspersonal> beantwortungBibliothekspersonalListe = new ArrayList<>();
+
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Emailkontakt> emailkontaktListe = new ArrayList<>();
+
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Telefonkontakt> telefonkontaktListe = new ArrayList<>();
+
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Intensivfrage> intensivfrageListe = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ExterneGruppe> externeGruppeListe = new ArrayList<>();
 
 	// Für Hibernate
 	public Benutzungsstatistik() {
@@ -41,7 +88,69 @@ public class Benutzungsstatistik implements Serializable {
 		this.kassenbeleg = kassenbeleg;
 		this.standort = standort;
 	}
+	
+	//Add and Remove from List Methoden
+	public void addBenutzerkontakt(Benutzerkontakt benutzerkontakt) {
+		benutzerkontaktListe.add(benutzerkontakt);
+		benutzerkontakt.setBenutzungsstatistik(this);
+	}
 
+	public void removeBenutzerkontakt(Benutzerkontakt benutzerkontakt) {
+		benutzerkontaktListe.remove(benutzerkontakt);
+		benutzerkontakt.setBenutzungsstatistik(null);
+	}
+	
+	public void addBeantwortungBibliothekspersonal(BeantwortungBibliothekspersonal beantwortungBibliothekspersonal) {
+		beantwortungBibliothekspersonalListe.add(beantwortungBibliothekspersonal);
+		beantwortungBibliothekspersonal.setBenutzungsstatistik(this);
+	}
+
+	public void removeBeantwortungBibliothekspersonal(BeantwortungBibliothekspersonal beantwortungBibliothekspersonal) {
+		beantwortungBibliothekspersonalListe.remove(beantwortungBibliothekspersonal);
+		beantwortungBibliothekspersonal.setBenutzungsstatistik(null);
+	}
+	
+	public void addEmailkontakt(Emailkontakt emailkontakt) {
+		emailkontaktListe.add(emailkontakt);
+		emailkontakt.setBenutzungsstatistik(this);
+	}
+
+	public void removeEmailkontakt(Emailkontakt emailkontakt) {
+		emailkontaktListe.remove(emailkontakt);
+		emailkontakt.setBenutzungsstatistik(null);
+	}
+	
+	public void addTelefonkontakt(Telefonkontakt telefonkontakt) {
+		telefonkontaktListe.add(telefonkontakt);
+		telefonkontakt.setBenutzungsstatistik(this);
+	}
+
+	public void removeTelefonkontakt(Telefonkontakt telefonkontakt) {
+		telefonkontaktListe.remove(telefonkontakt);
+		telefonkontakt.setBenutzungsstatistik(null);
+	}
+	
+	public void addIntensivfrage(Intensivfrage intensivfrage) {
+		intensivfrageListe.add(intensivfrage);
+		intensivfrage.setBenutzungsstatistik(this);
+	}
+
+	public void removeIntensivfrage(Intensivfrage intensivfrage) {
+		intensivfrageListe.remove(intensivfrage);
+		intensivfrage.setBenutzungsstatistik(null);
+	}
+	
+	public void addExterneGruppe(ExterneGruppe externeGruppe) {
+		externeGruppeListe.add(externeGruppe);
+		externeGruppe.setBenutzungsstatistik(this);
+	}
+
+	public void removeExterneGruppe(ExterneGruppe externeGruppe) {
+		externeGruppeListe.remove(externeGruppe);
+		externeGruppe.setBenutzungsstatistik(null);
+	}
+	
+	//Getter Methoden
 	public int getBenutzungsstatistik_ID() {
 		return benutzungsstatistik_ID;
 	}
@@ -64,6 +173,30 @@ public class Benutzungsstatistik implements Serializable {
 
 	public Wintikurier getWintikurier() {
 		return wintikurier;
+	}
+	
+	public List<Benutzerkontakt> getBenutzerkontaktListe() {
+		return benutzerkontaktListe;
+	}
+
+	public List<BeantwortungBibliothekspersonal> getBeantwortungBibliothekspersonalListe() {
+		return beantwortungBibliothekspersonalListe;
+	}
+
+	public List<Emailkontakt> getEmailkontaktListe() {
+		return emailkontaktListe;
+	}
+
+	public List<Telefonkontakt> getTelefonkontaktListe() {
+		return telefonkontaktListe;
+	}
+
+	public List<Intensivfrage> getIntensivfrageListe() {
+		return intensivfrageListe;
+	}
+
+	public List<ExterneGruppe> getExterneGruppeListe() {
+		return externeGruppeListe;
 	}
 
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
@@ -90,16 +223,48 @@ public class Benutzungsstatistik implements Serializable {
 	public void setWintikurier(Wintikurier wintikurier) {
 		this.wintikurier = wintikurier;
 	}
+	
+	public void setBenutzerkontaktListe(List<Benutzerkontakt> benutzerkontaktListe) {
+		this.benutzerkontaktListe = benutzerkontaktListe;
+	}
+
+	public void setBeantwortungBibliothekspersonalListe(
+			List<BeantwortungBibliothekspersonal> beantwortungBibliothekspersonalListe) {
+		this.beantwortungBibliothekspersonalListe = beantwortungBibliothekspersonalListe;
+	}
+
+	public void setEmailkontaktListe(List<Emailkontakt> emailkontaktListe) {
+		this.emailkontaktListe = emailkontaktListe;
+	}
+
+	public void setTelefonkontaktListe(List<Telefonkontakt> telefonkontaktListe) {
+		this.telefonkontaktListe = telefonkontaktListe;
+	}
+
+	public void setIntensivfrageListe(List<Intensivfrage> intensivfrageListe) {
+		this.intensivfrageListe = intensivfrageListe;
+	}
+
+	public void setExterneGruppeListe(List<ExterneGruppe> externeGruppeListe) {
+		this.externeGruppeListe = externeGruppeListe;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((beantwortungBibliothekspersonalListe == null) ? 0
+				: beantwortungBibliothekspersonalListe.hashCode());
 		result = prime * result + anzahl_Rechercheberatung;
+		result = prime * result + ((benutzerkontaktListe == null) ? 0 : benutzerkontaktListe.hashCode());
 		result = prime * result + benutzungsstatistik_ID;
 		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
+		result = prime * result + ((emailkontaktListe == null) ? 0 : emailkontaktListe.hashCode());
+		result = prime * result + ((externeGruppeListe == null) ? 0 : externeGruppeListe.hashCode());
+		result = prime * result + ((intensivfrageListe == null) ? 0 : intensivfrageListe.hashCode());
 		result = prime * result + (kassenbeleg ? 1231 : 1237);
 		result = prime * result + ((standort == null) ? 0 : standort.hashCode());
+		result = prime * result + ((telefonkontaktListe == null) ? 0 : telefonkontaktListe.hashCode());
 		result = prime * result + ((wintikurier == null) ? 0 : wintikurier.hashCode());
 		return result;
 	}
@@ -113,7 +278,17 @@ public class Benutzungsstatistik implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Benutzungsstatistik other = (Benutzungsstatistik) obj;
+		if (beantwortungBibliothekspersonalListe == null) {
+			if (other.beantwortungBibliothekspersonalListe != null)
+				return false;
+		} else if (!beantwortungBibliothekspersonalListe.equals(other.beantwortungBibliothekspersonalListe))
+			return false;
 		if (anzahl_Rechercheberatung != other.anzahl_Rechercheberatung)
+			return false;
+		if (benutzerkontaktListe == null) {
+			if (other.benutzerkontaktListe != null)
+				return false;
+		} else if (!benutzerkontaktListe.equals(other.benutzerkontaktListe))
 			return false;
 		if (benutzungsstatistik_ID != other.benutzungsstatistik_ID)
 			return false;
@@ -122,9 +297,29 @@ public class Benutzungsstatistik implements Serializable {
 				return false;
 		} else if (!datum.equals(other.datum))
 			return false;
+		if (emailkontaktListe == null) {
+			if (other.emailkontaktListe != null)
+				return false;
+		} else if (!emailkontaktListe.equals(other.emailkontaktListe))
+			return false;
+		if (externeGruppeListe == null) {
+			if (other.externeGruppeListe != null)
+				return false;
+		} else if (!externeGruppeListe.equals(other.externeGruppeListe))
+			return false;
+		if (intensivfrageListe == null) {
+			if (other.intensivfrageListe != null)
+				return false;
+		} else if (!intensivfrageListe.equals(other.intensivfrageListe))
+			return false;
 		if (kassenbeleg != other.kassenbeleg)
 			return false;
 		if (standort != other.standort)
+			return false;
+		if (telefonkontaktListe == null) {
+			if (other.telefonkontaktListe != null)
+				return false;
+		} else if (!telefonkontaktListe.equals(other.telefonkontaktListe))
 			return false;
 		if (wintikurier == null) {
 			if (other.wintikurier != null)
@@ -134,5 +329,4 @@ public class Benutzungsstatistik implements Serializable {
 		return true;
 	}
 
-	
 }

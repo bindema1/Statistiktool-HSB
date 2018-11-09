@@ -17,13 +17,14 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "kapazität")
 public class Kapazität implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long kapzität_ID;
+	private int kapzität_ID;
 	
 	@Enumerated(EnumType.STRING)
 	private StockwerkEnum stockwerk;
@@ -53,7 +54,7 @@ public class Kapazität implements Serializable {
 		return stockwerk;
 	}
 
-	public Long getKapzität_ID() {
+	public int getKapzität_ID() {
 		return kapzität_ID;
 	}
 
@@ -83,7 +84,7 @@ public class Kapazität implements Serializable {
 		this.stockwerk = stockwerk;
 	}
 	
-	public void setKapzität_ID(Long kapzität_ID) {
+	public void setKapzität_ID(int kapzität_ID) {
 		this.kapzität_ID = kapzität_ID;
 	}
 
@@ -111,7 +112,7 @@ public class Kapazität implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((kapzität_ID == null) ? 0 : kapzität_ID.hashCode());
+		result = prime * result + kapzität_ID;
 		result = prime * result + maxArbeitsplätze;
 		result = prime * result + maxCarrels;
 		result = prime * result + maxGruppenräume;
@@ -130,10 +131,7 @@ public class Kapazität implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Kapazität other = (Kapazität) obj;
-		if (kapzität_ID == null) {
-			if (other.kapzität_ID != null)
-				return false;
-		} else if (!kapzität_ID.equals(other.kapzität_ID))
+		if (kapzität_ID != other.kapzität_ID)
 			return false;
 		if (maxArbeitsplätze != other.maxArbeitsplätze)
 			return false;

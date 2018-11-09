@@ -30,12 +30,7 @@ import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.bean.TagesübersichtBenutzungBean;
 import benutzungsstatistik.bean.WintikurierBean;
-import benutzungsstatistik.db.BenutzerkontaktDatenbank;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.EmailkontaktDatenbank;
-import benutzungsstatistik.db.ExterneGruppeDatenbank;
-import benutzungsstatistik.db.IntensivfrageDatenbank;
-import benutzungsstatistik.db.TelefonkontaktDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
@@ -259,12 +254,9 @@ public class TagesübersichtBenutzungView {
 
 	private void fülleTabelleGruppen(Grid<ExterneGruppeBean> tabelleGruppen) {
 
-		ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
-		List<ExterneGruppe> externeGruppeListe = externeGruppeDB
-				.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		List<ExterneGruppeBean> externeGruppeBeanListe = new ArrayList<>();
 
-		for (ExterneGruppe eg : externeGruppeListe) {
+		for (ExterneGruppe eg : benutzungsstatistik.getExterneGruppeListe()) {
 			ExterneGruppeBean egb = new ExterneGruppeBean();
 			egb.setName(eg.getName());
 			egb.setAnzahl_personen(eg.getAnzahl_Personen());
@@ -285,19 +277,6 @@ public class TagesübersichtBenutzungView {
 
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten) {
 
-		IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-		List<Intensivfrage> intensivfragenListe = intensivFrageDB
-				.selectAllIntensivfragenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-		BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-		List<Benutzerkontakt> benutzerkontaktListe = benutzerKontaktDB
-				.selectAllBenutzerkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
-		List<Telefonkontakt> telefonkontaktListe = telefonKontaktDB
-				.selectAllTelefonkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-		EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
-		List<Emailkontakt> emailkontaktListe = emailKontaktDB
-				.selectAllEmailkontakteForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-
 		List<TagesübersichtBenutzungBean> tagesübersichtListe = new ArrayList<>();
 
 		for (int i = 8; i <= 19; i++) {
@@ -307,7 +286,7 @@ public class TagesübersichtBenutzungView {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
 
 			int emailzaehler = 0;
-			for (Emailkontakt e : emailkontaktListe) {
+			for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
 				if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
 					emailzaehler++;
 				}
@@ -315,7 +294,7 @@ public class TagesübersichtBenutzungView {
 			tb.setEmail(emailzaehler);
 
 			int intensivzaehler = 0;
-			for (Intensivfrage in : intensivfragenListe) {
+			for (Intensivfrage in : benutzungsstatistik.getIntensivfrageListe()) {
 				if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
 					intensivzaehler++;
 				}
@@ -323,7 +302,7 @@ public class TagesübersichtBenutzungView {
 			tb.setIntensiv(intensivzaehler);
 
 			int benutzerzaehler = 0;
-			for (Benutzerkontakt k : benutzerkontaktListe) {
+			for (Benutzerkontakt k : benutzungsstatistik.getBenutzerkontaktListe()) {
 				if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
 					benutzerzaehler++;
 				}
@@ -331,7 +310,7 @@ public class TagesübersichtBenutzungView {
 			tb.setKontakt(benutzerzaehler);
 
 			int telefonzaehler = 0;
-			for (Telefonkontakt t : telefonkontaktListe) {
+			for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
 				if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == i) {
 					telefonzaehler++;
 				}

@@ -31,7 +31,6 @@ import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
-import benutzungsstatistik.db.ExterneGruppeDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.ExterneGruppe;
 
@@ -53,7 +52,8 @@ public class ExterneGruppeView {
 	private Grid<ExterneGruppeBean> tabelle;
 	private List<ExterneGruppeBean> externeGruppeBeanListe;
 	private Benutzungsstatistik benutzungsstatistik;
-	private ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
+	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
+//	private ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -133,16 +133,17 @@ public class ExterneGruppeView {
 		tabelle.addColumn(ExterneGruppeBean::getName).setCaption("Name");
 		tabelle.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Anzahl Personen");
 		tabelle.addColumn(ExterneGruppeBean -> "Bearbeiten", new ButtonRenderer(clickEvent -> {
-			externeGruppeBeanListe.remove(clickEvent.getItem());
 			ExterneGruppeBean beanZuBearbeiten = (ExterneGruppeBean) clickEvent.getItem();
+			externeGruppeBeanListe.remove(beanZuBearbeiten);
 
-			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
-					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-			for (ExterneGruppe e : externeGruppeListe2) {
+			ExterneGruppe externeGruppeZuLöschen = null;
+			for (ExterneGruppe e : benutzungsstatistik.getExterneGruppeListe()) {
 				if (beanZuBearbeiten.getName().equals(e.getName())) {
-					externeGruppeDB.deleteExterneGruppe(e);
+					externeGruppeZuLöschen = e;
 				}
 			}
+			benutzungsstatistik.removeExterneGruppe(externeGruppeZuLöschen);
+			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 			tName.setValue(beanZuBearbeiten.getName());
 			tPersonenzahl.setValue("" + beanZuBearbeiten.getAnzahl_personen());
@@ -171,13 +172,14 @@ public class ExterneGruppeView {
 
 			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
 
-			List<ExterneGruppe> externeGruppeListe2 = externeGruppeDB
-					.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
-			for (ExterneGruppe e : externeGruppeListe2) {
+			ExterneGruppe externeGruppeZuLöschen = null;
+			for (ExterneGruppe e : benutzungsstatistik.getExterneGruppeListe()) {
 				if (beanZuLöschen.getName().equals(e.getName())) {
-					externeGruppeDB.deleteExterneGruppe(e);
+					externeGruppeZuLöschen = e;
 				}
 			}
+			benutzungsstatistik.removeExterneGruppe(externeGruppeZuLöschen);
+			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 			tabelle.setItems(externeGruppeBeanListe);
 
@@ -230,11 +232,9 @@ public class ExterneGruppeView {
 
 	private void fülleGruppenTabelle() {
 
-		List<ExterneGruppe> externeGruppeListe = externeGruppeDB
-				.selectAllExterneGruppenForBenutzungsstatistik(benutzungsstatistik.getBenutzungsstatistik_ID());
 		externeGruppeBeanListe = new ArrayList<>();
 
-		for (ExterneGruppe eg : externeGruppeListe) {
+		for (ExterneGruppe eg : benutzungsstatistik.getExterneGruppeListe()) {
 			ExterneGruppeBean egb = new ExterneGruppeBean();
 			egb.setName(eg.getName());
 			egb.setAnzahl_personen(eg.getAnzahl_Personen());
@@ -263,7 +263,8 @@ public class ExterneGruppeView {
 						String name = tName.getValue();
 						int personenzahl = Integer.parseInt(tPersonenzahl.getValue());
 
-						externeGruppeDB.insertExterneGruppe(new ExterneGruppe(name, personenzahl, benutzungsstatistik));
+						benutzungsstatistik.addExterneGruppe(new ExterneGruppe(name, personenzahl, benutzungsstatistik));
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						ExterneGruppeBean egb = new ExterneGruppeBean();
 						egb.setName(name);

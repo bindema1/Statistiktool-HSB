@@ -1,7 +1,18 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Emailkontakt in
@@ -9,18 +20,28 @@ import java.sql.Timestamp;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "emailkontakt")
 public class Emailkontakt implements Serializable {
 
-	int emailkontakt_ID;
-	Timestamp timestamp;
-	Benutzungsstatistik benutzungsstatistik;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int emailkontakt_ID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timestamp;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "benutzungsstatistik_ID")
+	private Benutzungsstatistik benutzungsstatistik;
 	
 	// Für Hibernate
 	public Emailkontakt(){
 				
 	}
 	
-	public Emailkontakt(Timestamp timestamp, Benutzungsstatistik benutzungsstatistik) {
+	public Emailkontakt(Date timestamp, Benutzungsstatistik benutzungsstatistik) {
 		this.timestamp = timestamp;
 		this.benutzungsstatistik = benutzungsstatistik;
 	}
@@ -29,7 +50,7 @@ public class Emailkontakt implements Serializable {
 		return emailkontakt_ID;
 	}
 
-	public Timestamp getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
@@ -43,7 +64,7 @@ public class Emailkontakt implements Serializable {
 		this.emailkontakt_ID = emailkontakt_ID;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -55,8 +76,8 @@ public class Emailkontakt implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + emailkontakt_ID;
 		result = prime * result + ((benutzungsstatistik == null) ? 0 : benutzungsstatistik.hashCode());
+		result = prime * result + emailkontakt_ID;
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
@@ -70,12 +91,12 @@ public class Emailkontakt implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Emailkontakt other = (Emailkontakt) obj;
-		if (emailkontakt_ID != other.emailkontakt_ID)
-			return false;
 		if (benutzungsstatistik == null) {
 			if (other.benutzungsstatistik != null)
 				return false;
 		} else if (!benutzungsstatistik.equals(other.benutzungsstatistik))
+			return false;
+		if (emailkontakt_ID != other.emailkontakt_ID)
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
@@ -84,5 +105,5 @@ public class Emailkontakt implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }
