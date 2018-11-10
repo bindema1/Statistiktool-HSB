@@ -32,6 +32,7 @@ public class PasswortView implements View {
 	private PasswordField passwort1;
 	private PasswordField passwort2;
 	private Label passwortDatum;
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -62,23 +63,23 @@ public class PasswortView implements View {
 	// Initialisieren der GUI Komponente
 	private void initComponents(MainView mainView) {
 
+		Label lText = new Label();
+		lText.setValue("Passwörter ändern");
+		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+		
 		Collection<Angestellter> angestelltenListe = angestellterDB.selectAllAngestellte();
 		ComboBox<Angestellter> combobox = new ComboBox<>("Wählen Sie einen User aus", angestelltenListe);
 		combobox.setPlaceholder("Kein User ausgewählt");
-		combobox.setWidth("400px");
+		combobox.setWidth("350px");
 		combobox.setEmptySelectionAllowed(false);
 
 		combobox.addValueChangeListener(event -> {
-
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-
 			this.angestellter = (Angestellter) event.getValue();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-			passwortDatum.setCaption("Passwort zuletzt geändert am " + sdf.format(angestellter.getPasswort_datum()));
+			passwortDatum.setCaption("Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
 		});
 
 		passwortDatum = new Label();
-		passwortDatum.setCaption("Passwort zuletzt geändert am ");
+		passwortDatum.setCaption("Passwort zuletzt geändert am: ");
 
 		passwort1 = new PasswordField("Passwort");
 		passwort2 = new PasswordField("Passwort wiederholen");
@@ -90,14 +91,14 @@ public class PasswortView implements View {
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
-		layout.setWidth("500px");
+		layout.addComponent(lText);
 		layout.addComponent(combobox);
 		layout.addComponent(passwortDatum);
 		layout.addComponent(passwort1);
 		layout.addComponent(passwort2);
 		layout.addComponent(bSpeichern);
 
-		mainLayout.addComponent(layout);
+		mainLayout.addComponent(layout, "top:20%;left:30%");
 	}
 
 	public ClickListener createClickListener(final MainView mainView) {
@@ -115,6 +116,7 @@ public class PasswortView implements View {
 						// Daten wieder auf 0 setzen
 						passwort1.setValue("");
 						passwort2.setValue("");
+						passwortDatum.setCaption("Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
 
 						Notification.show("Passwort gespeichert für User " + angestellter.getName(),
 								Type.TRAY_NOTIFICATION);
