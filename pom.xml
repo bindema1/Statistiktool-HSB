@@ -90,7 +90,7 @@
 			<scope>provided</scope> </dependency> -->
 		<!--<dependency> <groupId>javassist</groupId> <artifactId>javassist</artifactId> 
 			<version>3.12.1.GA</version> </dependency> -->
-			
+
 		<!-- HSQLDB Lokale in-memory Datenbank -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -128,10 +128,22 @@
 					<packagingExcludes>WEB-INF/classes/VAADIN/widgetsets/WEB-INF/**</packagingExcludes>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>com.vaadin</groupId> <artifactId>vaadin-maven-plugin</artifactId> 
-				<version>${vaadin.plugin.version}</version> <executions> <execution> <goals> 
-				<goal>update-theme</goal> <goal>update-widgetset</goal> <goal>compile</goal> 
-				<goal>compile-theme</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>${vaadin.plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-theme</goal>
+							<goal>update-widgetset</goal>
+							<goal>compile</goal>
+							<!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+							<goal>compile-theme</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>

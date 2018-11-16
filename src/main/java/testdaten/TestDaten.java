@@ -1,4 +1,4 @@
-package Testdaten;
+package testdaten;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
