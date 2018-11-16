@@ -203,6 +203,7 @@ public class BelegungErfassenView implements View {
 		tTotalRäume.setPlaceholder("Total Räume");
 		tTotalRäume.setValue("0");
 
+		//Eine Liste von Uhrzeiten zum auswählen
 		data = null;
 		ListSelect<String> uhrzeitListSelect;
 		if (korrektur == true) {
