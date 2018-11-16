@@ -23,7 +23,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
@@ -328,14 +328,14 @@ public class KorrekturView implements Serializable {
 		bKorrekturGruppen.setCaptionAsHtml(true);
 		bKorrekturGruppen.addClickListener(createClickListener(mainView));
 
-		DateTimeField datefield = new DateTimeField();
+		DateField datefield = new DateField();
 		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
-				.toLocalDateTime());
+				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
-			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
 			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date,

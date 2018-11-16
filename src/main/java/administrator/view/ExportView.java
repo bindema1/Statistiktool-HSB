@@ -9,10 +9,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBoxGroup;
-import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.RadioButtonGroup;
@@ -57,28 +57,21 @@ public class ExportView implements View {
 	}
 
 	// Initialisieren der GUI Komponente
+	@SuppressWarnings("unchecked")
 	private void initComponents(MainView mainView) {
 
 		Label lText = new Label();
-		lText.setValue("Daten exportieren");
+		lText.setValue("Daten exportieren - Winterthur");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		List<String> dataBibliothek = Arrays.asList("Winterthur", "Wädenswil");
-		NativeSelect dropdownBibliothek = new NativeSelect<>("Wählen Sie eine Bibliothek aus", dataBibliothek);
-		dropdownBibliothek.setWidth("200px");
-		dropdownBibliothek.setSelectedItem(dataBibliothek.get(0));
-		dropdownBibliothek.setEmptySelectionAllowed(false);
-		dropdownBibliothek.addValueChangeListener(event -> {
-		});
-
-		DateTimeField datumVon = new DateTimeField();
+		DateField datumVon = new DateField();
 		datumVon.setCaption("Datum Von");
 		datumVon.setDateFormat("dd.MM.yyyy");
 		datumVon.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 		});
 
-		DateTimeField datumBis = new DateTimeField();
+		DateField datumBis = new DateField();
 		datumBis.setCaption("Datum Bis");
 		datumBis.setDateFormat("dd.MM.yyyy");
 		datumBis.addValueChangeListener(event -> {
@@ -147,9 +140,14 @@ public class ExportView implements View {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
-		List<String> dataStockwerk = Arrays.asList("EG", "1.ZG", "2.ZG", "LL");
+		List<String> dataStockwerk = Arrays.asList("EG", "1.ZG", "2.ZG", "LL", "Bibliothek");
 		CheckBoxGroup checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
 		checkStockwerk.addValueChangeListener(event -> {
+			
+			if(checkStockwerk.isSelected(dataStockwerk.get(4))){
+				checkStockwerk.select(dataStockwerk.get(0), dataStockwerk.get(1), dataStockwerk.get(2));
+			}
+
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
@@ -163,7 +161,6 @@ public class ExportView implements View {
 
 		// Datum
 		HorizontalLayout datumLayout = new HorizontalLayout();
-		datumLayout.addComponent(dropdownBibliothek);
 		datumLayout.addComponent(datumVon);
 		datumLayout.addComponent(datumBis);
 		overallLayout.addComponent(datumLayout);

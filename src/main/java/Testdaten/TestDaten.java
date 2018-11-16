@@ -71,11 +71,11 @@ public class TestDaten {
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = sdf2.parse("01.11.2018");
 
-		Angestellter angestellter1 = new Angestellter("Mitarbeiter Winterthur", "123", date, false, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeiter Winterthur", "123", date, false,
+		Angestellter angestellter1 = new Angestellter("Mitarbeitende Winterthur", "123", date, false, StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeitende Winterthur", "123", date, false,
 				StandortEnum.WINTERTHUR_LL);
 		Angestellter angestellter3 = new Angestellter("Admin Winterthur", "123", date, true, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter4 = new Angestellter("Mitarbeiter Wädenswil", "123", date, false, StandortEnum.WÄDENSWIL);
+		Angestellter angestellter4 = new Angestellter("Mitarbeitende Wädenswil", "123", date, false, StandortEnum.WÄDENSWIL);
 		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", "123", date, true, StandortEnum.WÄDENSWIL);
 		angestelltenDB.insertAngestellter(angestellter1);
 		angestelltenDB.insertAngestellter(angestellter2);

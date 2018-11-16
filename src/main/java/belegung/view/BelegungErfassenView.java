@@ -19,7 +19,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -267,14 +267,14 @@ public class BelegungErfassenView implements View {
 			layoutMitZahlenFüllen();
 		});
 
-		DateTimeField datefield = new DateTimeField();
+		DateField datefield = new DateField();
 		datefield.setValue(
-				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
-			ZonedDateTime zdt = event.getValue().atZone(ZoneId.systemDefault());
+			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
 
 			if (stockwerkEnum == StockwerkEnum.LL) {
@@ -308,7 +308,7 @@ public class BelegungErfassenView implements View {
 		b2ZG.addStyleName(ValoTheme.BUTTON_LARGE);
 		b2ZG.addClickListener(createClickListener(mainView));
 
-		GridLayout grid = new GridLayout(5, 11);
+		GridLayout grid = new GridLayout(5, 14);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
@@ -319,30 +319,34 @@ public class BelegungErfassenView implements View {
 			grid.addComponent(lText, 1, 0, 3, 0);
 		}
 		grid.addComponent(bTagesübersicht, 4, 0);
-		grid.addComponent(uhrzeitListSelect, 0, 1, 0, 5);
+		
+		
+		//grid.addComponent(tabelle, 0, 1, 4, 3);
+		
+		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 8);
 
 		if (räumeVorhanden == true) {
-			grid.addComponent(bPersonen, 1, 1, 2, 4);
-			grid.addComponent(tTotalPersonen, 1, 5);
-			grid.addComponent(bPersonenMinus, 2, 5);
-			grid.addComponent(bRäume, 3, 1, 4, 3);
-			grid.addComponent(tTotalRäume, 3, 4);
-			grid.addComponent(bRäumeMinus, 4, 4);
-			grid.addComponent(bSpeichern, 3, 5, 4, 5);
+			grid.addComponent(bPersonen, 1, 4, 2, 7);
+			grid.addComponent(tTotalPersonen, 1, 8);
+			grid.addComponent(bPersonenMinus, 2, 8);
+			grid.addComponent(bRäume, 3, 4, 4, 6);
+			grid.addComponent(tTotalRäume, 3, 7);
+			grid.addComponent(bRäumeMinus, 4, 7);
+			grid.addComponent(bSpeichern, 3, 8, 4, 8);
 		} else {
-			grid.addComponent(bPersonen, 1, 1, 3, 4);
-			grid.addComponent(tTotalPersonen, 1, 5, 3, 5);
-			grid.addComponent(bPersonen10, 4, 1);
-			grid.addComponent(bPersonen5, 4, 2);
-			grid.addComponent(bPersonenMinus, 4, 3);
-			grid.addComponent(bSpeichern, 4, 4, 4, 5);
+			grid.addComponent(bPersonen, 1, 4, 3, 7);
+			grid.addComponent(tTotalPersonen, 1, 8, 3, 8);
+			grid.addComponent(bPersonen10, 4, 4);
+			grid.addComponent(bPersonen5, 4, 5);
+			grid.addComponent(bPersonenMinus, 4, 6);
+			grid.addComponent(bSpeichern, 4, 7, 4, 8);
 		}
-		grid.addComponent(bLL, 0, 6);
-		grid.addComponent(b2ZG, 0, 7);
-		grid.addComponent(b1ZG, 0, 8);
-		grid.addComponent(bEG, 0, 9);
-		grid.addComponent(new Label(), 0, 10);
-		grid.addComponent(createAbsoluteLayoutForImage(mainView), 1, 6, 4, 10);
+		grid.addComponent(bLL, 0, 9);
+		grid.addComponent(b2ZG, 0, 10);
+		grid.addComponent(b1ZG, 0, 11);
+		grid.addComponent(bEG, 0, 12);
+		grid.addComponent(new Label(), 0, 13);
+		grid.addComponent(createAbsoluteLayoutForImage(mainView), 1, 9, 4, 13);
 		grid.setColumnExpandRatio(0, 0.2f);
 		grid.setColumnExpandRatio(1, 0.2f);
 		grid.setColumnExpandRatio(2, 0.2f);
@@ -416,19 +420,19 @@ public class BelegungErfassenView implements View {
 
 		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
 		bArbeitsplätze = new Button();
-		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_LINK);
+		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bArbeitsplätze.addClickListener(createClickListener(mainView));
 		bSektorA = new Button();
-		bSektorA.setStyleName(ValoTheme.BUTTON_LINK);
+		bSektorA.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bSektorA.addClickListener(createClickListener(mainView));
 		bSektorB = new Button();
-		bSektorB.setStyleName(ValoTheme.BUTTON_LINK);
+		bSektorB.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bSektorB.addClickListener(createClickListener(mainView));
 		bGruppenräume = new Button();
-		bGruppenräume.setStyleName(ValoTheme.BUTTON_LINK);
+		bGruppenräume.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bGruppenräume.addClickListener(createClickListener(mainView));
 		bCarrels = new Button();
-		bCarrels.setStyleName(ValoTheme.BUTTON_LINK);
+		bCarrels.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bCarrels.addClickListener(createClickListener(mainView));
 
 		if(korrektur == false) {
