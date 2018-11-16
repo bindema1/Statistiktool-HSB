@@ -233,6 +233,11 @@ public class TagesübersichtBelegungView {
 		mainLayout.addComponent(grid);
 	}
 
+	/**
+	 * Füllt die Tabelle mit Inhalt
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
 
 		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
@@ -319,6 +324,11 @@ public class TagesübersichtBelegungView {
 		tabelleUhrzeiten.setItems(beanListe);
 	}
 
+	/**
+	 * Setzt die Tabelle auf
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
 	private void tabelleUhrzeitenAufsetzen(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
 		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
 		if (stockwerkEnum == StockwerkEnum.LL) {

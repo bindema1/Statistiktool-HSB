@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -18,20 +19,24 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
 import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
+import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
@@ -55,6 +60,7 @@ public class BelegungErfassenView implements View {
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bTagesübersicht;
+	private Button bValidieren;
 	private Button bLL;
 	private Button b1ZG;
 	private Button b2ZG;
@@ -83,6 +89,7 @@ public class BelegungErfassenView implements View {
 	private Image image;
 	private int erfassungsSchritt;
 	private List<String> data;
+	private Grid<TagesübersichtBelegungBean> tabelleUhrzeiten;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -148,6 +155,11 @@ public class BelegungErfassenView implements View {
 		bTagesübersicht.setCaption("Tagesübersicht");
 		bTagesübersicht.addStyleName(ValoTheme.BUTTON_LARGE);
 		bTagesübersicht.addClickListener(createClickListener(mainView));
+
+		bValidieren = new Button();
+		bValidieren.setCaption("Zählung validieren");
+		bValidieren.addStyleName(ValoTheme.BUTTON_LARGE);
+		bValidieren.addClickListener(createClickListener(mainView));
 
 		bPersonen = new Button();
 		bPersonen.setCaption("Arbeitsplätze");
@@ -262,9 +274,14 @@ public class BelegungErfassenView implements View {
 				break;
 			}
 
-			// Das GridLayout mit Zahlen füllen
-			//alleButtonRotSetzenOhneZahlen();
-			layoutMitZahlenFüllen();
+			if (ausgewählteUhrzeit != null) {
+				// Das GridLayout mit Zahlen füllen
+				// alleButtonRotSetzenOhneZahlen();
+				layoutMitZahlenFüllen();
+
+				// Tabelle füllen
+				fülleTabelleUhrzeiten(tabelleUhrzeiten);
+			}
 		});
 
 		DateField datefield = new DateField();
@@ -290,6 +307,12 @@ public class BelegungErfassenView implements View {
 			setButtonEnabled(false);
 		});
 
+		tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
+		tabelleUhrzeitenAufsetzen(tabelleUhrzeiten);
+		if (korrektur == false) {
+			fülleTabelleUhrzeiten(tabelleUhrzeiten);
+		}
+
 		// Unteres Grid
 		bLL = new Button();
 		bLL.setCaption("LL");
@@ -314,15 +337,15 @@ public class BelegungErfassenView implements View {
 		grid.addComponent(bZurueck, 0, 0);
 		if (korrektur == true) {
 			grid.addComponent(lText, 1, 0);
-			grid.addComponent(datefield, 2, 0, 3, 0);
+			grid.addComponent(datefield, 2, 0);
 		} else {
-			grid.addComponent(lText, 1, 0, 3, 0);
+			grid.addComponent(lText, 1, 0, 2, 0);
 		}
-		grid.addComponent(bTagesübersicht, 4, 0);
-		
-		
-		//grid.addComponent(tabelle, 0, 1, 4, 3);
-		
+		grid.addComponent(bTagesübersicht, 3, 0);
+		grid.addComponent(bValidieren, 4, 0);
+
+		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 3);
+
 		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 8);
 
 		if (räumeVorhanden == true) {
@@ -366,8 +389,8 @@ public class BelegungErfassenView implements View {
 				} else {
 
 					if (räumeVorhanden == true) {
-						if (row == 5 && col == 1 || row == 5 && col == 2 || row == 4 && col == 3
-								|| row == 4 && col == 4) {
+						if (row == 8 && col == 1 || row == 8 && col == 2 || row == 7 && col == 3
+								|| row == 7 && col == 4) {
 							c.setHeight("90%");
 							c.setWidth("80%");
 						} else {
@@ -375,7 +398,7 @@ public class BelegungErfassenView implements View {
 							c.setWidth("90%");
 						}
 					} else {
-						if (row == 5 && col == 1 || row == 5 && col == 2 || row == 5 && col == 3) {
+						if (row == 8 && col == 1 || row == 8 && col == 2 || row == 8 && col == 3) {
 							c.setHeight("90%");
 							// c.setWidth("80%");
 						} else {
@@ -384,7 +407,14 @@ public class BelegungErfassenView implements View {
 						}
 					}
 
-					if (row >= 6) {
+					if (row >= 1 && row <= 4) {
+						if (col == 0) {
+							c.setHeight("65%");
+							c.setWidth("100%");
+						}
+					}
+
+					if (row >= 9) {
 						if (col == 0) {
 							c.setHeight("100%");
 							c.setWidth("50%");
@@ -408,6 +438,126 @@ public class BelegungErfassenView implements View {
 		bRäume.setEnabled(wert);
 		bRäumeMinus.setEnabled(wert);
 		bSpeichern.setEnabled(wert);
+	}
+
+	/**
+	 * Füllt die Tabelle mit Inhalt
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
+	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
+
+		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
+		List<UhrzeitEnum> enumListe = new ArrayList<>();
+
+		Stockwerk stockwerk = null;
+		for (Stockwerk s : belegung.getStockwerkListe()) {
+			if (s.getName() == stockwerkEnum) {
+				stockwerk = s;
+			}
+		}
+
+		UhrzeitEnum uhrzeitEnum = ausgewählteUhrzeit;
+
+		TagesübersichtBelegungBean t = new TagesübersichtBelegungBean();
+		String uhrzeitEnumString = "";
+
+		switch (uhrzeitEnum) {
+		case NEUN:
+			uhrzeitEnumString = 9 + "";
+			break;
+		case ELF:
+			uhrzeitEnumString = 11 + "";
+			break;
+		case DREIZEHN:
+			uhrzeitEnumString = 13 + "";
+			break;
+		case FÜNFZEHN:
+			uhrzeitEnumString = 15 + "";
+			break;
+		case SIEBZEHN:
+			uhrzeitEnumString = 17 + "";
+			break;
+		case NEUNZEHN:
+			uhrzeitEnumString = 19 + "";
+			break;
+		}
+		uhrzeitEnumString = uhrzeitEnumString + " Uhr";
+		t.setUhrzeit(uhrzeitEnumString);
+
+		for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+			if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
+				t.setArbeitsplätze(arbeitsplätze.getAnzahlPersonen());
+			}
+		}
+
+		for (SektorA sektorA : stockwerk.getSektorAListe()) {
+			if (uhrzeitEnum == sektorA.getUhrzeit()) {
+				t.setSektorA(sektorA.getAnzahlPersonen());
+			}
+		}
+
+		for (SektorB sektorB : stockwerk.getSektorBListe()) {
+			if (uhrzeitEnum == sektorB.getUhrzeit()) {
+				t.setSektorB(sektorB.getAnzahlPersonen());
+			}
+		}
+
+		for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
+			if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
+				t.setGruppenräume(gruppenräume.getAnzahlRäume());
+				t.setGruppenräumePersonen(gruppenräume.getAnzahlPersonen());
+			}
+		}
+
+		for (Carrels carrels : stockwerk.getCarrelsListe()) {
+			if (uhrzeitEnum == carrels.getUhrzeit()) {
+				t.setCarrels(carrels.getAnzahlRäume());
+				t.setCarrelsPersonen(carrels.getAnzahlPersonen());
+			}
+		}
+
+		beanListe.add(t);
+
+		tabelleUhrzeiten.setWidth("90%");
+		tabelleUhrzeiten.setHeightByRows(beanListe.size());
+		tabelleUhrzeiten.setItems(beanListe);
+	}
+
+	/**
+	 * Setzt die Tabelle auf
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
+	private void tabelleUhrzeitenAufsetzen(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
+		tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getUhrzeit).setCaption("Uhrzeit");
+		if (stockwerkEnum == StockwerkEnum.LL) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorA).setCaption("Sektor A");
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getSektorB).setCaption("Sektor B");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
+			Column<TagesübersichtBelegungBean, ?> carrelColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getCarrelsPersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> carrelColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getCarrels).setCaption("Räume");
+			HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
+			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
+			second.join(carrelColumn1, carrelColumn2).setText("Carrels");
+
+		} else if (stockwerkEnum == StockwerkEnum.ZG1 || stockwerkEnum == StockwerkEnum.ZG2) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
+
+		} else if (stockwerkEnum == StockwerkEnum.EG) {
+			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräumePersonen).setCaption("Personen");
+			Column<TagesübersichtBelegungBean, ?> gruppeColumn2 = tabelleUhrzeiten
+					.addColumn(TagesübersichtBelegungBean::getGruppenräume).setCaption("Räume");
+			HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
+			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
+		}
 	}
 
 	/**
@@ -435,10 +585,10 @@ public class BelegungErfassenView implements View {
 		bCarrels.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bCarrels.addClickListener(createClickListener(mainView));
 
-		if(korrektur == false) {
-			//alleButtonRotSetzenOhneZahlen();
+		if (korrektur == false) {
+			// alleButtonRotSetzenOhneZahlen();
 		}
-		
+
 		if (räumeVorhanden == true) {
 			bPersonen.setCaption("Personen");
 		}
@@ -519,7 +669,7 @@ public class BelegungErfassenView implements View {
 			} else {
 //				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				bRäume.setCaption("Gruppenäume");
-				
+
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
 						for (Gruppenräume g : s.getGruppenräumeListe()) {
@@ -561,7 +711,7 @@ public class BelegungErfassenView implements View {
 			// Gruppenräume
 			if (erfassungsSchritt == 1) {
 				bRäume.setCaption("Gruppenäume");
-				
+
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
 						for (Gruppenräume g : s.getGruppenräumeListe()) {
@@ -631,7 +781,7 @@ public class BelegungErfassenView implements View {
 		bCarrels.setStyleName(ValoTheme.BUTTON_DANGER);
 		bSektorA.setStyleName(ValoTheme.BUTTON_DANGER);
 		bSektorB.setStyleName(ValoTheme.BUTTON_DANGER);
-		
+
 		for (Stockwerk s : belegung.getStockwerkListe()) {
 			if (s.getName() == stockwerkEnum) {
 				for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
@@ -707,6 +857,105 @@ public class BelegungErfassenView implements View {
 
 				if (e.getSource() == bRäumeMinus) {
 					erhöheOderVermindereTextfieldNachNummer(tTotalRäume, -1);
+				}
+
+				if (e.getSource() == bValidieren) {
+
+					Stockwerk stockwerk = null;
+					for (Stockwerk s : belegung.getStockwerkListe()) {
+						if (s.getName() == stockwerkEnum) {
+							stockwerk = s;
+						}
+					}
+
+					UhrzeitEnum uhrzeitEnum = ausgewählteUhrzeit;
+					boolean arbeitsplatzIsEmpty = true;
+					boolean sektorAIsEmpty = true;
+					boolean sektorBIsEmpty = true;
+					boolean gruppenraumIsEmpty = true;
+					boolean carellIsEmpty = true;
+
+					for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+						if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
+							if (arbeitsplätze.getAnzahlPersonen() != 0) {
+								arbeitsplatzIsEmpty = false;
+							}
+						}
+					}
+
+					for (SektorA sektorA : stockwerk.getSektorAListe()) {
+						if (uhrzeitEnum == sektorA.getUhrzeit()) {
+							if (sektorA.getAnzahlPersonen() != 0) {
+								sektorAIsEmpty = false;
+							}
+						}
+					}
+
+					for (SektorB sektorB : stockwerk.getSektorBListe()) {
+						if (uhrzeitEnum == sektorB.getUhrzeit()) {
+							if (sektorB.getAnzahlPersonen() != 0) {
+								sektorBIsEmpty = false;
+							}
+						}
+					}
+
+					for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
+						if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
+							if (gruppenräume.getAnzahlRäume() != 0 && gruppenräume.getAnzahlPersonen() != 0) {
+								gruppenraumIsEmpty = false;
+							}
+						}
+					}
+
+					for (Carrels carrels : stockwerk.getCarrelsListe()) {
+						if (uhrzeitEnum == carrels.getUhrzeit()) {
+							if (carrels.getAnzahlRäume() != 0 && carrels.getAnzahlPersonen() != 0) {
+								carellIsEmpty = false;
+							}
+						}
+					}
+
+					String validierung = "";
+					if (stockwerkEnum == StockwerkEnum.LL) {
+						if (sektorAIsEmpty == true || sektorBIsEmpty == true
+								|| gruppenraumIsEmpty == true || carellIsEmpty == true) {
+							if (sektorAIsEmpty == true)
+								validierung += "SektorA, ";
+							if (sektorBIsEmpty == true)
+								validierung += "SektorB, ";
+							if (gruppenraumIsEmpty == true)
+								validierung += "Gruppenräume, ";
+							if (carellIsEmpty == true)
+								validierung += "Carells, ";
+							validierung += "hat einen 0 wert";
+						}
+					} else if (stockwerkEnum == StockwerkEnum.ZG1) {
+						if (arbeitsplatzIsEmpty == true) {
+							if (arbeitsplatzIsEmpty == true)
+								validierung += "Arbeitsplatz, ";
+							validierung += "hat einen 0 wert";
+						}
+					} else if (stockwerkEnum == StockwerkEnum.ZG2) {
+						if (arbeitsplatzIsEmpty == true) {
+							if (arbeitsplatzIsEmpty == true)
+								validierung += "Arbeitsplatz, ";
+							validierung += "hat einen 0 wert";
+						}
+					} else if (stockwerkEnum == StockwerkEnum.EG) {
+						if (arbeitsplatzIsEmpty == true || gruppenraumIsEmpty == true) {
+							if (arbeitsplatzIsEmpty == true)
+								validierung += "Arbeitsplatz, ";
+							if (gruppenraumIsEmpty == true)
+								validierung += "Gruppenräume, ";
+							validierung += "hat einen 0 wert";
+						}
+					}
+					
+					if(validierung.equals("")) {
+						validierung = "Validierung erfolgreich, keine Fehler";
+					}
+
+					Notification.show(validierung, Type.WARNING_MESSAGE);
 				}
 
 				if (e.getSource() == bSpeichern) {
@@ -838,8 +1087,8 @@ public class BelegungErfassenView implements View {
 
 										// Falls es keine Carrels für die ausgewählte Uhrzeit gibt
 										if (eintragVorhanden == false) {
-											Carrels carrels = new Carrels(anzahlPersonen, anzahlRäume, ausgewählteUhrzeit,
-													s);
+											Carrels carrels = new Carrels(anzahlPersonen, anzahlRäume,
+													ausgewählteUhrzeit, s);
 											s.addCarrels(carrels);
 										}
 									}
@@ -884,6 +1133,7 @@ public class BelegungErfassenView implements View {
 						}
 
 						belegungDB.updateBelegung(belegung);
+						fülleTabelleUhrzeiten(tabelleUhrzeiten);
 
 						Notification.show("Zählung gespeichert", Type.TRAY_NOTIFICATION);
 
