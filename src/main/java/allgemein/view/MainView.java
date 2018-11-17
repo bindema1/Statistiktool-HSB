@@ -16,7 +16,7 @@ import com.vaadin.ui.UI;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class MainView extends UI {
+public class MainView extends UI{
 
 	protected void init(VaadinRequest request) {
 		setContent(buildMainLayout());
@@ -50,7 +50,7 @@ public class MainView extends UI {
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = MainView.class, productionMode = false)
+	@VaadinServletConfiguration(ui = MainView.class, productionMode = true)
 	public static class MyServlet extends VaadinServlet {
 	}
 
