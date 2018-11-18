@@ -416,7 +416,7 @@ public class BelegungErfassenView extends Composite implements View {
 
 					//Tabelle
 					if (row >= 1 && row <= 3) {
-						c.setHeight("85%");
+						c.setHeight("86%");
 						c.setWidth("95%");
 					}
 
