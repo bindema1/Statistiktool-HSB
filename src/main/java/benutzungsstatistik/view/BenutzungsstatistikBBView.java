@@ -16,6 +16,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -40,7 +41,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  */
 @SuppressWarnings("serial")
 @Theme("mytheme")
-public class BenutzungsstatistikBBView implements View {
+public class BenutzungsstatistikBBView extends Composite implements View {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;

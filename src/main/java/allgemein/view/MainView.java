@@ -4,10 +4,14 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.UI;
+
+import belegung.view.BelegungErfassenView;
+import benutzungsstatistik.view.BenutzungsstatistikBBView;
 
 /**
  * MainView setzt den Content und gibt seine eigene MainView an die
@@ -45,7 +49,6 @@ public class MainView extends UI{
 //			// ... update the UI accordingly
 //		});
 
-//		java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 		return new StartseiteView().init(this);
 	}
 

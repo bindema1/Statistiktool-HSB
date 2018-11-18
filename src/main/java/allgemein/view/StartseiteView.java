@@ -9,6 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -20,13 +21,14 @@ import benutzungsstatistik.view.BenutzungsstatistikBBView;
 import testdaten.TestDaten;
 
 @SuppressWarnings("serial")
-public class StartseiteView implements View{
+public class StartseiteView extends Composite implements View{
 
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistik;
 	private Button bBelegung;
 	private Button bExport;
 	private Button bPasswort;
+	private MainView mainView;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -39,6 +41,7 @@ public class StartseiteView implements View{
 
 	public AbsoluteLayout init(MainView mainView) {
 		// common part: create layout
+		this.mainView = mainView;
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
 		initComponents(mainView);
@@ -47,6 +50,10 @@ public class StartseiteView implements View{
 	}
 	
 	public StartseiteView() {
+		
+		//setCompositionRoot(init(mainView));
+		
+		//Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein SQL-Skript
 		new TestDaten();
 	}
 

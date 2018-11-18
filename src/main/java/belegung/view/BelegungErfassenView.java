@@ -20,6 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -55,7 +56,7 @@ import belegung.model.UhrzeitEnum;
  */
 @SuppressWarnings("serial")
 @Theme("mytheme")
-public class BelegungErfassenView implements View {
+public class BelegungErfassenView extends Composite implements View {
 
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;

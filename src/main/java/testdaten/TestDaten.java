@@ -49,15 +49,18 @@ public class TestDaten {
 	SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 	Date date;
 	Logger logger = LoggerFactory.getLogger(TestDaten.class);
+	AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
 
 	public TestDaten() {
 		
 		try {
-			logger.info("Testdaten werden eingelesen");
-			initAllgemein();
-			initBenutzungsstatistik();
-			initBelegung();
-			System.out.println("TestDaten eingelesen");
+			if(angestelltenDB.selectAllAngestellte().size() == 0) {
+				logger.info("Testdaten werden eingelesen");
+				initAllgemein();
+				initBenutzungsstatistik();
+				initBelegung();
+				System.out.println("TestDaten eingelesen");
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 			System.out.println("Fehler");
@@ -66,8 +69,6 @@ public class TestDaten {
 
 	private void initAllgemein() throws ParseException {
 		
-		AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
-
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = sdf2.parse("01.11.2018");
 
