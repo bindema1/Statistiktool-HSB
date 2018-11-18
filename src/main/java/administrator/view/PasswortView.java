@@ -9,8 +9,8 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
@@ -53,7 +53,7 @@ public class PasswortView implements View {
 	}
 
 	public PasswortView() {
-//		angestellter = angestellterDB.selectAllAngestellte().get(0);
+
 	}
 
 	private void initData() {
@@ -68,12 +68,11 @@ public class PasswortView implements View {
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 		
 		Collection<Angestellter> angestelltenListe = angestellterDB.selectAllAngestellte();
-		ComboBox<Angestellter> combobox = new ComboBox<>("Wählen Sie einen User aus", angestelltenListe);
-		combobox.setPlaceholder("Kein User ausgewählt");
-		combobox.setWidth("350px");
-		combobox.setEmptySelectionAllowed(false);
+		NativeSelect<Angestellter> dropdown = new NativeSelect<>("Wählen Sie einen User aus", angestelltenListe);
+		dropdown.setWidth("350px");
+		dropdown.setEmptySelectionAllowed(false);
 
-		combobox.addValueChangeListener(event -> {
+		dropdown.addValueChangeListener(event -> {
 			this.angestellter = (Angestellter) event.getValue();
 			passwortDatum.setCaption("Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
 		});
@@ -92,7 +91,7 @@ public class PasswortView implements View {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.addComponent(lText);
-		layout.addComponent(combobox);
+		layout.addComponent(dropdown);
 		layout.addComponent(passwortDatum);
 		layout.addComponent(passwort1);
 		layout.addComponent(passwort2);

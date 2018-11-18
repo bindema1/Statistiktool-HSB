@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>Statistiktool</artifactId>
+	<artifactId>HSB-Statistiktool</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Statistiktool</name>
+	<name>HSB-Statistiktool</name>
 
 	<prerequisites>
 		<maven>3</maven>

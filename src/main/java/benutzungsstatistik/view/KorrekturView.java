@@ -26,7 +26,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
@@ -208,9 +208,8 @@ public class KorrekturView implements Serializable {
 
 		List<String> data = Arrays.asList(new String[] { "Wählen", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
 				"14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
-		ListSelect<String> uhrzeitListSelect = new ListSelect<>("Uhrzeit:", data);
-		uhrzeitListSelect.setRows(13);
-		uhrzeitListSelect.select(data.get(0));
+		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
+		uhrzeitListSelect.setSelectedItem(data.get(0));
 		uhrzeitListSelect.setWidth(100.0f, Unit.PERCENTAGE);
 		uhrzeitListSelect.addValueChangeListener(event -> {
 			if (!String.valueOf(event.getValue()).equals("[Wählen]")) {
@@ -226,40 +225,40 @@ public class KorrekturView implements Serializable {
 				ausgewählteUhrzeit = 0;
 
 				switch (String.valueOf(event.getValue())) {
-				case "[08-09]":
+				case "08-09":
 					ausgewählteUhrzeit = 8;
 					break;
-				case "[09-10]":
+				case "09-10":
 					ausgewählteUhrzeit = 9;
 					break;
-				case "[10-11]":
+				case "10-11":
 					ausgewählteUhrzeit = 10;
 					break;
-				case "[11-12]":
+				case "11-12":
 					ausgewählteUhrzeit = 11;
 					break;
-				case "[12-13]":
+				case "12-13":
 					ausgewählteUhrzeit = 12;
 					break;
-				case "[13-14]":
+				case "13-14":
 					ausgewählteUhrzeit = 13;
 					break;
-				case "[14-15]":
+				case "14-15":
 					ausgewählteUhrzeit = 14;
 					break;
-				case "[15-16]":
+				case "15-16":
 					ausgewählteUhrzeit = 15;
 					break;
-				case "[16-17]":
+				case "16-17":
 					ausgewählteUhrzeit = 16;
 					break;
-				case "[17-18]":
+				case "17-18":
 					ausgewählteUhrzeit = 17;
 					break;
-				case "[18-19]":
+				case "18-19":
 					ausgewählteUhrzeit = 18;
 					break;
-				case "[19-20]":
+				case "19-20":
 					ausgewählteUhrzeit = 19;
 					break;
 				}
@@ -347,7 +346,7 @@ public class KorrekturView implements Serializable {
 			} else {
 				kassenbeleg.setValue(false);
 			}
-			uhrzeitListSelect.select(data.get(0));
+			uhrzeitListSelect.setSelectedItem(data.get(0));
 			bBenutzerkontakt.setEnabled(false);
 			bBenutzerkontaktMinus.setEnabled(false);
 			bEmailkontakt.setEnabled(false);
@@ -369,7 +368,10 @@ public class KorrekturView implements Serializable {
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0, 2, 0);
 		grid.addComponent(datefield, 3, 0, 4, 0);
-		grid.addComponent(uhrzeitListSelect, 0, 1, 0, 5);
+		grid.addComponent(uhrzeitListSelect, 0, 1, 0, 2);
+		grid.addComponent(new Label(), 0, 3);
+		grid.addComponent(new Label(), 0, 4);
+		grid.addComponent(new Label(), 0, 5);
 		grid.addComponent(bBenutzerkontakt, 1, 1, 1, 3);
 		grid.addComponent(lBenutzerkontakt, 1, 4);
 		grid.addComponent(bBenutzerkontaktMinus, 1, 5);
@@ -414,8 +416,12 @@ public class KorrekturView implements Serializable {
 				} else if (row == 6) {
 					grid.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				} else {
-					c.setHeight("80%");
-					c.setWidth("80%");
+					if(row == 7 && col == 0) {
+						//Kassenbeleg
+					}else {
+						c.setHeight("80%");
+						c.setWidth("80%");
+					}
 				}
 			}
 		}

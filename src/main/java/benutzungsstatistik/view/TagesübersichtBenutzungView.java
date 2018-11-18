@@ -56,7 +56,7 @@ public class TagesübersichtBenutzungView {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
-		mainLayout.setHeight("100%");
+		//mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
@@ -171,11 +171,7 @@ public class TagesübersichtBenutzungView {
 		overallLayout.addComponent(headerLayout);
 
 		HorizontalLayout contentLayout = new HorizontalLayout();
-		overallLayout.addComponent(contentLayout);
-		contentLayout.addComponent(tabelleUhrzeiten);
-
 		VerticalLayout rightLayout = new VerticalLayout();
-		rightLayout.setSizeUndefined();
 		rightLayout.addComponent(lRechercheberatung);
 		HorizontalLayout kassenbelegLayout = new HorizontalLayout();
 		kassenbelegLayout.addComponent(lKassenbeleg);
@@ -186,7 +182,9 @@ public class TagesübersichtBenutzungView {
 		rightLayout.addComponent(lGruppen);
 		rightLayout.addComponent(tabelleGruppen);
 		rightLayout.setSpacing(true);
+		contentLayout.addComponent(tabelleUhrzeiten);
 		contentLayout.addComponent(rightLayout);
+		overallLayout.addComponent(contentLayout);
 
 		mainLayout.addComponent(overallLayout);
 
@@ -321,6 +319,7 @@ public class TagesübersichtBenutzungView {
 		}
 
 		tabelleUhrzeiten.setItems(tagesübersichtListe);
+		tabelleUhrzeiten.setWidth("450px");
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
 

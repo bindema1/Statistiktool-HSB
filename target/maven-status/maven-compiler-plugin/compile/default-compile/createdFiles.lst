@@ -26,10 +26,11 @@ belegung\model\Arbeitsplätze.class
 benutzungsstatistik\model\ExterneGruppe.class
 benutzungsstatistik\model\BeantwortungBibliothekspersonal.class
 allgemein\view\MainView.class
+testdaten\TestDaten.class
 benutzungsstatistik\view\WintikurierView$1.class
+belegung\view\BelegungErfassenView$2.class
 belegung\model\Gruppenräume.class
 benutzungsstatistik\db\IntensivfrageDatenbank.class
-Testdaten\TestDaten.class
 belegung\bean\TagesübersichtBelegungBean.class
 belegung\db\BelegungsDatenbank.class
 benutzungsstatistik\db\TelefonkontaktDatenbank.class

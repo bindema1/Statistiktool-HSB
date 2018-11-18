@@ -25,7 +25,7 @@ public class MainView extends UI{
 	private AbsoluteLayout buildMainLayout() {
 		// top-level component properties
 		setWidth("100.0%");
-		setHeight("100.0%");
+		//setHeight("100.0%");
 
 //		Navigator navigator = new Navigator(this, this);
 //		navigator.addView("", StartseiteView.class);

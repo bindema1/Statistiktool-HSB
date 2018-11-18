@@ -19,18 +19,18 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
@@ -203,38 +203,38 @@ public class BelegungErfassenView implements View {
 		tTotalRäume.setPlaceholder("Total Räume");
 		tTotalRäume.setValue("0");
 
-		//Eine Liste von Uhrzeiten zum auswählen
+		// Eine Liste von Uhrzeiten zum auswählen
 		data = null;
-		ListSelect<String> uhrzeitListSelect;
+		NativeSelect<String> uhrzeitListSelect;
 		if (korrektur == true) {
 			data = Arrays.asList(new String[] { "Wählen", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
-			uhrzeitListSelect = new ListSelect<>("Uhrzeit:", data);
-			uhrzeitListSelect.setRows(7);
-			uhrzeitListSelect.select(data.get(0));
+			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
+			uhrzeitListSelect.setEmptySelectionAllowed(false);
+			uhrzeitListSelect.setSelectedItem(data.get(0));
 			setButtonEnabled(false);
 		} else {
 			data = Arrays.asList(new String[] { "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
-			uhrzeitListSelect = new ListSelect<>("Uhrzeit:", data);
-			uhrzeitListSelect.setRows(6);
+			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
+			uhrzeitListSelect.setEmptySelectionAllowed(false);
 
 			int time = Integer.parseInt(new SimpleDateFormat("HH").format(new Date()));
 			if (time <= 9) {
-				uhrzeitListSelect.select(data.get(0));
+				uhrzeitListSelect.setSelectedItem(data.get(0));
 				ausgewählteUhrzeit = UhrzeitEnum.NEUN;
 			} else if (time <= 11) {
-				uhrzeitListSelect.select(data.get(1));
+				uhrzeitListSelect.setSelectedItem(data.get(1));
 				ausgewählteUhrzeit = UhrzeitEnum.ELF;
 			} else if (time <= 13) {
-				uhrzeitListSelect.select(data.get(2));
+				uhrzeitListSelect.setSelectedItem(data.get(2));
 				ausgewählteUhrzeit = UhrzeitEnum.DREIZEHN;
 			} else if (time <= 15) {
-				uhrzeitListSelect.select(data.get(3));
+				uhrzeitListSelect.setSelectedItem(data.get(3));
 				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
 			} else if (time <= 17) {
-				uhrzeitListSelect.select(data.get(4));
+				uhrzeitListSelect.setSelectedItem(data.get(4));
 				ausgewählteUhrzeit = UhrzeitEnum.SIEBZEHN;
 			} else if (time >= 18) {
-				uhrzeitListSelect.select(data.get(5));
+				uhrzeitListSelect.setSelectedItem(data.get(5));
 				ausgewählteUhrzeit = UhrzeitEnum.NEUNZEHN;
 			}
 		}
@@ -250,27 +250,29 @@ public class BelegungErfassenView implements View {
 
 			// Alle Button enablen
 			setButtonEnabled(true);
+			
+			Notification.show(event.getValue(), Type.TRAY_NOTIFICATION);
 
-			switch (String.valueOf(event.getValue())) {
-			case "[9 Uhr]":
+			switch (event.getValue()) {
+			case "9 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.NEUN;
 				break;
-			case "[11 Uhr]":
+			case "11 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.ELF;
 				break;
-			case "[13 Uhr]":
+			case "13 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.DREIZEHN;
 				break;
-			case "[15 Uhr]":
+			case "15 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
 				break;
-			case "[17 Uhr]":
+			case "17 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.SIEBZEHN;
 				break;
-			case "[19 Uhr]":
+			case "19 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.NEUNZEHN;
 				break;
-			case "[Wählen]":
+			case "Wählen":
 				setButtonEnabled(false);
 				break;
 			}
@@ -304,7 +306,7 @@ public class BelegungErfassenView implements View {
 			}
 
 			// Alle Button disabled setzen, da der User erst eine Uhrzeit auswählen muss
-			uhrzeitListSelect.select(data.get(0));
+			uhrzeitListSelect.setSelectedItem(data.get(0));
 			setButtonEnabled(false);
 		});
 
@@ -347,7 +349,10 @@ public class BelegungErfassenView implements View {
 
 		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 3);
 
-		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 8);
+		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 5);
+		grid.addComponent(new Label(), 0, 6);
+		grid.addComponent(new Label(), 0, 7);
+		grid.addComponent(new Label(), 0, 8);
 
 		if (räumeVorhanden == true) {
 			grid.addComponent(bPersonen, 1, 4, 2, 7);
@@ -408,17 +413,17 @@ public class BelegungErfassenView implements View {
 						}
 					}
 
-					if (row >= 1 && row <= 4) {
-						if (col == 0) {
-							c.setHeight("65%");
-							c.setWidth("100%");
-						}
+					//Tabelle
+					if (row >= 1 && row <= 3) {
+						c.setHeight("85%");
+						c.setWidth("95%");
 					}
 
+					//Bild mit Etagen
 					if (row >= 9) {
 						if (col == 0) {
 							c.setHeight("100%");
-							c.setWidth("50%");
+							c.setWidth("70%");
 						} else {
 							c.setHeight("90%");
 							c.setWidth("100%");
@@ -449,7 +454,6 @@ public class BelegungErfassenView implements View {
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
 
 		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
-		List<UhrzeitEnum> enumListe = new ArrayList<>();
 
 		Stockwerk stockwerk = null;
 		for (Stockwerk s : belegung.getStockwerkListe()) {
@@ -596,48 +600,48 @@ public class BelegungErfassenView implements View {
 
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/EG-lang2.png"));
 			absoluteLayout.addComponent(image);
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bArbeitsplätze, "top: 50px; left: 50px;");
-			bArbeitsplätze.setWidth("900px");
-			bArbeitsplätze.setHeight("65px");
-			absoluteLayout.addComponent(bGruppenräume, "top: 120px; left: 90px;");
-			bGruppenräume.setHeight("110px");
-			bGruppenräume.setWidth("130px");
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 40px; left: 50px;");
+			bArbeitsplätze.setWidth("650px");
+			bArbeitsplätze.setHeight("45px");
+			absoluteLayout.addComponent(bGruppenräume, "top: 90px; left: 75px;");
+			bGruppenräume.setHeight("100px");
+			bGruppenräume.setWidth("90px");
 
 		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1.ZG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/1.ZG-lang2.png"));
 			absoluteLayout.addComponent(image);
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
-			bArbeitsplätze.setHeight("230px");
-			bArbeitsplätze.setWidth("900px");
+			bArbeitsplätze.setHeight("200px");
+			bArbeitsplätze.setWidth("650px");
 
 		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2.ZG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/2.ZG-lang2.png"));
 			absoluteLayout.addComponent(image);
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
-			bArbeitsplätze.setHeight("230px");
-			bArbeitsplätze.setWidth("900px");
+			bArbeitsplätze.setHeight("200px");
+			bArbeitsplätze.setWidth("650px");
 
 		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/LL-lang2.png"));
 			absoluteLayout.addComponent(image);
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bSektorA, "top: 40px; left: 50px;");
-			bSektorA.setHeight("200px");
-			bSektorA.setWidth("430px");
-			absoluteLayout.addComponent(bSektorB, "top: 40px; left: 520px;");
-			bSektorB.setHeight("200px");
-			bSektorB.setWidth("430px");
-			absoluteLayout.addComponent(bGruppenräume, "top: 155px; left: 320px;");
+			absoluteLayout.addComponent(bSektorA, "top: 30px; left: 50px;");
+			bSektorA.setHeight("140px");
+			bSektorA.setWidth("310px");
+			absoluteLayout.addComponent(bSektorB, "top: 30px; left: 380px;");
+			bSektorB.setHeight("140px");
+			bSektorB.setWidth("380px");
+			absoluteLayout.addComponent(bGruppenräume, "top: 115px; left: 235px;");
 			bGruppenräume.setHeight("60px");
-			bGruppenräume.setWidth("350px");
-			absoluteLayout.addComponent(bCarrels, "top: 110px; left: 760px;");
-			bCarrels.setHeight("60px");
-			bCarrels.setWidth("170px");
+			bGruppenräume.setWidth("270px");
+			absoluteLayout.addComponent(bCarrels, "top: 80px; left: 565px;");
+			bCarrels.setHeight("50px");
+			bCarrels.setWidth("125px");
 		}
 
 		layoutMitZahlenFüllen();
@@ -775,55 +779,6 @@ public class BelegungErfassenView implements View {
 		}
 	}
 
-	private void alleButtonRotSetzenOhneZahlen() {
-		// Alle Button Rot setzen, welche Daten 0 sind
-		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_DANGER);
-		bGruppenräume.setStyleName(ValoTheme.BUTTON_DANGER);
-		bCarrels.setStyleName(ValoTheme.BUTTON_DANGER);
-		bSektorA.setStyleName(ValoTheme.BUTTON_DANGER);
-		bSektorB.setStyleName(ValoTheme.BUTTON_DANGER);
-
-		for (Stockwerk s : belegung.getStockwerkListe()) {
-			if (s.getName() == stockwerkEnum) {
-				for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
-					if (a.getUhrzeit() == ausgewählteUhrzeit) {
-						if (a.getAnzahlPersonen() >= 0) {
-							bArbeitsplätze.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-						}
-					}
-				}
-				for (Gruppenräume a : s.getGruppenräumeListe()) {
-					if (a.getUhrzeit() == ausgewählteUhrzeit || a.getAnzahlRäume() == 0) {
-						if (a.getAnzahlPersonen() >= 0) {
-							bGruppenräume.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-						}
-					}
-				}
-				for (Carrels a : s.getCarrelsListe()) {
-					if (a.getUhrzeit() == ausgewählteUhrzeit) {
-						if (a.getAnzahlPersonen() >= 0 || a.getAnzahlRäume() == 0) {
-							bCarrels.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-						}
-					}
-				}
-				for (SektorA a : s.getSektorAListe()) {
-					if (a.getUhrzeit() == ausgewählteUhrzeit) {
-						if (a.getAnzahlPersonen() >= 0) {
-							bSektorA.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-						}
-					}
-				}
-				for (SektorB a : s.getSektorBListe()) {
-					if (a.getUhrzeit() == ausgewählteUhrzeit) {
-						if (a.getAnzahlPersonen() >= 0) {
-							bSektorB.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	public ClickListener createClickListener(final MainView mainView) {
 		return new ClickListener() {
 			@Override
@@ -918,8 +873,8 @@ public class BelegungErfassenView implements View {
 
 					String validierung = "";
 					if (stockwerkEnum == StockwerkEnum.LL) {
-						if (sektorAIsEmpty == true || sektorBIsEmpty == true
-								|| gruppenraumIsEmpty == true || carellIsEmpty == true) {
+						if (sektorAIsEmpty == true || sektorBIsEmpty == true || gruppenraumIsEmpty == true
+								|| carellIsEmpty == true) {
 							if (sektorAIsEmpty == true)
 								validierung += "SektorA, ";
 							if (sektorBIsEmpty == true)
@@ -951,8 +906,8 @@ public class BelegungErfassenView implements View {
 							validierung += "hat einen 0 wert";
 						}
 					}
-					
-					if(validierung.equals("")) {
+
+					if (validierung.equals("")) {
 						validierung = "Validierung erfolgreich, keine Fehler";
 					}
 

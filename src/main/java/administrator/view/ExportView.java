@@ -10,7 +10,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -34,7 +33,7 @@ public class ExportView implements View {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
-		mainLayout.setHeight("100%");
+		//mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
@@ -57,7 +56,6 @@ public class ExportView implements View {
 	}
 
 	// Initialisieren der GUI Komponente
-	@SuppressWarnings("unchecked")
 	private void initComponents(MainView mainView) {
 
 		Label lText = new Label();
@@ -85,13 +83,13 @@ public class ExportView implements View {
 
 		List<String> dataZeit = Arrays.asList("nach Stunde (detailliert)", "nach Tag", "nach KW", "nach Monat",
 				"nach Jahr");
-		RadioButtonGroup radioKontakt = new RadioButtonGroup<>("Kontakt", dataZeit);
+		RadioButtonGroup<String> radioKontakt = new RadioButtonGroup<>("Kontakt", dataZeit);
 		radioKontakt.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
 		List<String> dataKontakt = Arrays.asList("Benutzerkontakt", "Intensivfrage", "Telefonkontakt", "Emailkontakt");
-		CheckBoxGroup checkKontakt = new CheckBoxGroup<>("Kontakt", dataKontakt);
+		CheckBoxGroup<String> checkKontakt = new CheckBoxGroup<>("Kontakt", dataKontakt);
 		checkKontakt.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
@@ -102,7 +100,7 @@ public class ExportView implements View {
 
 		List<String> dataWintikurier = Arrays.asList("detailliert nach Datum", "nach Monat", "nach Quartal",
 				"nach Jahr");
-		RadioButtonGroup radioWintikurier = new RadioButtonGroup<>("Wintikurier", dataWintikurier);
+		RadioButtonGroup<String> radioWintikurier = new RadioButtonGroup<>("Wintikurier", dataWintikurier);
 		radioWintikurier.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
@@ -112,7 +110,7 @@ public class ExportView implements View {
 		bExportWintikurier.addClickListener(createClickListener(mainView));
 
 		List<String> dataGruppen = Arrays.asList("detailliert nach Datum", "nach KW", "nach Monat", "nach Jahr");
-		RadioButtonGroup radioGruppen = new RadioButtonGroup<>("Externe Gruppen", dataGruppen);
+		RadioButtonGroup<String> radioGruppen = new RadioButtonGroup<>("Externe Gruppen", dataGruppen);
 		radioGruppen.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
@@ -127,21 +125,21 @@ public class ExportView implements View {
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 //		List<String> dataZeit = Arrays.asList("nach Stunde (detailliert)", "nach Tag", "nach KW", "nach Monat", "nach Jahr");
-		RadioButtonGroup radioBelegung = new RadioButtonGroup<>("Belegung", dataZeit);
+		RadioButtonGroup<String> radioBelegung = new RadioButtonGroup<>("Belegung", dataZeit);
 		radioBelegung.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
 		List<String> dataUhrzeit = Arrays.asList("Alle Uhrzeiten", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr",
 				"19 Uhr");
-		RadioButtonGroup radioUhrzeit = new RadioButtonGroup<>("Uhrzeit", dataUhrzeit);
+		RadioButtonGroup<String> radioUhrzeit = new RadioButtonGroup<>("Uhrzeit", dataUhrzeit);
 		radioUhrzeit.setSelectedItem(dataUhrzeit.get(4));
 		radioUhrzeit.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
 		List<String> dataStockwerk = Arrays.asList("EG", "1.ZG", "2.ZG", "LL", "Bibliothek");
-		CheckBoxGroup checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
+		CheckBoxGroup<String> checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
 		checkStockwerk.addValueChangeListener(event -> {
 			
 			if(checkStockwerk.isSelected(dataStockwerk.get(4))){

@@ -166,16 +166,16 @@ public class TagesübersichtBelegungView {
 
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/EG-cut.png"));
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1.ZG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/1.ZG-cut.png"));
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2.ZG-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/2.ZG-cut.png"));
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-lang.png"));
+			image = new Image(null, new ClassResource("/belegung/LL-cut.png"));
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		}
 
@@ -191,19 +191,19 @@ public class TagesübersichtBelegungView {
 //		overallLayout.addComponent(headerLayout);
 //		overallLayout.addComponent(tabelleUhrzeiten);
 
-		grid = new GridLayout(5, 9);
+		grid = new GridLayout(5, 10);
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0);
 		grid.addComponent(datefield, 2, 0);
 		grid.addComponent(bErfassung, 3, 0);
 		grid.addComponent(bKorrektur, 4, 0);
-		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 4);
-		grid.addComponent(bLL, 0, 5);
-		grid.addComponent(b2ZG, 0, 6);
-		grid.addComponent(b1ZG, 0, 7);
-		grid.addComponent(bEG, 0, 8);
-		grid.addComponent(image, 1, 5, 4, 8);
+		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 5);
+		grid.addComponent(bLL, 0, 6);
+		grid.addComponent(b2ZG, 0, 7);
+		grid.addComponent(b1ZG, 0, 8);
+		grid.addComponent(bEG, 0, 9);
+		grid.addComponent(image, 1, 6, 4, 9);
 		
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -215,16 +215,16 @@ public class TagesübersichtBelegungView {
 					if (col == 1 || col == 2) {
 						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
 					}
-				}else if(row >= 1 && row <= 4){
+				}else if(row >= 1 && row <= 5){
 					//Tabelle
-					c.setHeight("100%");
-					c.setWidth("93%");
+					c.setHeight("97%");
+					c.setWidth("95%");
 				}else {
 					c.setHeight("100%");
 					c.setWidth("100%");
 					
-					if (col == 0 && row >= 5) {
-						c.setWidth("50%");
+					if (col == 0 && row >= 6) {
+						c.setWidth("70%");
 					} 
 				}
 			}
