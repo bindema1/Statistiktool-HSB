@@ -28,6 +28,7 @@ public class ExportView implements View {
 	private Button bExportWintikurier;
 	private Button bExportGruppen;
 	private Button bExportBelegung;
+	private Button bExportAllBelegung;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -81,38 +82,23 @@ public class ExportView implements View {
 		lBenutzung.setValue("Benutzungsstatistik");
 		lBenutzung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		List<String> dataZeit = Arrays.asList("nach Stunde (detailliert)", "nach Tag", "nach KW", "nach Monat",
-				"nach Jahr");
-		RadioButtonGroup<String> radioKontakt = new RadioButtonGroup<>("Kontakt", dataZeit);
-		radioKontakt.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-		});
-
-		List<String> dataKontakt = Arrays.asList("Benutzerkontakt", "Intensivfrage", "Telefonkontakt", "Emailkontakt");
-		CheckBoxGroup<String> checkKontakt = new CheckBoxGroup<>("Kontakt", dataKontakt);
-		checkKontakt.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-		});
-
 		bExportBenutzung = new Button();
 		bExportBenutzung.setCaption("Benutzung exportieren");
 		bExportBenutzung.addClickListener(createClickListener(mainView));
 
-		List<String> dataWintikurier = Arrays.asList("detailliert nach Datum", "nach Monat", "nach Quartal",
-				"nach Jahr");
-		RadioButtonGroup<String> radioWintikurier = new RadioButtonGroup<>("Wintikurier", dataWintikurier);
-		radioWintikurier.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-		});
-
 		bExportWintikurier = new Button();
 		bExportWintikurier.setCaption("Wintikurier exportieren");
+		bExportWintikurier.setEnabled(false);
 		bExportWintikurier.addClickListener(createClickListener(mainView));
-
-		List<String> dataGruppen = Arrays.asList("detailliert nach Datum", "nach KW", "nach Monat", "nach Jahr");
-		RadioButtonGroup<String> radioGruppen = new RadioButtonGroup<>("Externe Gruppen", dataGruppen);
-		radioGruppen.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
+		
+		List<String> dataWintikurier = Arrays.asList("nach Tag", "nach Monat");
+		RadioButtonGroup<String> radioWintikurier = new RadioButtonGroup<>("Wintikurier", dataWintikurier);
+		radioWintikurier.addValueChangeListener(event -> {
+			if(event.getValue().contains(dataWintikurier.get(0)) || event.getValue().contains(dataWintikurier.get(1))) {
+				bExportWintikurier.setEnabled(true);
+			}else {
+				bExportWintikurier.setEnabled(false);
+			}
 		});
 
 		bExportGruppen = new Button();
@@ -124,69 +110,69 @@ public class ExportView implements View {
 		lBelegung.setValue("Belegung");
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-//		List<String> dataZeit = Arrays.asList("nach Stunde (detailliert)", "nach Tag", "nach KW", "nach Monat", "nach Jahr");
-		RadioButtonGroup<String> radioBelegung = new RadioButtonGroup<>("Belegung", dataZeit);
-		radioBelegung.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-		});
-
-		List<String> dataUhrzeit = Arrays.asList("Alle Uhrzeiten", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr",
-				"19 Uhr");
-		RadioButtonGroup<String> radioUhrzeit = new RadioButtonGroup<>("Uhrzeit", dataUhrzeit);
-		radioUhrzeit.setSelectedItem(dataUhrzeit.get(4));
-		radioUhrzeit.addValueChangeListener(event -> {
-			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
-		});
-
-		List<String> dataStockwerk = Arrays.asList("EG", "1.ZG", "2.ZG", "LL", "Bibliothek");
-		CheckBoxGroup<String> checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
-		checkStockwerk.addValueChangeListener(event -> {
-			
-			if(checkStockwerk.isSelected(dataStockwerk.get(4))){
-				checkStockwerk.select(dataStockwerk.get(0), dataStockwerk.get(1), dataStockwerk.get(2));
-			}
-
+		List<String> dataUhrzeit = Arrays.asList("9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr");
+		CheckBoxGroup<String> checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
+		checkUhrzeit.select(dataUhrzeit.get(3));
+		checkUhrzeit.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
 		bExportBelegung = new Button();
 		bExportBelegung.setCaption("Belegung exportieren");
+		bExportBelegung.setEnabled(false);
 		bExportBelegung.addClickListener(createClickListener(mainView));
+		
+		List<String> dataStockwerk = Arrays.asList("Lernlandschaft", "Bibliothek");
+		CheckBoxGroup<String> checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
+		checkStockwerk.addValueChangeListener(event -> {
+			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
+			
+			if(event.getValue().contains(dataStockwerk.get(0)) || event.getValue().contains(dataStockwerk.get(1))) {
+				bExportBelegung.setEnabled(true);
+			}else {
+				bExportBelegung.setEnabled(false);
+			}
+		});
+		
+		bExportAllBelegung = new Button();
+		bExportAllBelegung.setCaption("Belegung komplett exportieren");
+		bExportAllBelegung.addClickListener(createClickListener(mainView));
 
 		// Layout
-		VerticalLayout overallLayout = new VerticalLayout();
-		overallLayout.addComponent(lText);
+		AbsoluteLayout overallLayout = new AbsoluteLayout();
+		overallLayout.addComponent(lText, "top:10%; left:5%");
 
 		// Datum
 		HorizontalLayout datumLayout = new HorizontalLayout();
 		datumLayout.addComponent(datumVon);
 		datumLayout.addComponent(datumBis);
-		overallLayout.addComponent(datumLayout);
+		overallLayout.addComponent(datumLayout, "top:18%; left:5%");
 
+		HorizontalLayout exportLayout = new HorizontalLayout();
+		
 		// Benutzung
-		overallLayout.addComponent(lBenutzung);
-		HorizontalLayout benutzungLayout = new HorizontalLayout();
-		benutzungLayout.addComponent(radioKontakt);
-		benutzungLayout.addComponent(checkKontakt);
-		benutzungLayout.addComponent(radioWintikurier);
-		benutzungLayout.addComponent(radioGruppen);
-		overallLayout.addComponent(benutzungLayout);
-		HorizontalLayout benutzungLayout2 = new HorizontalLayout();
-		benutzungLayout2.addComponent(bExportBenutzung);
-		benutzungLayout2.addComponent(bExportWintikurier);
-		benutzungLayout2.addComponent(bExportGruppen);
-		overallLayout.addComponent(benutzungLayout2);
+		VerticalLayout benutzungsLayout = new VerticalLayout();
+		benutzungsLayout.addComponent(lBenutzung);
+		benutzungsLayout.addComponent(bExportBenutzung);
+		benutzungsLayout.addComponent(bExportGruppen);
+		benutzungsLayout.addComponent(radioWintikurier);
+		benutzungsLayout.addComponent(bExportWintikurier);
+		exportLayout.addComponent(benutzungsLayout);
 
 		// Belegung
-		overallLayout.addComponent(lBelegung);
-		HorizontalLayout belegungLayout = new HorizontalLayout();
-		belegungLayout.addComponent(radioBelegung);
-		belegungLayout.addComponent(radioUhrzeit);
-		belegungLayout.addComponent(checkStockwerk);
-		overallLayout.addComponent(belegungLayout);
-		overallLayout.addComponent(bExportBelegung);
+		VerticalLayout belegungsLayout = new VerticalLayout();
+		HorizontalLayout uhrzeitStockwerkLayout = new HorizontalLayout();
+		uhrzeitStockwerkLayout.addComponent(checkUhrzeit);
+		uhrzeitStockwerkLayout.addComponent(checkStockwerk);
+		belegungsLayout.addComponent(lBelegung);
+		belegungsLayout.addComponent(uhrzeitStockwerkLayout);
+		belegungsLayout.addComponent(bExportBelegung);
+		belegungsLayout.addComponent(bExportAllBelegung);
+		exportLayout.addComponent(belegungsLayout);
+		
+		overallLayout.addComponent(exportLayout, "top:25%;");
 
-		mainLayout.addComponent(overallLayout);
+		mainLayout.addComponent(overallLayout, "left:25%");
 	}
 
 	public ClickListener createClickListener(final MainView mainView) {
