@@ -1,32 +1,34 @@
 package administrator.bean;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @SuppressWarnings("serial")
-public class ExportExterneGruppeBean implements Serializable{
+public class ExportBenutzungsstatistikBean implements Serializable{
 
 	private int kw;
 	private String wochentag;
 	private String datum;
-	private String nameGruppe;
+	private String uhrzeit;
+	private String typ;
 	private int anzahl;
 	
-	public ExportExterneGruppeBean(int kW, String wochentag, String datum, String name_Gruppe, int anzahl) {
+	public ExportBenutzungsstatistikBean(int kw, String wochentag, String datum, String uhrzeit, String typ,
+			int anzahl) {
 		super();
-		this.kw = kW;
+		this.kw = kw;
 		this.wochentag = wochentag;
 		this.datum = datum;
-		this.nameGruppe = name_Gruppe;
+		this.uhrzeit = uhrzeit;
+		this.typ = typ;
 		this.anzahl = anzahl;
 	}
 
-	public int getkW() {
+	public int getKw() {
 		return kw;
 	}
 
-	public void setkW(int kW) {
-		this.kw = kW;
+	public void setKw(int kw) {
+		this.kw = kw;
 	}
 
 	public String getWochentag() {
@@ -45,12 +47,20 @@ public class ExportExterneGruppeBean implements Serializable{
 		this.datum = datum;
 	}
 
-	public String getName_Gruppe() {
-		return nameGruppe;
+	public String getUhrzeit() {
+		return uhrzeit;
 	}
 
-	public void setName_Gruppe(String name_Gruppe) {
-		this.nameGruppe = name_Gruppe;
+	public void setUhrzeit(String uhrzeit) {
+		this.uhrzeit = uhrzeit;
+	}
+
+	public String getTyp() {
+		return typ;
+	}
+
+	public void setTyp(String typ) {
+		this.typ = typ;
 	}
 
 	public int getAnzahl() {
