@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.vaadin.haijian.Exporter;
 
@@ -30,6 +31,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import administrator.bean.ExportBelegungKomplettBean;
+import administrator.bean.ExportBelegungNormalBean;
 import administrator.bean.ExportBenutzungsstatistikBean;
 import administrator.bean.ExportExterneGruppeBean;
 import administrator.bean.ExportWintikurierMonatBean;
@@ -76,6 +78,9 @@ public class ExportView implements View {
 	private Grid<ExportWintikurierTagBean> tabelleWintikurierTag;
 	private Grid<ExportWintikurierMonatBean> tabelleWintikurierMonat;
 	private Grid<ExportBelegungKomplettBean> tabelleBelegungKomplett;
+	private Grid<ExportBelegungNormalBean> tabelleBelegungNormal;
+	private CheckBoxGroup<String> checkUhrzeit;
+	private CheckBoxGroup<String> checkStockwerk;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -182,7 +187,7 @@ public class ExportView implements View {
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		List<String> dataUhrzeit = Arrays.asList("9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr");
-		CheckBoxGroup<String> checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
+		checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
 		checkUhrzeit.select(dataUhrzeit.get(3));
 		checkUhrzeit.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
@@ -192,9 +197,15 @@ public class ExportView implements View {
 		bExportBelegung.setCaption("Belegung exportieren");
 		bExportBelegung.setEnabled(false);
 		bExportBelegung.addClickListener(createClickListener(mainView));
+		tabelleBelegungNormal = new Grid<>(ExportBelegungNormalBean.class);
+		StreamResource excelStreamResource6 = new StreamResource(
+				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBelegungNormal),
+				"BelegungNormal.xls");
+		FileDownloader excelFileDownloader6 = new FileDownloader(excelStreamResource6);
+		excelFileDownloader6.extend(bExportBelegung);
 
 		List<String> dataStockwerk = Arrays.asList("Lernlandschaft", "Bibliothek");
-		CheckBoxGroup<String> checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
+		checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
 		checkStockwerk.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 
@@ -297,7 +308,7 @@ public class ExportView implements View {
 
 					// Setze die Uhrzeit für den Export
 					String uhrzeit = getUhrzeitStringByInt(i);
-					
+
 					int emailzaehler = 0;
 					for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
@@ -347,7 +358,7 @@ public class ExportView implements View {
 	 * @return String
 	 */
 	private String getUhrzeitStringByInt(int i) {
-		
+
 		String uhrzeit;
 		if (i < 10) {
 			uhrzeit = "0" + i + ":00";
@@ -456,7 +467,7 @@ public class ExportView implements View {
 
 		tabelleWintikurierMonat.setItems(beanListeMonat);
 	}
-	
+
 	/**
 	 * Sammelt alle Daten für den export der Belegung - Komplett und detailliert
 	 */
@@ -475,33 +486,33 @@ public class ExportView implements View {
 				List<Belegung> belegungsListe = new ArrayList<>();
 				belegungsListe.add(belegungBB);
 				belegungsListe.add(belegungLL);
-				
-				//Geht durch Bibliothek und Lernlandschaft
-				for(Belegung belegung : belegungsListe) {
-					
+
+				// Geht durch Bibliothek und Lernlandschaft
+				for (Belegung belegung : belegungsListe) {
+
 					String bereich = null;
-					if(belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
+					if (belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
 						bereich = "Lernlandschaft";
-					}else if(belegung.getStandort() == StandortEnum.WINTERTHUR_BB) {
+					} else if (belegung.getStandort() == StandortEnum.WINTERTHUR_BB) {
 						bereich = "Bibliothek";
 					}
-					
-					//Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
-					for(Stockwerk stockwerk : belegung.getStockwerkListe()) {
-						
+
+					// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
+					for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
+
 						String stockwerkName = null;
-						if(stockwerk.getName() == StockwerkEnum.EG) {
+						if (stockwerk.getName() == StockwerkEnum.EG) {
 							stockwerkName = "EG";
-						}else if(stockwerk.getName() == StockwerkEnum.ZG1) {
+						} else if (stockwerk.getName() == StockwerkEnum.ZG1) {
 							stockwerkName = "1.ZG";
-						}else if(stockwerk.getName() == StockwerkEnum.ZG2) {
+						} else if (stockwerk.getName() == StockwerkEnum.ZG2) {
 							stockwerkName = "2.ZG";
-						}else if(stockwerk.getName() == StockwerkEnum.LL) {
+						} else if (stockwerk.getName() == StockwerkEnum.LL) {
 							stockwerkName = "Lernlandschaft";
 						}
-						
+
 						Kapazität kapazität = stockwerk.getKapzität();
-						
+
 						List<UhrzeitEnum> enumListe = new ArrayList<>();
 						enumListe.add(UhrzeitEnum.NEUN);
 						enumListe.add(UhrzeitEnum.ELF);
@@ -534,61 +545,209 @@ public class ExportView implements View {
 								uhrzeit = getUhrzeitStringByInt(19);
 								break;
 							}
-							
 
 							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
-									int auslastung = arbeitsplätze.getAnzahlPersonen() * 100 / kapazität.getMaxArbeitsplätze();
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Arbeitsplätze", arbeitsplätze.getAnzahlPersonen(), auslastung+"%"));
+									int auslastung = arbeitsplätze.getAnzahlPersonen() * 100
+											/ kapazität.getMaxArbeitsplätze();
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Arbeitsplätze", arbeitsplätze.getAnzahlPersonen(),
+											auslastung + "%"));
 								}
 							}
 
 							for (SektorA sektorA : stockwerk.getSektorAListe()) {
 								if (uhrzeitEnum == sektorA.getUhrzeit()) {
 									int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getMaxSektorA();
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Sektor A", sektorA.getAnzahlPersonen(), auslastung+"%"));
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Sektor A", sektorA.getAnzahlPersonen(), auslastung + "%"));
 								}
 							}
 
 							for (SektorB sektorB : stockwerk.getSektorBListe()) {
 								if (uhrzeitEnum == sektorB.getUhrzeit()) {
 									int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getMaxSektorB();
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Sektor B", sektorB.getAnzahlPersonen(), auslastung+"%"));
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Sektor B", sektorB.getAnzahlPersonen(), auslastung + "%"));
 								}
 							}
 
 							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
-									int auslastung = gruppenräume.getAnzahlPersonen() * 100 / kapazität.getMaxGruppenräume();
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Gruppenräume - Räume", gruppenräume.getAnzahlRäume(), auslastung+"%"));
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Gruppenräume - Personen", gruppenräume.getAnzahlPersonen(), auslastung+"%"));									
+									int auslastung = gruppenräume.getAnzahlPersonen() * 100
+											/ kapazität.getMaxGruppenräume();
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Gruppenräume - Räume", gruppenräume.getAnzahlRäume(),
+											auslastung + "%"));
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Gruppenräume - Personen", gruppenräume.getAnzahlPersonen(),
+											auslastung + "%"));
 								}
 							}
 
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
 									int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getMaxCarrels();
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Carrels - Räume", carrels.getAnzahlRäume(), auslastung+"%"));
-									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum), getWochentagForDate(date), sdf.format(datum), uhrzeit, 
-											bereich, stockwerkName, "Carrels - Personen", carrels.getAnzahlPersonen(), auslastung+"%"));	
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Carrels - Räume", carrels.getAnzahlRäume(),
+											auslastung + "%"));
+									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
+											stockwerkName, "Carrels - Personen", carrels.getAnzahlPersonen(),
+											auslastung + "%"));
 								}
 							}
-						
+
 						}
-					}	
-					
+					}
+
 				}
-				
+
 			}
 		}
 
 		tabelleBelegungKomplett.setItems(beanListe);
+	}
+
+	/**
+	 * Sammelt alle Daten für den export der Belegung - Normal, zusammengezählt
+	 */
+	private void exportBelegungNormal() {
+		List<ExportBelegungNormalBean> beanListe = new ArrayList<>();
+
+		// Geht durch alle Tage vom Startdatum bis Enddatum
+		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
+
+			if (!getWochentagForDate(date).equals("Sonntag")) {
+
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+
+				Belegung belegungBB = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
+				Belegung belegungLL = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
+				List<Belegung> belegungsListe = new ArrayList<>();
+				Set<String> selectedBelegung = checkStockwerk.getSelectedItems();
+				//Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
+				for(String s : selectedBelegung) {
+					if(s.equals("Bibliothek")) {
+						belegungsListe.add(belegungBB);
+					}else if(s.equals("Lernlandschaft")) {
+						belegungsListe.add(belegungLL);
+					}
+				}
+				
+				List<UhrzeitEnum> enumListe = new ArrayList<>();
+				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
+				//Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
+				for(String s : selectedUhrzeit) {
+					if(s.equals("9 Uhr"))
+						enumListe.add(UhrzeitEnum.NEUN);
+					if(s.equals("11 Uhr"))
+						enumListe.add(UhrzeitEnum.ELF);
+					if(s.equals("13 Uhr"))
+						enumListe.add(UhrzeitEnum.DREIZEHN);
+					if(s.equals("15 Uhr"))
+						enumListe.add(UhrzeitEnum.FÜNFZEHN);
+					if(s.equals("17 Uhr"))
+						enumListe.add(UhrzeitEnum.SIEBZEHN);
+					if(s.equals("19 Uhr"))
+						enumListe.add(UhrzeitEnum.NEUNZEHN);
+				}
+
+				// Geht durch alle Uhrzeiten
+				for (UhrzeitEnum uhrzeitEnum : enumListe) {
+
+					String uhrzeit = null;
+
+					switch (uhrzeitEnum) {
+					case NEUN:
+						uhrzeit = getUhrzeitStringByInt(9);
+						break;
+					case ELF:
+						uhrzeit = getUhrzeitStringByInt(11);
+						break;
+					case DREIZEHN:
+						uhrzeit = getUhrzeitStringByInt(13);
+						break;
+					case FÜNFZEHN:
+						uhrzeit = getUhrzeitStringByInt(15);
+						break;
+					case SIEBZEHN:
+						uhrzeit = getUhrzeitStringByInt(17);
+						break;
+					case NEUNZEHN:
+						uhrzeit = getUhrzeitStringByInt(19);
+						break;
+					}
+
+					// Geht durch Bibliothek und Lernlandschaft
+					for (Belegung belegung : belegungsListe) {
+
+						String bereich = null;
+						if (belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
+							bereich = "Lernlandschaft";
+						} else if (belegung.getStandort() == StandortEnum.WINTERTHUR_BB) {
+							bereich = "Bibliothek";
+						}
+
+						int maxAlleKapazitäten = 0;
+						int personenZaehler = 0;
+
+						// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
+						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
+
+							Kapazität kapazität = stockwerk.getKapzität();
+							int maxKapazität = kapazität.getMaxArbeitsplätze() + kapazität.getMaxSektorA()
+									+ kapazität.getMaxSektorB() + kapazität.getMaxGruppenräume()
+									+ kapazität.getMaxCarrels();
+							maxAlleKapazitäten += maxKapazität;
+
+							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
+									personenZaehler += arbeitsplätze.getAnzahlPersonen();
+								}
+							}
+
+							for (SektorA sektorA : stockwerk.getSektorAListe()) {
+								if (uhrzeitEnum == sektorA.getUhrzeit()) {
+									personenZaehler += sektorA.getAnzahlPersonen();
+								}
+							}
+
+							for (SektorB sektorB : stockwerk.getSektorBListe()) {
+								if (uhrzeitEnum == sektorB.getUhrzeit()) {
+									personenZaehler += sektorB.getAnzahlPersonen();
+								}
+							}
+
+							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
+								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
+									personenZaehler += gruppenräume.getAnzahlPersonen();
+								}
+							}
+
+							for (Carrels carrels : stockwerk.getCarrelsListe()) {
+								if (uhrzeitEnum == carrels.getUhrzeit()) {
+									personenZaehler += carrels.getAnzahlPersonen();
+								}
+							}
+						}
+
+						int auslastung = personenZaehler * 100 / maxAlleKapazitäten;
+						beanListe.add(new ExportBelegungNormalBean(getKWForDate(datum), getWochentagForDate(date),
+								sdf.format(datum), uhrzeit, bereich, personenZaehler,
+								auslastung + "%"));
+					}
+				}
+			}
+		}
+
+		tabelleBelegungNormal.setItems(beanListe);
 	}
 
 	private String getMonatForInt(int monat) {
@@ -680,9 +839,9 @@ public class ExportView implements View {
 				}
 
 				if (e.getSource() == bExportBelegung) {
-					// TODO Export
+					exportBelegungNormal();
 				}
-				
+
 				if (e.getSource() == bExportAllBelegung) {
 					exportBelegungKomplett();
 				}
