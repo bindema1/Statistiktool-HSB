@@ -73,11 +73,8 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.3.7.Final</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.3.7.Final</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> 
+			<version>5.3.7.Final</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
@@ -130,6 +127,12 @@
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+		<!-- Dependency für den Export -->
+		<dependency>
+			<groupId>org.vaadin.haijian</groupId>
+			<artifactId>exporter</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 
@@ -215,7 +218,7 @@
 						<enabled>true</enabled>
 					</snapshots>
 				</repository>
-				<!-- Repository für Switch Kassenbeleg -->
+				<!-- Repository für Switch Kassenbeleg, Export und andere Addons -->
 				<repository>
 					<id>vaadin-addons</id>
 					<url>http://maven.vaadin.com/vaadin-addons</url>
