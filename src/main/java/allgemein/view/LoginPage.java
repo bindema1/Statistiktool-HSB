@@ -1,6 +1,7 @@
 package allgemein.view;
 
 import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
@@ -71,16 +72,50 @@ public class LoginPage extends VerticalLayout implements View {
 								TagesübersichtBenutzungView.class);
 						getUI().getNavigator().addView(WintikurierView.NAME, WintikurierView.class);
 
+						getUI().getNavigator().addViewChangeListener(new ViewChangeListener() {
+
+							@Override
+							public boolean beforeViewChange(ViewChangeEvent event) {
+
+								String user = VaadinSession.getCurrent().getAttribute("user").toString();
+
+								if (event.getNewView() instanceof PasswortView && user.contains("Admin")
+										|| event.getNewView() instanceof ExportView && user.equals("Admin Winterthur")) {
+									return true;
+								}
+								if (event.getNewView() instanceof BenutzungsstatistikBBView && user.equals("Admin Winterthur")
+										|| event.getNewView() instanceof BenutzungsstatistikBBView && user.equals("Mitarbeitende Winterthur")) {
+									return true;
+								}
+								if (event.getNewView() instanceof BelegungErfassenView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof TagesübersichtBelegungView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof WintikurierView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof ExterneGruppeView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof BelegungErfassenView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof TagesübersichtBenutzungView && !user.equals("Mitarbeitende Wädenswil")
+										|| event.getNewView() instanceof KorrekturView && !user.equals("Mitarbeitende Wädenswil")) {
+									return true;
+								} 
+								if (event.getNewView() instanceof StartseiteView) {
+									return true;
+								}
+								
+								Notification.show("Zugriff verweigert", Notification.Type.WARNING_MESSAGE);
+								return false;
+							}
+
+						});
+
 //						Object object = getUI().getSession().getAttribute("route");
 //						System.out.println("BOOM " +object.toString());
 //						Page.getCurrent().setUriFragment(object.toString());
-						
+
 						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
 					} else {
-						Notification.show("Ungültige Eingaben", Notification.Type.ERROR_MESSAGE);
+						Notification.show("Ungültige Eingaben", Notification.Type.WARNING_MESSAGE);
 					}
 				} else {
-					Notification.show("Ungültige Eingaben", Notification.Type.ERROR_MESSAGE);
+					Notification.show("Ungültige Eingaben", Notification.Type.WARNING_MESSAGE);
 				}
 			}
 

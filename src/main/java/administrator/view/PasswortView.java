@@ -100,7 +100,8 @@ public class PasswortView extends Composite implements View {
 
 		mainLayout.addComponent(layout, "top:20%;left:30%");
 	}
-
+	
+	
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener() {
 		return new ClickListener() {
