@@ -20,11 +20,12 @@ import javax.persistence.TemporalType;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "intensivfrage")
 public class Intensivfrage implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int intensivfrage_ID;

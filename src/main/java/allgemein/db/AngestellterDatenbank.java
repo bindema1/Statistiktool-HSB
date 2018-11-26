@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -46,7 +47,6 @@ public class AngestellterDatenbank {
 		try {
 			tempSession = sessionFactory.openSession();
 			tempTransaction = tempSession.beginTransaction();
-
 			tempSession.save(angestellter);
 
 			tempTransaction.commit();
@@ -112,7 +112,7 @@ public class AngestellterDatenbank {
 	/**
 	 * @return Liste von allen Angestellten
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked"})
 	public List<Angestellter> selectAllAngestellte() {
 
 		Session tempSession = null;
@@ -146,6 +146,52 @@ public class AngestellterDatenbank {
 
 		return angestelltenListe;
 	}
+	
+	
+	/**
+	 * @return Angestellter für einen Namen
+	 */
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public Angestellter getAngestellterByName(String name) {
+
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Angestellter> angestellterListe = new ArrayList<Angestellter>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+			String hql = "FROM Angestellter a WHERE a.name = :name";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("name", name);
+			angestellterListe = query.list();
+
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
+			}
+		}
+		
+		if(angestellterListe.size() == 1) {
+			return angestellterListe.get(0);	
+		}else {
+			return null;
+		}
+	}	
 
 	
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -16,6 +18,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -28,7 +31,6 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -48,8 +50,10 @@ import belegung.model.UhrzeitEnum;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtBelegungView {
+public class TagesübersichtBelegungView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Belegung-Winterthur-Übersicht";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bErfassung;
@@ -74,25 +78,17 @@ public class TagesübersichtBelegungView {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public TagesübersichtBelegungView(Date date, StockwerkEnum stockwerkenum) {
+	public TagesübersichtBelegungView() {
 
-		if (stockwerkenum == StockwerkEnum.LL) {
-			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
-		} else {
-			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
-		}
-
-		this.stockwerkEnum = stockwerkenum;
-		this.date = date;
 	}
 
 	private void initData() {
@@ -100,12 +96,12 @@ public class TagesübersichtBelegungView {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
 		lText.setValue("Tagesübersicht Belegung vom ");
@@ -114,12 +110,12 @@ public class TagesübersichtBelegungView {
 		bErfassung = new Button();
 		bErfassung.setCaption("Erfassung");
 		bErfassung.addStyleName(ValoTheme.BUTTON_LARGE);
-		bErfassung.addClickListener(createClickListener(mainView));
+		bErfassung.addClickListener(createClickListener());
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.addStyleName(ValoTheme.BUTTON_LARGE);
-		bKorrektur.addClickListener(createClickListener(mainView));
+		bKorrektur.addClickListener(createClickListener());
 
 		Grid<TagesübersichtBelegungBean> tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
 		tabelleUhrzeitenAufsetzen(tabelleUhrzeiten);
@@ -150,19 +146,19 @@ public class TagesübersichtBelegungView {
 		bLL = new Button();
 		bLL.setCaption("LL");
 		bLL.addStyleName(ValoTheme.BUTTON_LARGE);
-		bLL.addClickListener(createClickListener(mainView));
+		bLL.addClickListener(createClickListener());
 		bEG = new Button();
 		bEG.setCaption("EG");
 		bEG.addStyleName(ValoTheme.BUTTON_LARGE);
-		bEG.addClickListener(createClickListener(mainView));
+		bEG.addClickListener(createClickListener());
 		b1ZG = new Button();
 		b1ZG.setCaption("1.ZG");
 		b1ZG.addStyleName(ValoTheme.BUTTON_LARGE);
-		b1ZG.addClickListener(createClickListener(mainView));
+		b1ZG.addClickListener(createClickListener());
 		b2ZG = new Button();
 		b2ZG.setCaption("2.ZG");
 		b2ZG.addStyleName(ValoTheme.BUTTON_LARGE);
-		b2ZG.addClickListener(createClickListener(mainView));
+		b2ZG.addClickListener(createClickListener());
 
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
@@ -360,38 +356,65 @@ public class TagesübersichtBelegungView {
 			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
 		}
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String datumString = args[0];
+	    String stockwerk = args[1];
+	    
+	    this.date = new Date(Long.parseLong(datumString));
+	    
+	    if(stockwerk.equals("LL")) {
+	    	this.stockwerkEnum = StockwerkEnum.LL;
+	    }else if(stockwerk.equals("EG")) {
+	    	this.stockwerkEnum = StockwerkEnum.EG;
+	    }else if(stockwerk.equals("ZG1")) {
+	    	this.stockwerkEnum = StockwerkEnum.ZG1;
+	    }else if(stockwerk.equals("ZG2")) {
+	    	this.stockwerkEnum = StockwerkEnum.ZG2;
+	    }
+	    
+	    if (stockwerkEnum == StockwerkEnum.LL) {
+			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
+		} else {
+			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
+		}
+
+	    setCompositionRoot(init());
+	}
 
 	@SuppressWarnings("serial")
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
 				}
 
 				if (e.getSource() == bErfassung) {
-					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
 				}
 
 				if (e.getSource() == bKorrektur) {
-					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.EG, true, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0);
 				}
 
 				if (e.getSource() == bLL) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.LL).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.LL.toString());
 				}
 
 				if (e.getSource() == b2ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG2).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG2.toString());
 				}
 
 				if (e.getSource() == b1ZG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.ZG1).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG1.toString());
 				}
 
 				if (e.getSource() == bEG) {
-					mainView.setContent(new TagesübersichtBelegungView(date, StockwerkEnum.EG).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString());
 				}
 
 			}

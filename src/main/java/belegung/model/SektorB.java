@@ -20,11 +20,12 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "sektorB")
 public class SektorB implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int sektorB_ID;

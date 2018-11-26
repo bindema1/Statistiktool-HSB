@@ -9,6 +9,7 @@ import com.vaadin.external.org.slf4j.LoggerFactory;
 
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
+import allgemein.model.MD5;
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -69,15 +70,16 @@ public class TestDaten {
 
 	private void initAllgemein() throws ParseException {
 		
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = sdf2.parse("01.11.2018");
 
-		Angestellter angestellter1 = new Angestellter("Mitarbeitende Winterthur", "123", date, false, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeitende Winterthur", "123", date, false,
+		MD5 md5 = new MD5();
+		
+		Angestellter angestellter1 = new Angestellter("Mitarbeitende Winterthur", md5.convertMD5("123"), date, false, StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeitende Winterthur", md5.convertMD5("123"), date, false,
 				StandortEnum.WINTERTHUR_LL);
-		Angestellter angestellter3 = new Angestellter("Admin Winterthur", "123", date, true, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter4 = new Angestellter("Mitarbeitende Wädenswil", "123", date, false, StandortEnum.WÄDENSWIL);
-		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", "123", date, true, StandortEnum.WÄDENSWIL);
+		Angestellter angestellter3 = new Angestellter("Admin Winterthur", md5.convertMD5("123"), date, true, StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter4 = new Angestellter("Mitarbeitende Wädenswil", md5.convertMD5("123"), date, false, StandortEnum.WÄDENSWIL);
+		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", md5.convertMD5("123"), date, true, StandortEnum.WÄDENSWIL);
 		angestelltenDB.insertAngestellter(angestellter1);
 		angestelltenDB.insertAngestellter(angestellter2);
 		angestelltenDB.insertAngestellter(angestellter3);
@@ -204,8 +206,7 @@ public class TestDaten {
 
 	    BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 		
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
-		Date date = sdf2.parse("01.11.2018");
+		Date date = sdf2.parse("01.11.2018 12:00:00");
 
 		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
 		Belegung belegungLL = new Belegung(date, StandortEnum.WINTERTHUR_LL);

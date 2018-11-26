@@ -61,4 +61,14 @@ public class TestAngestellterDatenbank {
 		assertEquals(angestellterListe.get(2).getName(), angestellter.getName());
 		assertEquals(angestellterListe.get(2).getPasswort(), angestellter.getPasswort());
 	}
+	
+	@Test
+	public void testgetAngestellterByName() {
+		angestellter = new Angestellter("Peter Meier", "123", new Date(), true, StandortEnum.TEST);
+		angestellterDB.insertAngestellter(angestellter);
+		Angestellter testAngestellter = angestellterDB.getAngestellterByName("Peter Meier");
+
+		assertEquals(testAngestellter.getName(), angestellter.getName());
+		assertEquals(testAngestellter.getPasswort(), angestellter.getPasswort());
+	}
 }

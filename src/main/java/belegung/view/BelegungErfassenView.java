@@ -12,8 +12,9 @@ import java.util.List;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
-import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.Page;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -35,7 +36,6 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
 import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank;
@@ -54,10 +54,11 @@ import belegung.model.UhrzeitEnum;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Theme("mytheme")
 public class BelegungErfassenView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Belegung-Winterthur";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bTagesübersicht;
@@ -101,35 +102,17 @@ public class BelegungErfassenView extends Composite implements View {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public BelegungErfassenView(Date date, StockwerkEnum stockwerkenum, boolean korrektur, int erfassungsSchritt) {
+	public BelegungErfassenView() {
 
-		this.date = date;
-
-		if (stockwerkenum == StockwerkEnum.LL) {
-			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
-		} else {
-			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
-		}
-
-		this.stockwerkEnum = stockwerkenum;
-		this.korrektur = korrektur;
-		this.erfassungsSchritt = erfassungsSchritt;
-
-		if (erfassungsSchritt == 0 || erfassungsSchritt == 3 || erfassungsSchritt == 4) {
-			räumeVorhanden = false;
-		} else {
-			// Bei Schritt 1 und 2 sind Gruppenräume und Carrels
-			räumeVorhanden = true;
-		}
 	}
 
 	private void initData() {
@@ -137,12 +120,12 @@ public class BelegungErfassenView extends Composite implements View {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
 		if (korrektur == true) {
@@ -155,47 +138,47 @@ public class BelegungErfassenView extends Composite implements View {
 		bTagesübersicht = new Button();
 		bTagesübersicht.setCaption("Tagesübersicht");
 		bTagesübersicht.addStyleName(ValoTheme.BUTTON_LARGE);
-		bTagesübersicht.addClickListener(createClickListener(mainView));
+		bTagesübersicht.addClickListener(createClickListener());
 
 		bValidieren = new Button();
 		bValidieren.setCaption("Zählung validieren");
 		bValidieren.addStyleName(ValoTheme.BUTTON_LARGE);
-		bValidieren.addClickListener(createClickListener(mainView));
+		bValidieren.addClickListener(createClickListener());
 
 		bPersonen = new Button();
 		bPersonen.setCaption("Arbeitsplätze");
 		bPersonen.addStyleName(ValoTheme.BUTTON_LARGE);
-		bPersonen.addClickListener(createClickListener(mainView));
+		bPersonen.addClickListener(createClickListener());
 
 		bPersonen10 = new Button();
 		bPersonen10.setCaption("+ 10");
 		bPersonen10.addStyleName(ValoTheme.BUTTON_LARGE);
-		bPersonen10.addClickListener(createClickListener(mainView));
+		bPersonen10.addClickListener(createClickListener());
 
 		bPersonen5 = new Button();
 		bPersonen5.setCaption("+ 5");
 		bPersonen5.addStyleName(ValoTheme.BUTTON_LARGE);
-		bPersonen5.addClickListener(createClickListener(mainView));
+		bPersonen5.addClickListener(createClickListener());
 
 		bPersonenMinus = new Button();
 		bPersonenMinus.setCaption("-1 Korrektur");
 		bPersonenMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bPersonenMinus.addClickListener(createClickListener(mainView));
+		bPersonenMinus.addClickListener(createClickListener());
 
 		bRäume = new Button();
 		bRäume.setCaption("Räume");
 		bRäume.addStyleName(ValoTheme.BUTTON_LARGE);
-		bRäume.addClickListener(createClickListener(mainView));
+		bRäume.addClickListener(createClickListener());
 
 		bRäumeMinus = new Button();
 		bRäumeMinus.setCaption("-1 Korrektur");
 		bRäumeMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bRäumeMinus.addClickListener(createClickListener(mainView));
+		bRäumeMinus.addClickListener(createClickListener());
 
 		bSpeichern = new Button();
 		bSpeichern.addStyleName(ValoTheme.BUTTON_LARGE);
 		bSpeichern.setCaption("Speichern");
-		bSpeichern.addClickListener(createClickListener(mainView));
+		bSpeichern.addClickListener(createClickListener());
 
 		tTotalPersonen = new TextField();
 		tTotalPersonen.setPlaceholder("Total Personen");
@@ -321,19 +304,19 @@ public class BelegungErfassenView extends Composite implements View {
 		bLL = new Button();
 		bLL.setCaption("LL");
 		bLL.addStyleName(ValoTheme.BUTTON_LARGE);
-		bLL.addClickListener(createClickListener(mainView));
+		bLL.addClickListener(createClickListener());
 		bEG = new Button();
 		bEG.setCaption("EG");
 		bEG.addStyleName(ValoTheme.BUTTON_LARGE);
-		bEG.addClickListener(createClickListener(mainView));
+		bEG.addClickListener(createClickListener());
 		b1ZG = new Button();
 		b1ZG.setCaption("1.ZG");
 		b1ZG.addStyleName(ValoTheme.BUTTON_LARGE);
-		b1ZG.addClickListener(createClickListener(mainView));
+		b1ZG.addClickListener(createClickListener());
 		b2ZG = new Button();
 		b2ZG.setCaption("2.ZG");
 		b2ZG.addStyleName(ValoTheme.BUTTON_LARGE);
-		b2ZG.addClickListener(createClickListener(mainView));
+		b2ZG.addClickListener(createClickListener());
 
 		GridLayout grid = new GridLayout(5, 14);
 		grid.addStyleName("gridlayout");
@@ -376,7 +359,7 @@ public class BelegungErfassenView extends Composite implements View {
 		grid.addComponent(b1ZG, 0, 11);
 		grid.addComponent(bEG, 0, 12);
 		grid.addComponent(new Label(), 0, 13);
-		grid.addComponent(createAbsoluteLayoutForImage(mainView), 1, 9, 4, 13);
+		grid.addComponent(createAbsoluteLayoutForImage(), 1, 9, 4, 13);
 		grid.setColumnExpandRatio(0, 0.2f);
 		grid.setColumnExpandRatio(1, 0.2f);
 		grid.setColumnExpandRatio(2, 0.2f);
@@ -572,24 +555,24 @@ public class BelegungErfassenView extends Composite implements View {
 	 * 
 	 * @return Component
 	 */
-	private Component createAbsoluteLayoutForImage(MainView mainView) {
+	private Component createAbsoluteLayoutForImage() {
 
 		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
 		bArbeitsplätze = new Button();
 		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		bArbeitsplätze.addClickListener(createClickListener(mainView));
+		bArbeitsplätze.addClickListener(createClickListener());
 		bSektorA = new Button();
 		bSektorA.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		bSektorA.addClickListener(createClickListener(mainView));
+		bSektorA.addClickListener(createClickListener());
 		bSektorB = new Button();
 		bSektorB.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		bSektorB.addClickListener(createClickListener(mainView));
+		bSektorB.addClickListener(createClickListener());
 		bGruppenräume = new Button();
 		bGruppenräume.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		bGruppenräume.addClickListener(createClickListener(mainView));
+		bGruppenräume.addClickListener(createClickListener());
 		bCarrels = new Button();
 		bCarrels.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		bCarrels.addClickListener(createClickListener(mainView));
+		bCarrels.addClickListener(createClickListener());
 
 		if (korrektur == false) {
 			// alleButtonRotSetzenOhneZahlen();
@@ -779,16 +762,60 @@ public class BelegungErfassenView extends Composite implements View {
 
 		}
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String datumString = args[0];
+	    String stockwerkString = args[1];
+	    String korrekturString = args[2];
+	    String erfassungsSchrittString = args[3];
+	    
+	    if(datumString.equals("")) {
+	    	this.date = new Date();
+	    }else {
+	    	this.date = new Date(Long.parseLong(datumString));
+	    }
+	    
+	    if(stockwerkString.equals("LL")) {
+	    	this.stockwerkEnum = StockwerkEnum.LL;
+	    }else if(stockwerkString.equals("EG")) {
+	    	this.stockwerkEnum = StockwerkEnum.EG;
+	    }else if(stockwerkString.equals("ZG1")) {
+	    	this.stockwerkEnum = StockwerkEnum.ZG1;
+	    }else if(stockwerkString.equals("ZG2")) {
+	    	this.stockwerkEnum = StockwerkEnum.ZG2;
+	    }
+	    
+	    if (stockwerkEnum == StockwerkEnum.LL) {
+			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
+		} else {
+			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
+		}
 
-	public ClickListener createClickListener(final MainView mainView) {
+		this.korrektur = Boolean.parseBoolean(korrekturString);
+		this.erfassungsSchritt = Integer.parseInt(erfassungsSchrittString);
+
+		if (erfassungsSchritt == 0 || erfassungsSchritt == 3 || erfassungsSchritt == 4) {
+			räumeVorhanden = false;
+		} else {
+			// Bei Schritt 1 und 2 sind Gruppenräume und Carrels
+			räumeVorhanden = true;
+		}
+
+	    setCompositionRoot(init());
+	}
+
+	@SuppressWarnings("serial")
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if (korrektur == true) {
-						mainView.setContent(new TagesübersichtBelegungView(date, stockwerkEnum).init(mainView));
+						getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
 					} else {
-						mainView.setContent(new StartseiteView().init(mainView));
+						Page.getCurrent().setUriFragment("!"+StartseiteView.NAME);
 					}
 				}
 
@@ -1101,43 +1128,43 @@ public class BelegungErfassenView extends Composite implements View {
 				}
 
 				if (e.getSource() == bTagesübersicht) {
-					mainView.setContent(new TagesübersichtBelegungView(date, stockwerkEnum).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
 				}
 
 				if (e.getSource() == bLL) {
-					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.LL, korrektur, 1).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.LL.toString() + '/' + korrektur + '/' + 1);
 				}
 
 				if (e.getSource() == b2ZG) {
-					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.ZG2, korrektur, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG2.toString() + '/' + korrektur + '/' + 0);
 				}
 
 				if (e.getSource() == b1ZG) {
-					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.ZG1, korrektur, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG1.toString() + '/' + korrektur + '/' + 0);
 				}
 
 				if (e.getSource() == bEG) {
-					mainView.setContent(new BelegungErfassenView(date, StockwerkEnum.EG, korrektur, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + korrektur + '/' + 0);
 				}
 
 				if (e.getSource() == bArbeitsplätze) {
-					mainView.setContent(new BelegungErfassenView(date, stockwerkEnum, korrektur, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + korrektur + '/' + 0);
 				}
 
 				if (e.getSource() == bGruppenräume) {
-					mainView.setContent(new BelegungErfassenView(date, stockwerkEnum, korrektur, 1).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + korrektur + '/' + 1);
 				}
 
 				if (e.getSource() == bCarrels) {
-					mainView.setContent(new BelegungErfassenView(date, stockwerkEnum, korrektur, 2).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + korrektur + '/' + 2);
 				}
 
 				if (e.getSource() == bSektorA) {
-					mainView.setContent(new BelegungErfassenView(date, stockwerkEnum, korrektur, 3).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + korrektur + '/' + 3);
 				}
 
 				if (e.getSource() == bSektorB) {
-					mainView.setContent(new BelegungErfassenView(date, stockwerkEnum, korrektur, 4).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + korrektur + '/' + 4);
 				}
 
 			}

@@ -9,6 +9,7 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
@@ -20,11 +21,11 @@ import com.vaadin.ui.themes.ValoTheme;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
-import allgemein.view.MainView;
 
-@SuppressWarnings("serial")
-public class PasswortView implements View {
+public class PasswortView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Passwort";
 	private AbsoluteLayout mainLayout;
 	private Button bSpeichern;
 	private AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
@@ -39,21 +40,21 @@ public class PasswortView implements View {
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
-
+		
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
 	public PasswortView() {
-
+		setCompositionRoot(init());
 	}
 
 	private void initData() {
@@ -61,7 +62,7 @@ public class PasswortView implements View {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		Label lText = new Label();
 		lText.setValue("Passwörter ändern");
@@ -86,7 +87,7 @@ public class PasswortView implements View {
 		bSpeichern = new Button();
 		bSpeichern.setCaption("Speichern");
 		bSpeichern.addStyleName(ValoTheme.BUTTON_LARGE);
-		bSpeichern.addClickListener(createClickListener(mainView));
+		bSpeichern.addClickListener(createClickListener());
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
@@ -100,7 +101,8 @@ public class PasswortView implements View {
 		mainLayout.addComponent(layout, "top:20%;left:30%");
 	}
 
-	public ClickListener createClickListener(final MainView mainView) {
+	@SuppressWarnings("serial")
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {

@@ -17,11 +17,12 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "kapazität")
 public class Kapazität implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int kapzität_ID;

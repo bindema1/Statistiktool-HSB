@@ -21,11 +21,12 @@ import javax.persistence.TemporalType;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "beantwortungbibliothekspersonal")
 public class BeantwortungBibliothekspersonal implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int beantwortungBibliothekspersonal_ID;

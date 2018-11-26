@@ -1,8 +1,7 @@
 package allgemein.view;
 
-import java.util.Date;
-
 import com.vaadin.navigator.View;
+import com.vaadin.server.Page;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -18,17 +17,16 @@ import administrator.view.PasswortView;
 import belegung.model.StockwerkEnum;
 import belegung.view.BelegungErfassenView;
 import benutzungsstatistik.view.BenutzungsstatistikBBView;
-import testdaten.TestDaten;
 
-@SuppressWarnings("serial")
 public class StartseiteView extends Composite implements View{
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Startseite";
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistik;
 	private Button bBelegung;
 	private Button bExport;
 	private Button bPasswort;
-	private MainView mainView;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -39,22 +37,17 @@ public class StartseiteView extends Composite implements View{
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 		// common part: create layout
-		this.mainView = mainView;
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 	
 	public StartseiteView() {
-		
-		//setCompositionRoot(init(mainView));
-		
-		//Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein SQL-Skript
-		new TestDaten();
+		setCompositionRoot(init());
 	}
 
 	private void initData() {
@@ -62,27 +55,27 @@ public class StartseiteView extends Composite implements View{
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bBenutzungsstatistik = new Button();
 		bBenutzungsstatistik.setCaption("Benutzungsstatistik");
 		bBenutzungsstatistik.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBenutzungsstatistik.addClickListener(createClickListener(mainView));
+		bBenutzungsstatistik.addClickListener(createClickListener());
 
 		bBelegung = new Button();
 		bBelegung.setCaption("Belegung");
 		bBelegung.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBelegung.addClickListener(createClickListener(mainView));
+		bBelegung.addClickListener(createClickListener());
 		
 		bExport = new Button();
 		bExport.setCaption("Export");
 		bExport.addStyleName(ValoTheme.BUTTON_LARGE);
-		bExport.addClickListener(createClickListener(mainView));
+		bExport.addClickListener(createClickListener());
 		
 		bPasswort = new Button();
 		bPasswort.setCaption("Passwörter ändern");
 		bPasswort.addStyleName(ValoTheme.BUTTON_LARGE);
-		bPasswort.addClickListener(createClickListener(mainView));
+		bPasswort.addClickListener(createClickListener());
 
 		GridLayout grid = new GridLayout(2, 2);
 		grid.setSizeFull();
@@ -105,24 +98,24 @@ public class StartseiteView extends Composite implements View{
 	}
 
 	@SuppressWarnings("serial")
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bBenutzungsstatistik) {
-					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+					getUI().getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
 				}
 
 				if (e.getSource() == bBelegung) {
-					mainView.setContent(new BelegungErfassenView(new Date(), StockwerkEnum.EG, false, 0).init(mainView));
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
 				}
 				
 				if (e.getSource() == bExport) {
-					mainView.setContent(new ExportView().init(mainView));
+					getUI().getNavigator().navigateTo(ExportView.NAME);
 				}
 				
 				if (e.getSource() == bPasswort) {
-					mainView.setContent(new PasswortView().init(mainView));
+					getUI().getNavigator().navigateTo(PasswortView.NAME);
 				}
 
 			}

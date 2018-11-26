@@ -27,11 +27,12 @@ import allgemein.model.StandortEnum;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "benutzungsstatistik")
 public class Benutzungsstatistik implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="benutzungsstatistik_ID")

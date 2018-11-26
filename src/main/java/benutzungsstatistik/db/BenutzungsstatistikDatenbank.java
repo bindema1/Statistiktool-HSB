@@ -209,5 +209,50 @@ public class BenutzungsstatistikDatenbank {
 
 		return benutzungsstatistik;
 	}
+	
+	/**
+	 * @return Benutzungsstatistik für eine ID
+	 */
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public Benutzungsstatistik findBenutzungsstatistikById(int benutzungsstatistik_ID) {
+
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+		List<Benutzungsstatistik> benutzungsstatistikenListe = new ArrayList<Benutzungsstatistik>();
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+			String hql = "FROM Benutzungsstatistik B WHERE B.benutzungsstatistik_ID = :benutzungsstatistik_ID";
+			Query query = tempSession.createQuery(hql);
+			query.setParameter("benutzungsstatistik_ID", benutzungsstatistik_ID);
+			benutzungsstatistikenListe = query.list();
+
+			tempTransaction.commit();
+
+		} catch (final HibernateException ex) {
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
+			}
+		}
+
+		if(benutzungsstatistikenListe.size() == 1) {
+			return benutzungsstatistikenListe.get(0);	
+		}else {
+			return null;
+		}
+	}
 
 }

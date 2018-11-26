@@ -10,6 +10,9 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -17,6 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
@@ -28,7 +32,6 @@ import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -41,8 +44,10 @@ import benutzungsstatistik.model.ExterneGruppe;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class ExterneGruppeView {
+public class ExterneGruppeView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Benutzung-ExterneGruppe";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bSpeichern;
@@ -64,18 +69,17 @@ public class ExterneGruppeView {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public ExterneGruppeView(Benutzungsstatistik benutzungsstatistik, boolean korrektur) {
-		this.benutzungsstatistik = benutzungsstatistik;
-		this.korrektur = korrektur;
+	public ExterneGruppeView() {
+
 	}
 
 	private void initData() {
@@ -84,12 +88,12 @@ public class ExterneGruppeView {
 
 	// Initialisieren der GUI Komponente
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
 		if(korrektur == true) {
@@ -127,7 +131,7 @@ public class ExterneGruppeView {
 
 		bSpeichern = new Button();
 		bSpeichern.setCaption("Speichern");
-		bSpeichern.addClickListener(createClickListener(mainView));
+		bSpeichern.addClickListener(createClickListener());
 
 		tabelle = new Grid<ExterneGruppeBean>();
 		tabelle.addColumn(ExterneGruppeBean::getName).setCaption("Name");
@@ -243,17 +247,28 @@ public class ExterneGruppeView {
 
 		tabelle.setItems(externeGruppeBeanListe);
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String id = args[0];
+	    String korrekturString = args[1];
+	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		this.korrektur = Boolean.parseBoolean(korrekturString);
+	    
+	    setCompositionRoot(init());
+	}
 
 	@SuppressWarnings("serial")
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if(korrektur == true) {
-						mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+						getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 					}else {
-						mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikBBView.NAME);
 					}
 				}
 

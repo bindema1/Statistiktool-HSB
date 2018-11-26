@@ -19,11 +19,12 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "arbeitsplätze")
 public class Arbeitsplätze implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int arbeitsplätze_ID;

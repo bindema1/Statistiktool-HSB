@@ -24,7 +24,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import allgemein.view.StartseiteView;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
@@ -39,10 +38,11 @@ import benutzungsstatistik.model.Telefonkontakt;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Theme("mytheme")
 public class BenutzungsstatistikBBView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Benutzung-BB";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
@@ -73,17 +73,17 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
 	public BenutzungsstatistikBBView() {
-
+		setCompositionRoot(init());
 	}
 
 	private void initData() {
@@ -92,13 +92,13 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 //		bZurueck.setEnabled(false);
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		lText = new Label();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -113,55 +113,55 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		bBenutzerkontakt.setCaption("Benutzerkontakt");
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
 		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bBenutzerkontakt.addClickListener(createClickListener(mainView));
+		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
 		bIntensivFrage.setCaption("Intensiv Frage");
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bIntensivFrage.addClickListener(createClickListener(mainView));
+		bIntensivFrage.addClickListener(createClickListener());
 
 		bRechercheBeratung = new Button();
 		bRechercheBeratung.setCaption("Recherche-Beratung");
 		bRechercheBeratung.setIcon(VaadinIcons.GLASSES);
 		bRechercheBeratung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bRechercheBeratung.addClickListener(createClickListener(mainView));
+		bRechercheBeratung.addClickListener(createClickListener());
 
 		bEmailkontakt = new Button();
 		bEmailkontakt.setCaption("Email");
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
 		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bEmailkontakt.addClickListener(createClickListener(mainView));
+		bEmailkontakt.addClickListener(createClickListener());
 
 		bTelefonkontakt = new Button();
 		bTelefonkontakt.setCaption("Telefon");
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
 		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bTelefonkontakt.addClickListener(createClickListener(mainView));
+		bTelefonkontakt.addClickListener(createClickListener());
 
 		bWintikurier = new Button();
 		bWintikurier.setCaption("Wintikurier");
 		bWintikurier.setIcon(VaadinIcons.TRUCK);
 		bWintikurier.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bWintikurier.addClickListener(createClickListener(mainView));
+		bWintikurier.addClickListener(createClickListener());
 
 		bExterneGruppe = new Button();
 		bExterneGruppe.setCaption("Externe Gruppe");
 		bExterneGruppe.setIcon(VaadinIcons.GROUP);
 		bExterneGruppe.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bExterneGruppe.addClickListener(createClickListener(mainView));
+		bExterneGruppe.addClickListener(createClickListener());
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.setIcon(VaadinIcons.EDIT);
 		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bKorrektur.addClickListener(createClickListener(mainView));
+		bKorrektur.addClickListener(createClickListener());
 
 		bTagesuebersicht = new Button();
 		bTagesuebersicht.setCaption("Tagesübersicht");
 		bTagesuebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
 		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bTagesuebersicht.addClickListener(createClickListener(mainView));
+		bTagesuebersicht.addClickListener(createClickListener());
 
 		kassenbeleg = new Switch();
 		if (benutzungsstatistik.isKassenbeleg()) {
@@ -212,12 +212,13 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 
 	}
 
-	public ClickListener createClickListener(final MainView mainView) {
+	@SuppressWarnings("serial")
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new StartseiteView().init(mainView));
+					getUI().getNavigator().navigateTo(StartseiteView.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
@@ -263,19 +264,19 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 				}
 
 				if (e.getSource() == bWintikurier) {
-					mainView.setContent(new WintikurierView(benutzungsstatistik, false).init(mainView));
+					getUI().getNavigator().navigateTo(WintikurierView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 				if (e.getSource() == bExterneGruppe) {
-					mainView.setContent(new ExterneGruppeView(benutzungsstatistik, false).init(mainView));
+					getUI().getNavigator().navigateTo(ExterneGruppeView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 				if (e.getSource() == bKorrektur) {
-					mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+					getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					mainView.setContent(new TagesübersichtBenutzungView(benutzungsstatistik).init(mainView));
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

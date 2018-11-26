@@ -1,6 +1,5 @@
 package benutzungsstatistik.view;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,13 +15,15 @@ import org.vaadin.teemu.switchui.Switch;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -32,7 +33,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -47,8 +47,10 @@ import benutzungsstatistik.model.Telefonkontakt;
  */
 @SuppressWarnings("serial")
 @Theme("mytheme")
-public class KorrekturView implements Serializable {
+public class KorrekturView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Benutzung-Korrektur";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
@@ -89,17 +91,18 @@ public class KorrekturView implements Serializable {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public KorrekturView(Benutzungsstatistik benutzungsstatistik) {
-		this.benutzungsstatistik = benutzungsstatistik;
+	public KorrekturView() {
+//		this.benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
+//		setCompositionRoot(init());
 	}
 
 	private void initData() {
@@ -107,12 +110,12 @@ public class KorrekturView implements Serializable {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 		mainLayout.addComponent(bZurueck);
 
 		Label lText = new Label();
@@ -124,7 +127,7 @@ public class KorrekturView implements Serializable {
 		bBenutzerkontakt.setEnabled(false);
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
 		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bBenutzerkontakt.addClickListener(createClickListener(mainView));
+		bBenutzerkontakt.addClickListener(createClickListener());
 
 		lBenutzerkontakt = new Label();
 		lBenutzerkontakt.setValue("0");
@@ -134,14 +137,14 @@ public class KorrekturView implements Serializable {
 		bBenutzerkontaktMinus.setEnabled(false);
 		bBenutzerkontaktMinus.setCaption("Korrektur -1");
 		bBenutzerkontaktMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bBenutzerkontaktMinus.addClickListener(createClickListener(mainView));
+		bBenutzerkontaktMinus.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
 		bIntensivFrage.setCaption("Frage");
 		bIntensivFrage.setEnabled(false);
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bIntensivFrage.addClickListener(createClickListener(mainView));
+		bIntensivFrage.addClickListener(createClickListener());
 
 		lIntensivFrage = new Label();
 		lIntensivFrage.setValue("0");
@@ -151,14 +154,14 @@ public class KorrekturView implements Serializable {
 		bIntensivFrageMinus.setCaption("Korrektur -1");
 		bIntensivFrageMinus.setEnabled(false);
 		bIntensivFrageMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bIntensivFrageMinus.addClickListener(createClickListener(mainView));
+		bIntensivFrageMinus.addClickListener(createClickListener());
 
 		bEmailkontakt = new Button();
 		bEmailkontakt.setCaption("Email");
 		bEmailkontakt.setEnabled(false);
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
 		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bEmailkontakt.addClickListener(createClickListener(mainView));
+		bEmailkontakt.addClickListener(createClickListener());
 
 		lEmailkontakt = new Label();
 		lEmailkontakt.setValue("0");
@@ -168,14 +171,14 @@ public class KorrekturView implements Serializable {
 		bEmailkontaktMinus.setCaption("Korrektur -1");
 		bEmailkontaktMinus.setEnabled(false);
 		bEmailkontaktMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bEmailkontaktMinus.addClickListener(createClickListener(mainView));
+		bEmailkontaktMinus.addClickListener(createClickListener());
 
 		bTelefonkontakt = new Button();
 		bTelefonkontakt.setCaption("Telefon");
 		bTelefonkontakt.setEnabled(false);
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
 		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bTelefonkontakt.addClickListener(createClickListener(mainView));
+		bTelefonkontakt.addClickListener(createClickListener());
 
 		lTelefonkontakt = new Label();
 		lTelefonkontakt.setValue("0");
@@ -185,7 +188,7 @@ public class KorrekturView implements Serializable {
 		bTelefonkontaktMinus.setCaption("Korrektur -1");
 		bTelefonkontaktMinus.setEnabled(false);
 		bTelefonkontaktMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bTelefonkontaktMinus.addClickListener(createClickListener(mainView));
+		bTelefonkontaktMinus.addClickListener(createClickListener());
 
 		Label lKassenbeleg = new Label();
 		lKassenbeleg.setValue("Kassenbeleg");
@@ -311,21 +314,21 @@ public class KorrekturView implements Serializable {
 
 		bRechercheBeratung = new Button();
 		bRechercheBeratung.setCaption("Rechercheb. +1");
-		bRechercheBeratung.addClickListener(createClickListener(mainView));
+		bRechercheBeratung.addClickListener(createClickListener());
 
 		bRechercheBeratungMinus = new Button();
 		bRechercheBeratungMinus.setCaption("Rechercheb. -1");
 		bRechercheBeratungMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bRechercheBeratungMinus.addClickListener(createClickListener(mainView));
+		bRechercheBeratungMinus.addClickListener(createClickListener());
 
 		bKorrekturWintikurier = new Button();
 		bKorrekturWintikurier.setCaption("Wintikurier");
-		bKorrekturWintikurier.addClickListener(createClickListener(mainView));
+		bKorrekturWintikurier.addClickListener(createClickListener());
 
 		bKorrekturGruppen = new Button();
 		bKorrekturGruppen.setCaption("Gruppen");
 		bKorrekturGruppen.setCaptionAsHtml(true);
-		bKorrekturGruppen.addClickListener(createClickListener(mainView));
+		bKorrekturGruppen.addClickListener(createClickListener());
 
 		DateField datefield = new DateField();
 		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
@@ -429,13 +432,22 @@ public class KorrekturView implements Serializable {
 		mainLayout.addComponent(grid);
 
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String id = args[0];
+	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+	    
+	    setCompositionRoot(init());
+	}
 
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+					getUI().getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
@@ -638,11 +650,11 @@ public class KorrekturView implements Serializable {
 				}
 
 				if (e.getSource() == bKorrekturWintikurier) {
-					mainView.setContent(new WintikurierView(benutzungsstatistik, true).init(mainView));
+					getUI().getNavigator().navigateTo(WintikurierView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
 				}
 
 				if (e.getSource() == bKorrekturGruppen) {
-					mainView.setContent(new ExterneGruppeView(benutzungsstatistik, true).init(mainView));
+					getUI().getNavigator().navigateTo(ExterneGruppeView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
 				}
 
 			}

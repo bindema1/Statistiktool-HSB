@@ -12,10 +12,13 @@ import org.vaadin.teemu.switchui.Switch;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -26,7 +29,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import benutzungsstatistik.bean.ExterneGruppeBean;
 import benutzungsstatistik.bean.TagesübersichtBenutzungBean;
 import benutzungsstatistik.bean.WintikurierBean;
@@ -45,12 +47,15 @@ import benutzungsstatistik.model.Telefonkontakt;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtBenutzungView {
+public class TagesübersichtBenutzungView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Benutzung-Übersicht";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bKorrektur;
 	private Benutzungsstatistik benutzungsstatistik;
+	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -61,17 +66,17 @@ public class TagesübersichtBenutzungView {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public TagesübersichtBenutzungView(Benutzungsstatistik benutzungsstatistik) {
-		this.benutzungsstatistik = benutzungsstatistik;
+	public TagesübersichtBenutzungView() {
+		
 	}
 
 	private void initData() {
@@ -79,12 +84,12 @@ public class TagesübersichtBenutzungView {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
 		lText.setValue("Tagesübersicht Belegungsstatistik vom ");
@@ -92,7 +97,7 @@ public class TagesübersichtBenutzungView {
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
-		bKorrektur.addClickListener(createClickListener(mainView));
+		bKorrektur.addClickListener(createClickListener());
 
 		Label lKassenbeleg = new Label();
 		lKassenbeleg.setValue("Kassenbeleg");
@@ -145,9 +150,12 @@ public class TagesübersichtBenutzungView {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			System.out.println("DATUM " +date);
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 
+			System.out.println("DATUM2" +benutzungsstatistik.getDatum());
+			
 			// Alle Werte anpassen
 			fülleTabelleGruppen(tabelleGruppen);
 			fülleTabelleUhrzeiten(tabelleUhrzeiten);
@@ -322,18 +330,26 @@ public class TagesübersichtBenutzungView {
 		tabelleUhrzeiten.setWidth("450px");
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String id = args[0];
+	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+	    setCompositionRoot(init());
+	}
 
 	@SuppressWarnings("serial")
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+					getUI().getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
 				}
 
 				if (e.getSource() == bKorrektur) {
-					mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+					getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

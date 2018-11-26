@@ -14,11 +14,12 @@ import javax.persistence.Table;
  * 
  * @author Marvin Bindemann
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "wintikurier")
 public class Wintikurier implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int wintikurier_ID;

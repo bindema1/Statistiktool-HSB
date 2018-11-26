@@ -21,6 +21,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -37,7 +38,6 @@ import administrator.bean.ExportExterneGruppeBean;
 import administrator.bean.ExportWintikurierMonatBean;
 import administrator.bean.ExportWintikurierTagBean;
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
@@ -58,9 +58,10 @@ import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 
-@SuppressWarnings("serial")
-public class ExportView implements View {
+public class ExportView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Export";
 	private AbsoluteLayout mainLayout;
 	private Button bExportBenutzung;
 	private Button bExportWintikurierTag;
@@ -91,17 +92,17 @@ public class ExportView implements View {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
 	public ExportView() {
-
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("static-access")
@@ -111,7 +112,7 @@ public class ExportView implements View {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		Label lText = new Label();
 		lText.setValue("Daten exportieren - Winterthur");
@@ -141,7 +142,7 @@ public class ExportView implements View {
 		// Download Excelfile für Benutzungsstatistik
 		bExportBenutzung = new Button();
 		bExportBenutzung.setCaption("Benutzungsstatistik exportieren");
-		bExportBenutzung.addClickListener(createClickListener(mainView));
+		bExportBenutzung.addClickListener(createClickListener());
 		tabelleBenutzungsstatistik = new Grid<>(ExportBenutzungsstatistikBean.class);
 		StreamResource excelStreamResource4 = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBenutzungsstatistik),
@@ -152,7 +153,7 @@ public class ExportView implements View {
 		// Download Excelfile für Wintikurier pro Tag
 		bExportWintikurierTag = new Button();
 		bExportWintikurierTag.setCaption("Wintikurier pro Tag exportieren");
-		bExportWintikurierTag.addClickListener(createClickListener(mainView));
+		bExportWintikurierTag.addClickListener(createClickListener());
 		tabelleWintikurierTag = new Grid<>(ExportWintikurierTagBean.class);
 		StreamResource excelStreamResource = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleWintikurierTag),
@@ -163,7 +164,7 @@ public class ExportView implements View {
 		// Download Excelfile für Wintikurier pro Monat
 		bExportWintikurierMonat = new Button();
 		bExportWintikurierMonat.setCaption("Wintikurier pro Monat exportieren");
-		bExportWintikurierMonat.addClickListener(createClickListener(mainView));
+		bExportWintikurierMonat.addClickListener(createClickListener());
 		tabelleWintikurierMonat = new Grid<>(ExportWintikurierMonatBean.class);
 		StreamResource excelStreamResource3 = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleWintikurierMonat),
@@ -174,7 +175,7 @@ public class ExportView implements View {
 		// Download Excelfile für Externe Gruppen
 		bExportGruppen = new Button();
 		bExportGruppen.setCaption("Externe Gruppen exportieren");
-		bExportGruppen.addClickListener(createClickListener(mainView));
+		bExportGruppen.addClickListener(createClickListener());
 		tabelleExterneGruppen = new Grid<>(ExportExterneGruppeBean.class);
 		StreamResource excelStreamResource2 = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleExterneGruppen), "ExterneGruppe.xls");
@@ -196,7 +197,7 @@ public class ExportView implements View {
 		bExportBelegung = new Button();
 		bExportBelegung.setCaption("Belegung exportieren");
 		bExportBelegung.setEnabled(false);
-		bExportBelegung.addClickListener(createClickListener(mainView));
+		bExportBelegung.addClickListener(createClickListener());
 		tabelleBelegungNormal = new Grid<>(ExportBelegungNormalBean.class);
 		StreamResource excelStreamResource6 = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBelegungNormal),
@@ -218,7 +219,7 @@ public class ExportView implements View {
 
 		bExportAllBelegung = new Button();
 		bExportAllBelegung.setCaption("Belegung komplett exportieren");
-		bExportAllBelegung.addClickListener(createClickListener(mainView));
+		bExportAllBelegung.addClickListener(createClickListener());
 		tabelleBelegungKomplett = new Grid<>(ExportBelegungKomplettBean.class);
 		StreamResource excelStreamResource5 = new StreamResource(
 				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBelegungKomplett),
@@ -817,7 +818,8 @@ public class ExportView implements View {
 		return kw;
 	}
 
-	public ClickListener createClickListener(final MainView mainView) {
+	@SuppressWarnings("serial")
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {

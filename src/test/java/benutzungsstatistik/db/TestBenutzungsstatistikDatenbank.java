@@ -87,4 +87,16 @@ public class TestBenutzungsstatistikDatenbank {
 		assertEquals(sdf.format(b.getDatum()), sdf.format(benutzungsstatistik.getDatum()));
 		assertEquals(b.getWintikurier().getAnzahl_Gesundheit(), wintikurier1.getAnzahl_Gesundheit());
 	}
+	
+	@Test
+	public void testfindenutzungsstatistikByID() {
+		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
+		
+		Benutzungsstatistik b = benutzungsstatistikDB.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+
+		assertEquals(b.getAnzahl_Rechercheberatung(), benutzungsstatistik.getAnzahl_Rechercheberatung());
+		assertEquals(b.isKassenbeleg(), benutzungsstatistik.isKassenbeleg());
+		assertEquals(sdf.format(b.getDatum()), sdf.format(benutzungsstatistik.getDatum()));
+		assertEquals(b.getWintikurier().getAnzahl_Gesundheit(), wintikurier1.getAnzahl_Gesundheit());
+	}
 }

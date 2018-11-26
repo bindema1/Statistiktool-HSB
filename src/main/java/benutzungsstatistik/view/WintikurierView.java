@@ -8,12 +8,16 @@ import java.util.Date;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -22,7 +26,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
-import allgemein.view.MainView;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Wintikurier;
@@ -34,8 +37,10 @@ import benutzungsstatistik.model.Wintikurier;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class WintikurierView {
+public class WintikurierView extends Composite implements View {
 
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "Benutzung-Wintikurier";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bGesundheit;
@@ -69,19 +74,17 @@ public class WintikurierView {
 		return mainLayout;
 	}
 
-	public AbsoluteLayout init(MainView mainView) {
+	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
-		initComponents(mainView);
+		initComponents();
 
 		return absolutLayout;
 	}
 
-	public WintikurierView(Benutzungsstatistik benutzungsstatistik, boolean korrektur) {
-		this.benutzungsstatistik = benutzungsstatistik;
-		this.wintikurier = benutzungsstatistik.getWintikurier();
-		this.korrektur = korrektur;
+	public WintikurierView() {
+		
 	}
 
 	private void initData() {
@@ -89,12 +92,12 @@ public class WintikurierView {
 	}
 
 	// Initialisieren der GUI Komponente
-	private void initComponents(MainView mainView) {
+	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
-		bZurueck.addClickListener(createClickListener(mainView));
+		bZurueck.addClickListener(createClickListener());
 
 		lText = new Label();
 		if(korrektur == true) {
@@ -132,7 +135,7 @@ public class WintikurierView {
 		bGesundheit = new Button();
 		bGesundheit.setCaption("Gesundheit");
 		bGesundheit.addStyleName(ValoTheme.BUTTON_LARGE);
-		bGesundheit.addClickListener(createClickListener(mainView));
+		bGesundheit.addClickListener(createClickListener());
 
 		lGesundheitTotal = new Label();
 		lGesundheitTotal.setValue("" + wintikurier.getAnzahl_Gesundheit());
@@ -141,12 +144,12 @@ public class WintikurierView {
 		bGesundheitMinus = new Button();
 		bGesundheitMinus.setCaption("Korrektur -1");
 		bGesundheitMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
-		bGesundheitMinus.addClickListener(createClickListener(mainView));
+		bGesundheitMinus.addClickListener(createClickListener());
 
 		bLinguistik = new Button();
 		bLinguistik.setCaption("Linguistik");
 		bLinguistik.addStyleName(ValoTheme.BUTTON_LARGE);
-		bLinguistik.addClickListener(createClickListener(mainView));
+		bLinguistik.addClickListener(createClickListener());
 
 		lLinguistikTotal = new Label();
 		lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
@@ -155,12 +158,12 @@ public class WintikurierView {
 		bLinguistikMinus = new Button();
 		bLinguistikMinus.setCaption("Korrektur -1");
 		bLinguistikMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
-		bLinguistikMinus.addClickListener(createClickListener(mainView));
+		bLinguistikMinus.addClickListener(createClickListener());
 
 		bTechnik = new Button();
 		bTechnik.setCaption(" Technik  ");
 		bTechnik.addStyleName(ValoTheme.BUTTON_LARGE);
-		bTechnik.addClickListener(createClickListener(mainView));
+		bTechnik.addClickListener(createClickListener());
 
 		lTechnikTotal = new Label();
 		lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
@@ -169,12 +172,12 @@ public class WintikurierView {
 		bTechnikMinus = new Button();
 		bTechnikMinus.setCaption("Korrektur -1");
 		bTechnikMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
-		bTechnikMinus.addClickListener(createClickListener(mainView));
+		bTechnikMinus.addClickListener(createClickListener());
 
 		bWirtschaft = new Button();
 		bWirtschaft.setCaption("Wirtschaft");
 		bWirtschaft.addStyleName(ValoTheme.BUTTON_LARGE);
-		bWirtschaft.addClickListener(createClickListener(mainView));
+		bWirtschaft.addClickListener(createClickListener());
 
 		lWirtschaftTotal = new Label();
 		lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
@@ -183,7 +186,7 @@ public class WintikurierView {
 		bWirtschaftMinus = new Button();
 		bWirtschaftMinus.setCaption("Korrektur -1");
 		bWirtschaftMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
-		bWirtschaftMinus.addClickListener(createClickListener(mainView));
+		bWirtschaftMinus.addClickListener(createClickListener());
 
 //		VerticalLayout overallLayout = new VerticalLayout();
 //		overallLayout.setSpacing(true);
@@ -286,17 +289,29 @@ public class WintikurierView {
 		mainLayout.addComponent(grid);
 
 	}
+	
+	@Override
+	public void enter(ViewChangeEvent event) {
+	    String args[] = event.getParameters().split("/");
+	    String id = args[0];
+	    String korrekturString = args[1];
+	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+	    this.wintikurier = benutzungsstatistik.getWintikurier();
+	    this.korrektur = Boolean.parseBoolean(korrekturString);
+	    
+	    setCompositionRoot(init());
+	}
 
 	@SuppressWarnings("serial")
-	public ClickListener createClickListener(final MainView mainView) {
+	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if(korrektur == true) {
-						mainView.setContent(new KorrekturView(benutzungsstatistik).init(mainView));
+						getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 					}else {
-						mainView.setContent(new BenutzungsstatistikBBView().init(mainView));
+						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikBBView.NAME);
 					}
 				}
 
