@@ -59,13 +59,13 @@ public class MainView extends UI {
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = MainView.class, productionMode = true)
+	@VaadinServletConfiguration(ui = MainView.class, productionMode = false)
 	public static class MyServlet extends VaadinServlet {
 	}
 
 	private void router(String route) {
 
-		System.out.println("ROUTE: " +route);
+//		System.out.println("ROUTE: " +route);
 		
 		if (getSession().getAttribute("user") != null) {
 			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);

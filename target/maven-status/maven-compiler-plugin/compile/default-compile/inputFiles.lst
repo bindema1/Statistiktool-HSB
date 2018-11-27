@@ -9,7 +9,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\db\BelegungsDate
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\db\KapazitätDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBenutzungsstatistikBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Kapazität.java
-C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\login\OtherSecurePage.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\view\LoginPage.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\ExterneGruppeDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBelegungNormalBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\model\Angestellter.java
@@ -20,7 +20,6 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Gruppenräu
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportWintikurierMonatBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBelegungKomplettBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Arbeitsplätze.java
-C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\login\LoginPage.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\view\TagesübersichtBelegungView.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\WintikurierDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Belegung.java
@@ -40,7 +39,6 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\model\MD5.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\Wintikurier.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\bean\TagesübersichtBenutzungBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\ExterneGruppe.java
-C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\login\SecurePage.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\BeantwortungBibliothekspersonalDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\TelefonkontaktDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Carrels.java

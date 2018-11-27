@@ -39,11 +39,9 @@ $v-shadow-opacity: 5%;
   	font-size: $v-font-size--huge;
 	}
 	
-
-	.transparent .v-button-caption {
-	background: none;
-    border: 1px solid white;
-	color: green;
-}
+	.icon96px .v-icon{
+	  font-size: 200px;
+	  color: green;
+	}
   		
 }

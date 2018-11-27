@@ -1,6 +1,7 @@
 package benutzungsstatistik.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man eine ExterneGruppe in
@@ -27,9 +30,11 @@ public class ExterneGruppe implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int externeGruppe_ID;
 	
-	String name;
+	private String name;
 	private int anzahl_Personen;
+	private String erfasstUm;
 	
+
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "benutzungsstatistik_ID")
 	private Benutzungsstatistik benutzungsstatistik;
@@ -39,9 +44,10 @@ public class ExterneGruppe implements Serializable {
 				
 	}
 	
-	public ExterneGruppe(String name, int anzahl_Personen, Benutzungsstatistik benutzungsstatistik) {
+	public ExterneGruppe(String name, int anzahl_Personen, String erfasstUm, Benutzungsstatistik benutzungsstatistik) {
 		this.name = name;
 		this.anzahl_Personen = anzahl_Personen;
+		this.erfasstUm = erfasstUm;
 		this.benutzungsstatistik = benutzungsstatistik;
 	}
 
@@ -78,6 +84,14 @@ public class ExterneGruppe implements Serializable {
 	public void setBenutzungsstatistik(Benutzungsstatistik benutzungsstatistik) {
 		this.benutzungsstatistik = benutzungsstatistik;
 	}
+	
+	public String getErfasstUm() {
+		return erfasstUm;
+	}
+
+	public void setErfasstUm(String erfasstUm) {
+		this.erfasstUm = erfasstUm;
+	}
 
 	@Override
 	public int hashCode() {
@@ -85,6 +99,7 @@ public class ExterneGruppe implements Serializable {
 		int result = 1;
 		result = prime * result + anzahl_Personen;
 		result = prime * result + ((benutzungsstatistik == null) ? 0 : benutzungsstatistik.hashCode());
+		result = prime * result + ((erfasstUm == null) ? 0 : erfasstUm.hashCode());
 		result = prime * result + externeGruppe_ID;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -106,6 +121,11 @@ public class ExterneGruppe implements Serializable {
 				return false;
 		} else if (!benutzungsstatistik.equals(other.benutzungsstatistik))
 			return false;
+		if (erfasstUm == null) {
+			if (other.erfasstUm != null)
+				return false;
+		} else if (!erfasstUm.equals(other.erfasstUm))
+			return false;
 		if (externeGruppe_ID != other.externeGruppe_ID)
 			return false;
 		if (name == null) {
@@ -119,7 +139,7 @@ public class ExterneGruppe implements Serializable {
 	@Override
 	public String toString() {
 		return "ExterneGruppe [externeGruppe_ID=" + externeGruppe_ID + ", name=" + name + ", anzahl_Personen="
-				+ anzahl_Personen + ", benutzungsstatistik=" + benutzungsstatistik + "]";
+				+ anzahl_Personen + ", erfasstUm=" + erfasstUm + ", benutzungsstatistik=" + benutzungsstatistik + "]";
 	}
-	
+
 }

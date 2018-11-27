@@ -10,6 +10,7 @@ public class ExterneGruppeBean implements Serializable{
 
 	private String name;
 	private int anzahl_personen;
+	private String erfasstUm;
 	
 	public ExterneGruppeBean() {
 		
@@ -29,6 +30,14 @@ public class ExterneGruppeBean implements Serializable{
 
 	public void setAnzahl_personen(int anzahl_personen) {
 		this.anzahl_personen = anzahl_personen;
+	}
+
+	public String getErfasstUm() {
+		return erfasstUm;
+	}
+
+	public void setErfasstUm(String erfasstUm) {
+		this.erfasstUm = erfasstUm;
 	}
 	
 }

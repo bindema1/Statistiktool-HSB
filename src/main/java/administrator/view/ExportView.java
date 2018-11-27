@@ -303,6 +303,9 @@ public class ExportView extends Composite implements View {
 				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
 
+				beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
+						sdf.format(datum), "", "Rechercheberatung", benutzungsstatistik.getAnzahl_Rechercheberatung()));
+				
 				// Geht durch alle Uhrzeiten eines Tages
 				for (int i = 8; i <= 19; i++) {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("HH");

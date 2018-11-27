@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,7 @@ public class ExterneGruppeView extends Composite implements View {
 		tabelle = new Grid<ExterneGruppeBean>();
 		tabelle.addColumn(ExterneGruppeBean::getName).setCaption("Name");
 		tabelle.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Anzahl Personen");
+		tabelle.addColumn(ExterneGruppeBean::getErfasstUm).setCaption("Erfasst um");
 		tabelle.addColumn(ExterneGruppeBean -> "Bearbeiten", new ButtonRenderer(clickEvent -> {
 			ExterneGruppeBean beanZuBearbeiten = (ExterneGruppeBean) clickEvent.getItem();
 			externeGruppeBeanListe.remove(beanZuBearbeiten);
@@ -242,6 +244,7 @@ public class ExterneGruppeView extends Composite implements View {
 			ExterneGruppeBean egb = new ExterneGruppeBean();
 			egb.setName(eg.getName());
 			egb.setAnzahl_personen(eg.getAnzahl_Personen());
+			egb.setErfasstUm(eg.getErfasstUm());
 			externeGruppeBeanListe.add(egb);
 		}
 
@@ -277,13 +280,18 @@ public class ExterneGruppeView extends Composite implements View {
 					try {
 						String name = tName.getValue();
 						int personenzahl = Integer.parseInt(tPersonenzahl.getValue());
+						
+						Calendar cal = Calendar.getInstance();
+				        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+						String erfasstUm = sdf.format(cal.getTime());
 
-						benutzungsstatistik.addExterneGruppe(new ExterneGruppe(name, personenzahl, benutzungsstatistik));
+						benutzungsstatistik.addExterneGruppe(new ExterneGruppe(name, personenzahl, erfasstUm, benutzungsstatistik));
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						ExterneGruppeBean egb = new ExterneGruppeBean();
 						egb.setName(name);
 						egb.setAnzahl_personen(personenzahl);
+						egb.setErfasstUm(erfasstUm);
 						externeGruppeBeanListe.add(egb);
 						tabelle.setItems(externeGruppeBeanListe);
 

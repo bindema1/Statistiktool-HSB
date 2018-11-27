@@ -62,6 +62,7 @@ public class BelegungErfassenView extends Composite implements View {
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bTagesübersicht;
+	private Button bKorrektur;
 	private Button bValidieren;
 	private Button bLL;
 	private Button b1ZG;
@@ -129,7 +130,7 @@ public class BelegungErfassenView extends Composite implements View {
 
 		Label lText = new Label();
 		if (korrektur == true) {
-			lText.setValue("Belegung erfassen vom ");
+			lText.setValue("Belegung korrigieren vom ");
 		} else {
 			lText.setValue("Belegung erfassen vom " + new SimpleDateFormat("dd.MM.yyyy").format(belegung.getDatum()));
 		}
@@ -144,9 +145,18 @@ public class BelegungErfassenView extends Composite implements View {
 		bValidieren.setCaption("Zählung validieren");
 		bValidieren.addStyleName(ValoTheme.BUTTON_LARGE);
 		bValidieren.addClickListener(createClickListener());
+		
+		bKorrektur = new Button();
+		if (korrektur == false) {
+			bKorrektur.setCaption("Korrektur");
+		} else {
+			bKorrektur.setCaption("Erfassung");
+		}
+		bKorrektur.addStyleName(ValoTheme.BUTTON_LARGE);
+		bKorrektur.addClickListener(createClickListener());
 
 		bPersonen = new Button();
-		bPersonen.setCaption("Arbeitsplätze");
+		bPersonen.setCaption("+1 Arbeitsplatz");
 		bPersonen.addStyleName(ValoTheme.BUTTON_LARGE);
 		bPersonen.addClickListener(createClickListener());
 
@@ -166,7 +176,7 @@ public class BelegungErfassenView extends Composite implements View {
 		bPersonenMinus.addClickListener(createClickListener());
 
 		bRäume = new Button();
-		bRäume.setCaption("Räume");
+		bRäume.setCaption("+1 Räume");
 		bRäume.addStyleName(ValoTheme.BUTTON_LARGE);
 		bRäume.addClickListener(createClickListener());
 
@@ -319,7 +329,11 @@ public class BelegungErfassenView extends Composite implements View {
 		b2ZG.addClickListener(createClickListener());
 
 		GridLayout grid = new GridLayout(5, 14);
-		grid.addStyleName("gridlayout");
+		if(korrektur == true) {
+			grid.addStyleName("gridlayout" +" backgroundRed");
+		}else {
+			grid.addStyleName("gridlayout");
+		}
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		if (korrektur == true) {
@@ -328,7 +342,7 @@ public class BelegungErfassenView extends Composite implements View {
 		} else {
 			grid.addComponent(lText, 1, 0, 2, 0);
 		}
-		grid.addComponent(bTagesübersicht, 3, 0);
+		grid.addComponent(bKorrektur, 3, 0);
 		grid.addComponent(bValidieren, 4, 0);
 
 		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 3);
@@ -336,7 +350,7 @@ public class BelegungErfassenView extends Composite implements View {
 		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 5);
 		grid.addComponent(new Label(), 0, 6);
 		grid.addComponent(new Label(), 0, 7);
-		grid.addComponent(new Label(), 0, 8);
+		grid.addComponent(bTagesübersicht, 0, 8);
 
 		if (räumeVorhanden == true) {
 			grid.addComponent(bPersonen, 1, 4, 2, 7);
@@ -579,7 +593,7 @@ public class BelegungErfassenView extends Composite implements View {
 		}
 
 		if (räumeVorhanden == true) {
-			bPersonen.setCaption("Personen");
+			bPersonen.setCaption("+1 Person");
 		}
 
 		image = null;
@@ -657,7 +671,7 @@ public class BelegungErfassenView extends Composite implements View {
 				}
 			} else {
 //				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
-				bRäume.setCaption("Gruppenäume");
+				bRäume.setCaption("+1 Gruppenaum");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
@@ -715,7 +729,7 @@ public class BelegungErfassenView extends Composite implements View {
 //				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// Carrels
 			} else if (erfassungsSchritt == 2) {
-				bRäume.setCaption("Carrels");
+				bRäume.setCaption("+1 Carrel");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
@@ -730,7 +744,7 @@ public class BelegungErfassenView extends Composite implements View {
 //				bCarrels.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// SektorA
 			} else if (erfassungsSchritt == 3) {
-				bPersonen.setCaption("Sektor A");
+				bPersonen.setCaption("+1 Sektor A");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
@@ -745,7 +759,7 @@ public class BelegungErfassenView extends Composite implements View {
 //				bSektorA.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// SektorB
 			} else if (erfassungsSchritt == 4) {
-				bPersonen.setCaption("Sektor B");
+				bPersonen.setCaption("+1 Sektor B");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
@@ -1129,6 +1143,14 @@ public class BelegungErfassenView extends Composite implements View {
 
 				if (e.getSource() == bTagesübersicht) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
+				}
+				
+				if (e.getSource() == bKorrektur) {
+					if(korrektur == false) {
+						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString() + '/' + true + '/' + 0);
+					}else {
+						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + stockwerkEnum.toString() + '/' + false + '/' + 0);
+					}
 				}
 
 				if (e.getSource() == bLL) {

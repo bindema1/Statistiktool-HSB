@@ -191,9 +191,9 @@ public class TestDaten {
 				timestamp8, benutzungsstatistik1);
 		benutzungsstatistik1.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
 
-		ExterneGruppe externeGruppe1 = new ExterneGruppe("Test Gruppe", 10, benutzungsstatistik1);
-		ExterneGruppe externeGruppe2 = new ExterneGruppe("Winterthur Stadtführung", 14, benutzungsstatistik1);
-		ExterneGruppe externeGruppe3 = new ExterneGruppe("Fussballverein Winterthur", 7, benutzungsstatistik1);
+		ExterneGruppe externeGruppe1 = new ExterneGruppe("Test Gruppe", 10, "10:30", benutzungsstatistik1);
+		ExterneGruppe externeGruppe2 = new ExterneGruppe("Winterthur Stadtführung", 14, "12:15", benutzungsstatistik1);
+		ExterneGruppe externeGruppe3 = new ExterneGruppe("Fussballverein Winterthur", 7, "16:24", benutzungsstatistik1);
 		benutzungsstatistik1.addExterneGruppe(externeGruppe1);
 		benutzungsstatistik1.addExterneGruppe(externeGruppe2);
 		benutzungsstatistik1.addExterneGruppe(externeGruppe3);

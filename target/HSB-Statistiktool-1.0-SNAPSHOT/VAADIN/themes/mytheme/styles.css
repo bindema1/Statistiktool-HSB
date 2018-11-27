@@ -15060,8 +15060,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-size: 26px;
 }
 
-.mytheme .transparent .v-button-caption {
-	background: none;
-	border: 1px solid white;
+.mytheme .icon96px .v-icon {
+	font-size: 200px;
 	color: green;
 }

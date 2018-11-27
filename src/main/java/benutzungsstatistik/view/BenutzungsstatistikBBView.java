@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.Icon;
+
 import org.vaadin.teemu.switchui.Switch;
 
 import com.vaadin.annotations.Theme;
@@ -19,8 +21,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
@@ -47,6 +51,7 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
+	private int slider;
 	private Button bRechercheBeratung;
 	private Button bEmailkontakt;
 	private Button bTelefonkontakt;
@@ -109,58 +114,70 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		lKassenbeleg.setValue("Kassenbeleg");
 		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
+//		bBenutzerkontakt = new NativeButton();
+//		bBenutzerkontakt.setCaptionAsHtml(true);
+//		bBenutzerkontakt.setCaption("<center><br>Benutzerkontakt<br>Uhrzeit: 9 Uhr</center>");
 		bBenutzerkontakt = new Button();
-		bBenutzerkontakt.setCaption("Benutzerkontakt");
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
 		bIntensivFrage.setCaption("Intensiv Frage");
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
+		
+		Slider sIntensivFrageSlider = new Slider();
+		sIntensivFrageSlider.setCaption("Dauer in Minuten");
+		sIntensivFrageSlider.setMin(1.0);
+		sIntensivFrageSlider.setMax(60.0);
+		sIntensivFrageSlider.setValue(5.0);
+		sIntensivFrageSlider.addValueChangeListener(event -> {
+			slider = event.getValue().intValue();
+		});
+              
 
 		bRechercheBeratung = new Button();
 		bRechercheBeratung.setCaption("Recherche-Beratung");
 		bRechercheBeratung.setIcon(VaadinIcons.GLASSES);
-		bRechercheBeratung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bRechercheBeratung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bRechercheBeratung.addClickListener(createClickListener());
 
 		bEmailkontakt = new Button();
 		bEmailkontakt.setCaption("Email");
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
-		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bEmailkontakt.addClickListener(createClickListener());
 
 		bTelefonkontakt = new Button();
 		bTelefonkontakt.setCaption("Telefon");
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
-		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bTelefonkontakt.addClickListener(createClickListener());
 
 		bWintikurier = new Button();
 		bWintikurier.setCaption("Wintikurier");
 		bWintikurier.setIcon(VaadinIcons.TRUCK);
-		bWintikurier.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bWintikurier.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bWintikurier.addClickListener(createClickListener());
 
 		bExterneGruppe = new Button();
 		bExterneGruppe.setCaption("Externe Gruppe");
 		bExterneGruppe.setIcon(VaadinIcons.GROUP);
-		bExterneGruppe.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bExterneGruppe.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bExterneGruppe.addClickListener(createClickListener());
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.setIcon(VaadinIcons.EDIT);
-		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bKorrektur.addClickListener(createClickListener());
 
 		bTagesuebersicht = new Button();
 		bTagesuebersicht.setCaption("Tagesübersicht");
 		bTagesuebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
-		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bTagesuebersicht.addClickListener(createClickListener());
 
 		kassenbeleg = new Switch();
@@ -175,7 +192,11 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 			benutzungsstatistik.setKassenbeleg(item);
 			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
+			if(item == true) {
+				Notification.show("Kassenbeleg muss erstellt werden", Type.TRAY_NOTIFICATION);
+			}else {
+				Notification.show("Kassenbeleg wurde erstellt", Type.TRAY_NOTIFICATION);
+			}
 		});
 
 		GridLayout grid = new GridLayout(6, 7);
@@ -186,14 +207,15 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		grid.addComponent(lKassenbeleg, 4, 0);
 		grid.addComponent(kassenbeleg, 5, 0);
 		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
-		grid.addComponent(bIntensivFrage, 2, 1, 3, 2);
-		grid.addComponent(bRechercheBeratung, 4, 1, 5, 2);
+		grid.addComponent(bIntensivFrage, 2, 1, 3, 1);
+		grid.addComponent(sIntensivFrageSlider, 2, 2, 3, 2);
+		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
 		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
 		grid.addComponent(bTelefonkontakt, 2, 3, 3, 4);
-		grid.addComponent(bWintikurier, 4, 3, 5, 4);
+		grid.addComponent(bRechercheBeratung, 4, 3, 5, 4);
 		grid.addComponent(bExterneGruppe, 0, 5, 1, 6);
-		grid.addComponent(bKorrektur, 2, 5, 3, 6);
-		grid.addComponent(bTagesuebersicht, 4, 5, 5, 6);
+		grid.addComponent(bWintikurier, 2, 5, 3, 6);
+		grid.addComponent(bKorrektur, 4, 5, 5, 6);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -202,8 +224,13 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					c.setHeight("80%");
-					c.setWidth("80%");
+					if(row == 2 && col == 2 || row == 2 && col == 3) {
+						//Slider nicht verändern
+						c.setWidth("80%");
+					}else {
+						c.setHeight("80%");
+						c.setWidth("80%");
+					}
 				}
 			}
 		}
@@ -232,11 +259,19 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 
 				if (e.getSource() == bIntensivFrage) {
 
-					benutzungsstatistik.addIntensivfrage(
-							new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
+					int zaehler = 0;
+					for(int i = 1; i<=slider; i+=5) {
+						benutzungsstatistik.addIntensivfrage(
+								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
+						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
+						zaehler++;
+					}
 
-					Notification.show("+1 Intensivfrage", Type.TRAY_NOTIFICATION);
+					Notification.show("+ "+zaehler +" Intensivfrage", Type.TRAY_NOTIFICATION);
+					
+					benutzungsstatistik.addBenutzerkontakt(
+							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 				}
 
 				if (e.getSource() == bRechercheBeratung) {

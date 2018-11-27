@@ -29,7 +29,7 @@ public class TestExterneGruppeDatenbank {
 		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 
-		externeGruppe = new ExterneGruppe("Test Gruppe", 10, benutzungsstatistik);
+		externeGruppe = new ExterneGruppe("Test Gruppe", 10, "15:00", benutzungsstatistik);
 	}
 
 	@Test
