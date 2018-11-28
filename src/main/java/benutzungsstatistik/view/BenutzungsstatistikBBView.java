@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.Icon;
-
 import org.vaadin.teemu.switchui.Switch;
 
 import com.vaadin.annotations.Theme;
@@ -21,7 +19,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Slider;
@@ -118,18 +115,19 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 //		bBenutzerkontakt.setCaptionAsHtml(true);
 //		bBenutzerkontakt.setCaption("<center><br>Benutzerkontakt<br>Uhrzeit: 9 Uhr</center>");
 		bBenutzerkontakt = new Button();
+		bBenutzerkontakt.setCaption("Benutzerkontakt");
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
 		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
-		bIntensivFrage.setCaption("Intensiv Frage");
+//		bIntensivFrage.setCaption("Intensiv Frage");
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 		
 		Slider sIntensivFrageSlider = new Slider();
-		sIntensivFrageSlider.setCaption("Dauer in Minuten");
+		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
 		sIntensivFrageSlider.setMax(60.0);
 		sIntensivFrageSlider.setValue(5.0);
@@ -199,23 +197,23 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 			}
 		});
 
-		GridLayout grid = new GridLayout(6, 7);
+		GridLayout grid = new GridLayout(9, 10);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
-		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 3, 0);
-		grid.addComponent(lKassenbeleg, 4, 0);
-		grid.addComponent(kassenbeleg, 5, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
-		grid.addComponent(bIntensivFrage, 2, 1, 3, 1);
-		grid.addComponent(sIntensivFrageSlider, 2, 2, 3, 2);
-		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
-		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
-		grid.addComponent(bTelefonkontakt, 2, 3, 3, 4);
-		grid.addComponent(bRechercheBeratung, 4, 3, 5, 4);
-		grid.addComponent(bExterneGruppe, 0, 5, 1, 6);
-		grid.addComponent(bWintikurier, 2, 5, 3, 6);
-		grid.addComponent(bKorrektur, 4, 5, 5, 6);
+		grid.addComponent(bZurueck, 0, 0, 1, 0);
+		grid.addComponent(lText, 2, 0, 5, 0);
+		grid.addComponent(lKassenbeleg, 6, 0);
+		grid.addComponent(kassenbeleg, 7, 0, 8, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 2, 3);
+		grid.addComponent(bIntensivFrage, 3, 1, 5, 2);
+		grid.addComponent(sIntensivFrageSlider, 3, 3, 5, 3);
+		grid.addComponent(bTagesuebersicht, 6, 1, 8, 3);
+		grid.addComponent(bEmailkontakt, 0, 4, 2, 6);
+		grid.addComponent(bTelefonkontakt, 3, 4, 5, 6);
+		grid.addComponent(bRechercheBeratung, 6, 4, 8, 6);
+		grid.addComponent(bExterneGruppe, 0, 7, 2, 9);
+		grid.addComponent(bWintikurier, 3, 7, 5, 9);
+		grid.addComponent(bKorrektur, 6, 7, 8, 9);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -224,7 +222,7 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					if(row == 2 && col == 2 || row == 2 && col == 3) {
+					if(row == 3 && col == 3 || row == 3 && col == 4 || row == 3 && col == 5) {
 						//Slider nicht verändern
 						c.setWidth("80%");
 					}else {

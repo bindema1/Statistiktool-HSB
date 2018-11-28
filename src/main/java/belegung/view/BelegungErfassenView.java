@@ -827,7 +827,7 @@ public class BelegungErfassenView extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if (korrektur == true) {
-						getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
+						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + stockwerkEnum.toString() + '/' + false + '/' + 0);
 					} else {
 						Page.getCurrent().setUriFragment("!"+StartseiteView.NAME);
 					}

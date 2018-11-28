@@ -15056,11 +15056,14 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
-.mytheme .icon-align-top.huge-icon .v-icon {
-	font-size: 26px;
+.mytheme .iconBenutzungHuge .v-icon {
+	font-size: 40px;
 }
 
-.mytheme .icon96px .v-icon {
-	font-size: 200px;
-	color: green;
+.mytheme .backgroundRed {
+	background-color: #faf5fa;
+}
+
+.mytheme .backgroundGreen {
+	background-color: #eff9f1;
 }

@@ -35,13 +35,20 @@ $v-shadow-opacity: 5%;
   @include valo;
 
   // Insert your own theme rules here
-  .icon-align-top.huge-icon .v-icon {
-  	font-size: $v-font-size--huge;
+  //.icon-align-top.huge-icon .v-icon {
+  	//font-size: $v-font-size--huge;
+	//}
+	
+	.iconBenutzungHuge .v-icon{
+	  font-size: 40px;
 	}
 	
-	.icon96px .v-icon{
-	  font-size: 200px;
-	  color: green;
-	}
+	.backgroundRed{
+           background-color:#faf5fa;
+      }
+      
+     .backgroundGreen{
+           background-color:#eff9f1;
+      }
   		
 }
