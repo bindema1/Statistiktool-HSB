@@ -391,15 +391,15 @@ public class TagesübersichtBelegungView extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bErfassung) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0);
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bLL) {

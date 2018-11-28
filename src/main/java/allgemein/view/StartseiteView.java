@@ -107,7 +107,7 @@ public class StartseiteView extends Composite implements View{
 				}
 
 				if (e.getSource() == bBelegung) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + "" + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0);
+					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 				
 				if (e.getSource() == bExport) {
