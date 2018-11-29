@@ -209,13 +209,14 @@ public class KorrekturView extends Composite implements View {
 			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
 		});
 
-		List<String> data = Arrays.asList(new String[] { "Bitte wählen", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
+		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
 				"14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
 		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 		uhrzeitListSelect.setSelectedItem(data.get(0));
+		uhrzeitListSelect.setEmptySelectionAllowed(false);
 		uhrzeitListSelect.setWidth(100.0f, Unit.PERCENTAGE);
 		uhrzeitListSelect.addValueChangeListener(event -> {
-			if (!String.valueOf(event.getValue()).equals("[Bitte wählen]")) {
+			if (!String.valueOf(event.getValue()).equals("Bitte wählen ↓")) {
 				bBenutzerkontakt.setEnabled(true);
 				bBenutzerkontaktMinus.setEnabled(true);
 				bEmailkontakt.setEnabled(true);

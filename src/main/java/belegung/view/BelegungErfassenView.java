@@ -201,7 +201,7 @@ public class BelegungErfassenView extends Composite implements View {
 		data = null;
 		NativeSelect<String> uhrzeitListSelect;
 		if (korrektur == true) {
-			data = Arrays.asList(new String[] { "Wählen", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
+			data = Arrays.asList(new String[] { "Bitte wählen ↓", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
 			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 			uhrzeitListSelect.setEmptySelectionAllowed(false);
 			if (ausgewählteUhrzeit != null) {
@@ -281,7 +281,7 @@ public class BelegungErfassenView extends Composite implements View {
 			case "19 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.NEUNZEHN;
 				break;
-			case "Wählen":
+			case "Bitte wählen ↓":
 				setButtonEnabled(false);
 				break;
 			}
@@ -345,7 +345,7 @@ public class BelegungErfassenView extends Composite implements View {
 
 		GridLayout grid = new GridLayout(5, 14);
 		if (korrektur == true) {
-			grid.addStyleName("gridlayout" + " backgroundRed");
+			grid.addStyleName("gridlayout" + " backgroundKorrektur");
 		} else {
 			grid.addStyleName("gridlayout");
 		}

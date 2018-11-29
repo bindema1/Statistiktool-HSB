@@ -188,7 +188,7 @@ public class TagesübersichtBelegungView extends Composite implements View {
 //		overallLayout.addComponent(tabelleUhrzeiten);
 
 		grid = new GridLayout(5, 12);
-		grid.addStyleName("backgroundGreen");
+		grid.addStyleName("backgroundTages");
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0);
