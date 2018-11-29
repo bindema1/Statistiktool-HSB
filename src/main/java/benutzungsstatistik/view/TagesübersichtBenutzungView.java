@@ -139,6 +139,7 @@ public class TagesübersichtBenutzungView extends Composite implements View {
 		Grid<ExterneGruppeBean> tabelleGruppen = new Grid<ExterneGruppeBean>();
 		tabelleGruppen.addColumn(ExterneGruppeBean::getName).setCaption("Name").setId("GruppenName");
 		tabelleGruppen.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Personen");
+		tabelleGruppen.addColumn(ExterneGruppeBean::getErfasstUm).setCaption("Erfasst um");
 		fülleTabelleGruppen(tabelleGruppen);
 
 		DateField datefield = new DateField();
@@ -150,12 +151,9 @@ public class TagesübersichtBenutzungView extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
-			System.out.println("DATUM " +date);
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 
-			System.out.println("DATUM2" +benutzungsstatistik.getDatum());
-			
 			// Alle Werte anpassen
 			fülleTabelleGruppen(tabelleGruppen);
 			fülleTabelleUhrzeiten(tabelleUhrzeiten);
@@ -266,6 +264,7 @@ public class TagesübersichtBenutzungView extends Composite implements View {
 			ExterneGruppeBean egb = new ExterneGruppeBean();
 			egb.setName(eg.getName());
 			egb.setAnzahl_personen(eg.getAnzahl_Personen());
+			egb.setErfasstUm(eg.getErfasstUm());
 			externeGruppeBeanListe.add(egb);
 		}
 

@@ -133,7 +133,7 @@ public class WintikurierView extends Composite implements View {
 		lPlatzhalter.setValue("");
 
 		bGesundheit = new Button();
-		bGesundheit.setCaption("Gesundheit");
+		bGesundheit.setCaption("+1 Gesundheit");
 		bGesundheit.addStyleName(ValoTheme.BUTTON_LARGE);
 		bGesundheit.addClickListener(createClickListener());
 
@@ -147,7 +147,7 @@ public class WintikurierView extends Composite implements View {
 		bGesundheitMinus.addClickListener(createClickListener());
 
 		bLinguistik = new Button();
-		bLinguistik.setCaption("Linguistik");
+		bLinguistik.setCaption("+1 Linguistik");
 		bLinguistik.addStyleName(ValoTheme.BUTTON_LARGE);
 		bLinguistik.addClickListener(createClickListener());
 
@@ -161,7 +161,7 @@ public class WintikurierView extends Composite implements View {
 		bLinguistikMinus.addClickListener(createClickListener());
 
 		bTechnik = new Button();
-		bTechnik.setCaption(" Technik  ");
+		bTechnik.setCaption("  +1 Technik  ");
 		bTechnik.addStyleName(ValoTheme.BUTTON_LARGE);
 		bTechnik.addClickListener(createClickListener());
 
@@ -175,7 +175,7 @@ public class WintikurierView extends Composite implements View {
 		bTechnikMinus.addClickListener(createClickListener());
 
 		bWirtschaft = new Button();
-		bWirtschaft.setCaption("Wirtschaft");
+		bWirtschaft.setCaption("+1 Wirtschaft");
 		bWirtschaft.addStyleName(ValoTheme.BUTTON_LARGE);
 		bWirtschaft.addClickListener(createClickListener());
 
@@ -187,43 +187,6 @@ public class WintikurierView extends Composite implements View {
 		bWirtschaftMinus.setCaption("Korrektur -1");
 		bWirtschaftMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
 		bWirtschaftMinus.addClickListener(createClickListener());
-
-//		VerticalLayout overallLayout = new VerticalLayout();
-//		overallLayout.setSpacing(true);
-//		
-//		HorizontalLayout headerLayout = new HorizontalLayout();
-//		headerLayout.setWidth("100%");
-//		headerLayout.addComponent(bZurueck);
-//		headerLayout.addComponent(lText);
-//		headerLayout.addComponent(datefield);
-//		overallLayout.addComponent(headerLayout);
-//		
-//		HorizontalLayout buttonLayout = new HorizontalLayout();
-//		buttonLayout.setHeight("200px");
-//		buttonLayout.setWidth("100%");
-//		buttonLayout.addComponent(bGesundheit);
-//		buttonLayout.addComponent(bLinguistik);
-//		buttonLayout.addComponent(bTechnik);
-//		buttonLayout.addComponent(bWirtschaft);
-//		overallLayout.addComponent(buttonLayout);
-//		
-//		overallLayout.addComponent(lTotal);
-//		
-//		HorizontalLayout totalLayout = new HorizontalLayout();
-//		totalLayout.addComponent(lGesundheitTotal);
-//		totalLayout.addComponent(lLinguistikTotal);
-//		totalLayout.addComponent(lTechnikTotal);
-//		totalLayout.addComponent(lWirtschaftTotal);
-//		overallLayout.addComponent(totalLayout);
-//		
-//		HorizontalLayout korrekturLayout = new HorizontalLayout();
-//		korrekturLayout.addComponent(bGesundheitMinus);
-//		korrekturLayout.addComponent(bLinguistikMinus);
-//		korrekturLayout.addComponent(bTechnikMinus);
-//		korrekturLayout.addComponent(bWirtschaftMinus);
-//		overallLayout.addComponent(korrekturLayout);
-//		
-//		mainLayout.addComponent(overallLayout);
 
 		GridLayout grid = new GridLayout(8, 7);
 		grid.addStyleName("gridlayout");
@@ -240,8 +203,6 @@ public class WintikurierView extends Composite implements View {
 		grid.addComponent(bLinguistik, 2, 1, 3, 4);
 		grid.addComponent(bTechnik, 4, 1, 5, 4);
 		grid.addComponent(bWirtschaft, 6, 1, 7, 4);
-//		grid.addComponent(lTotal, 0, 4, 1, 4);
-//		grid.addComponent(lPlatzhalter, 2, 4, 7, 4);
 		grid.addComponent(lGesundheitTotal, 0, 5, 1, 5);
 		grid.addComponent(lLinguistikTotal, 2, 5, 3, 5);
 		grid.addComponent(lTechnikTotal, 4, 5, 5, 5);

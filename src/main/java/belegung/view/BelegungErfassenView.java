@@ -362,10 +362,10 @@ public class BelegungErfassenView extends Composite implements View {
 
 		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 3);
 
-		grid.addComponent(uhrzeitListSelect, 0, 4, 0, 5);
-		grid.addComponent(new Label(), 0, 6);
+		grid.addComponent(bTagesübersicht, 0, 4);
+		grid.addComponent(uhrzeitListSelect, 0, 5, 0, 6);
 		grid.addComponent(new Label(), 0, 7);
-		grid.addComponent(bTagesübersicht, 0, 8);
+		grid.addComponent(new Label(), 0, 8);
 
 		if (räumeVorhanden == true) {
 			grid.addComponent(bPersonen, 1, 4, 2, 7);
@@ -728,7 +728,7 @@ public class BelegungErfassenView extends Composite implements View {
 
 			// Gruppenräume
 			if (erfassungsSchritt == 1) {
-				bRäume.setCaption("Gruppenäume");
+				bRäume.setCaption("+1 Gruppenraum");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
@@ -795,7 +795,6 @@ public class BelegungErfassenView extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
-		System.out.println(event.toString());
 		String datumString = args[0];
 		String stockwerkString = args[1];
 		String korrekturString = args[2];
@@ -1277,7 +1276,7 @@ public class BelegungErfassenView extends Composite implements View {
 										+ ausgewählteUhrzeit.toString());
 					} else {
 						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
-								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 2 + '/' + "");
+								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 2 + '/' + " ");
 					}
 				}
 

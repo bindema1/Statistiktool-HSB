@@ -1,5 +1,8 @@
 package allgemein.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -10,10 +13,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import administrator.view.ExportView;
@@ -35,6 +38,7 @@ public class LoginPage extends VerticalLayout implements View {
 	public static final String NAME = "";
 	private AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
 	private MD5 md5 = new MD5();
+	private NativeSelect<String> username;
 
 	public LoginPage() {
 		Panel panel = new Panel("Login");
@@ -42,7 +46,12 @@ public class LoginPage extends VerticalLayout implements View {
 		addComponent(panel);
 
 		FormLayout content = new FormLayout();
-		TextField username = new TextField("Username");
+		List<String> data = new ArrayList<>();
+		for(Angestellter a : angestellterDB.selectAllAngestellte()) {
+			data.add(a.getName());
+		}
+		username = new NativeSelect<>("Uhrzeit:", data);
+		username.setWidth(100.0f, Unit.PERCENTAGE);
 		content.addComponent(username);
 		PasswordField password = new PasswordField("Passwort");
 		content.addComponent(password);

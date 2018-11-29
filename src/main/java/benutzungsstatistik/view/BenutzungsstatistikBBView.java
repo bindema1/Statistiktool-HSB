@@ -19,6 +19,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Slider;
@@ -59,12 +60,14 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 	private Switch kassenbeleg;
 	private Label lText;
 	private Label lKassenbeleg;
+	private int uhrzeit;
 //	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 //	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
 //	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
 //	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
+	private SimpleDateFormat stundenFormat = new SimpleDateFormat("HH");
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -91,6 +94,8 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 	private void initData() {
 		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WINTERTHUR_BB);
+		
+		uhrzeit = Integer.parseInt(stundenFormat.format(new Date().getTime()));
 	}
 
 	// Initialisieren der GUI Komponente
@@ -111,17 +116,14 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		lKassenbeleg.setValue("Kassenbeleg");
 		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-//		bBenutzerkontakt = new NativeButton();
-//		bBenutzerkontakt.setCaptionAsHtml(true);
-//		bBenutzerkontakt.setCaption("<center><br>Benutzerkontakt<br>Uhrzeit: 9 Uhr</center>");
 		bBenutzerkontakt = new Button();
-		bBenutzerkontakt.setCaption("Benutzerkontakt");
+		setBenutzerCaption();
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
 		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
-//		bIntensivFrage.setCaption("Intensiv Frage");
+		setIntensivCaption();
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
@@ -129,7 +131,7 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		Slider sIntensivFrageSlider = new Slider();
 		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
-		sIntensivFrageSlider.setMax(60.0);
+		sIntensivFrageSlider.setMax(30.0);
 		sIntensivFrageSlider.setValue(5.0);
 		sIntensivFrageSlider.addValueChangeListener(event -> {
 			slider = event.getValue().intValue();
@@ -137,19 +139,19 @@ public class BenutzungsstatistikBBView extends Composite implements View {
               
 
 		bRechercheBeratung = new Button();
-		bRechercheBeratung.setCaption("Recherche-Beratung");
+		setRechercheCaption();
 		bRechercheBeratung.setIcon(VaadinIcons.GLASSES);
 		bRechercheBeratung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bRechercheBeratung.addClickListener(createClickListener());
 
 		bEmailkontakt = new Button();
-		bEmailkontakt.setCaption("Email");
+		setEmailCaption();
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
 		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bEmailkontakt.addClickListener(createClickListener());
 
 		bTelefonkontakt = new Button();
-		bTelefonkontakt.setCaption("Telefon");
+		setTelefonCaption();
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
 		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bTelefonkontakt.addClickListener(createClickListener());
@@ -237,6 +239,52 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 
 	}
 
+	private void setTelefonCaption() {
+		int telefonzaehler = 0;
+		for (Telefonkontakt telefon : benutzungsstatistik.getTelefonkontaktListe()) {
+			if (Integer.parseInt(stundenFormat.format(telefon.getTimestamp().getTime())) == uhrzeit) {
+				telefonzaehler++;
+			}
+		}
+		bTelefonkontakt.setCaption("Telefon, "+uhrzeit +" Uhr: "+telefonzaehler);
+	}
+	
+	private void setEmailCaption() {
+		int emailzaehler = 0;
+		for (Emailkontakt email : benutzungsstatistik.getEmailkontaktListe()) {
+			if (Integer.parseInt(stundenFormat.format(email.getTimestamp().getTime())) == uhrzeit) {
+				emailzaehler++;
+			}
+		}
+		bEmailkontakt.setCaption("Email, "+uhrzeit +" Uhr: "+emailzaehler);
+	}
+	
+	private void setBenutzerCaption() {
+		int benutzerzaehler = 0;
+		for (Benutzerkontakt benutzer : benutzungsstatistik.getBenutzerkontaktListe()) {
+			if (Integer.parseInt(stundenFormat.format(benutzer.getTimestamp().getTime())) == uhrzeit) {
+				benutzerzaehler++;
+			}
+		}
+		bBenutzerkontakt.setCaption("Benutzerkontakt, "+uhrzeit +" Uhr: "+benutzerzaehler);
+	}
+	
+	private void setIntensivCaption() {
+		int intensivzaehler = 0;
+		for (Intensivfrage intensiv : benutzungsstatistik.getIntensivfrageListe()) {
+			if (Integer.parseInt(stundenFormat.format(intensiv.getTimestamp().getTime())) == uhrzeit) {
+				intensivzaehler++;
+			}
+		}
+		bIntensivFrage.setCaption("Intensivfrage, "+uhrzeit +" Uhr: "+intensivzaehler);
+	}	
+	
+	private void setRechercheCaption() {
+		benutzungsstatistik.getAnzahl_Rechercheberatung();
+		bRechercheBeratung.setCaption("Rechercheberatung, Total: "+benutzungsstatistik.getAnzahl_Rechercheberatung());
+	}	
+	
+
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener() {
 		return new ClickListener() {
@@ -247,16 +295,15 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
-
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
+					
+					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bIntensivFrage) {
-
 					int zaehler = 0;
 					for(int i = 1; i<=slider; i+=5) {
 						benutzungsstatistik.addIntensivfrage(
@@ -264,36 +311,41 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						zaehler++;
 					}
-
 					Notification.show("+ "+zaehler +" Intensivfrage", Type.TRAY_NOTIFICATION);
 					
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
+					
+					setIntensivCaption();
+					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bRechercheBeratung) {
 					benutzungsstatistik
 							.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() + 1);
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
 					Notification.show("+1 Rechercheberatung", Type.TRAY_NOTIFICATION);
+					
+					setRechercheCaption();
 				}
 
 				if (e.getSource() == bEmailkontakt) {
 					benutzungsstatistik.addEmailkontakt(
 							new Emailkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);					
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
+					
+					setEmailCaption();
 				}
 
 				if (e.getSource() == bTelefonkontakt) {
 					benutzungsstatistik.addTelefonkontakt(
 							new Telefonkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);
+					
+					setTelefonCaption();
 				}
 
 				if (e.getSource() == bWintikurier) {
