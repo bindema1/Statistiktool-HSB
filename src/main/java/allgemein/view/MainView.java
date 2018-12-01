@@ -14,9 +14,9 @@ import com.vaadin.ui.UI;
 
 import administrator.view.ExportView;
 import administrator.view.PasswortView;
-import belegung.view.BelegungErfassenView;
-import belegung.view.TagesübersichtBelegungView;
-import benutzungsstatistik.view.BenutzungsstatistikBBView;
+import belegung.view.BelegungErfassenViewWinti;
+import belegung.view.TagesübersichtBelegungViewWinti;
+import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.ExterneGruppeView;
 import benutzungsstatistik.view.KorrekturView;
 import benutzungsstatistik.view.TagesübersichtBenutzungView;
@@ -71,9 +71,9 @@ public class MainView extends UI {
 			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
 			getNavigator().addView(PasswortView.NAME, PasswortView.class);
 			getNavigator().addView(ExportView.NAME, ExportView.class);
-			getNavigator().addView(BelegungErfassenView.NAME, BelegungErfassenView.class);
-			getNavigator().addView(TagesübersichtBelegungView.NAME, TagesübersichtBelegungView.class);
-			getNavigator().addView(BenutzungsstatistikBBView.NAME, BenutzungsstatistikBBView.class);
+			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
+			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
+			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 			getNavigator().addView(ExterneGruppeView.NAME, ExterneGruppeView.class);
 			getNavigator().addView(KorrekturView.NAME, KorrekturView.class);
 			getNavigator().addView(TagesübersichtBenutzungView.NAME, TagesübersichtBenutzungView.class);
@@ -83,8 +83,8 @@ public class MainView extends UI {
 				getNavigator().navigateTo(PasswortView.NAME);
 			} else if (route.equals("!"+ExportView.NAME)) {
 				getNavigator().navigateTo(ExportView.NAME);
-			} else if (route.equals("!"+BenutzungsstatistikBBView.NAME)) {
-				getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
+			} else if (route.equals("!"+BenutzungsstatistikViewBB.NAME)) {
+				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 			} else if (route.equals("!"+KorrekturView.NAME)) {
 				getNavigator().navigateTo(KorrekturView.NAME);
 			} else if (route.equals("!"+TagesübersichtBenutzungView.NAME)) {
@@ -93,10 +93,10 @@ public class MainView extends UI {
 				getNavigator().navigateTo(WintikurierView.NAME);
 			} else if (route.equals("!"+ExterneGruppeView.NAME)) {
 				getNavigator().navigateTo(ExterneGruppeView.NAME);
-			} else if (route.equals("!"+TagesübersichtBelegungView.NAME)) {
-				getNavigator().navigateTo(TagesübersichtBelegungView.NAME);
-			} else if (route.equals("!"+BelegungErfassenView.NAME)) {
-				getNavigator().navigateTo(BelegungErfassenView.NAME);
+			} else if (route.equals("!"+TagesübersichtBelegungViewWinti.NAME)) {
+				getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME);
+			} else if (route.equals("!"+BelegungErfassenViewWinti.NAME)) {
+				getNavigator().navigateTo(BelegungErfassenViewWinti.NAME);
 			} else {
 				getNavigator().navigateTo(StartseiteView.NAME);
 			}

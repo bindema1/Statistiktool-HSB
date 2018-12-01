@@ -41,7 +41,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class BenutzungsstatistikBBView extends Composite implements View {
+public class BenutzungsstatistikViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Benutzung-BB";
@@ -87,7 +87,7 @@ public class BenutzungsstatistikBBView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public BenutzungsstatistikBBView() {
+	public BenutzungsstatistikViewBB() {
 		setCompositionRoot(init());
 	}
 

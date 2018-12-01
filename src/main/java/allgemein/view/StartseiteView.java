@@ -1,7 +1,7 @@
 package allgemein.view;
 
 import com.vaadin.navigator.View;
-import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -10,22 +10,23 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 
 import administrator.view.ExportView;
 import administrator.view.PasswortView;
 import belegung.model.StockwerkEnum;
-import belegung.view.BelegungErfassenView;
-import benutzungsstatistik.view.BenutzungsstatistikBBView;
+import belegung.view.BelegungErfassenViewWinti;
+import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 
 public class StartseiteView extends Composite implements View{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Startseite";
 	private AbsoluteLayout mainLayout;
-	private Button bBenutzungsstatistik;
-	private Button bBelegung;
-	private Button bExport;
+	private Button bBenutzungsstatistikBB;
+	private Button bBelegungWini;
+	private Button bExportWinti;
 	private Button bPasswort;
 
 	private AbsoluteLayout buildMainLayout() {
@@ -57,32 +58,53 @@ public class StartseiteView extends Composite implements View{
 	// Initialisieren der GUI Komponente
 	private void initComponents() {
 
-		bBenutzungsstatistik = new Button();
-		bBenutzungsstatistik.setCaption("Benutzungsstatistik");
-		bBenutzungsstatistik.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBenutzungsstatistik.addClickListener(createClickListener());
+		bBenutzungsstatistikBB = new Button();
+		bBenutzungsstatistikBB.setCaption("Benutzungsstatistik BB");
+		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikBB.addClickListener(createClickListener());
 
-		bBelegung = new Button();
-		bBelegung.setCaption("Belegung");
-		bBelegung.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBelegung.addClickListener(createClickListener());
+		bBelegungWini = new Button();
+		bBelegungWini.setCaption("Belegung Winti");
+		bBelegungWini.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWini.addClickListener(createClickListener());
 		
-		bExport = new Button();
-		bExport.setCaption("Export");
-		bExport.addStyleName(ValoTheme.BUTTON_LARGE);
-		bExport.addClickListener(createClickListener());
+		bExportWinti = new Button();
+		bExportWinti.setCaption("Export Winti");
+		bExportWinti.addStyleName(ValoTheme.BUTTON_LARGE);
+		bExportWinti.addClickListener(createClickListener());
 		
 		bPasswort = new Button();
 		bPasswort.setCaption("Passwörter ändern");
 		bPasswort.addStyleName(ValoTheme.BUTTON_LARGE);
 		bPasswort.addClickListener(createClickListener());
 
+		
+		//Erstellt ein GridLayout, welches je nach User andere Button anzeigt
 		GridLayout grid = new GridLayout(2, 2);
 		grid.setSizeFull();
-		grid.addComponent(bBenutzungsstatistik, 0, 0);
-		grid.addComponent(bBelegung, 1, 0);
-		grid.addComponent(bExport, 0, 1);
-		grid.addComponent(bPasswort, 1, 1);
+		String user = VaadinSession.getCurrent().getAttribute("user").toString();
+		if (user.equals("Admin Winterthur")) {
+			grid.addComponent(bBenutzungsstatistikBB, 0, 0);
+			grid.addComponent(bBelegungWini, 1, 0);
+			grid.addComponent(bExportWinti, 0, 1);
+			grid.addComponent(bPasswort, 1, 1);
+		}else if(user.equals("Mitarbeitende Winterthur")) {
+			grid.addComponent(bBenutzungsstatistikBB, 0, 0);
+			grid.addComponent(bBelegungWini, 1, 0);
+			grid.addComponent(new Label(), 0, 1);
+			grid.addComponent(new Label(), 1, 1);
+		}else if(user.equals("Studentische Mitarbeitende Winterthur")) {
+			grid.addComponent(new Label(), 0, 0);
+			grid.addComponent(bBelegungWini, 1, 0);
+			grid.addComponent(new Label(), 0, 1);
+			grid.addComponent(new Label(), 1, 1);
+		}else if(user.equals("Admin Wädenswil")) {
+			grid.addComponent(bPasswort, 1, 1);
+		}else if(user.equals("Mitarbeitende Wädenswil")) {
+			
+		}else 
+			
+		System.out.println(grid.getColumns() +"  " +grid.getRows());
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -102,15 +124,15 @@ public class StartseiteView extends Composite implements View{
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
-				if (e.getSource() == bBenutzungsstatistik) {
-					getUI().getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
+				if (e.getSource() == bBenutzungsstatistikBB) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
-				if (e.getSource() == bBelegung) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
+				if (e.getSource() == bBelegungWini) {
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 				
-				if (e.getSource() == bExport) {
+				if (e.getSource() == bExportWinti) {
 					getUI().getNavigator().navigateTo(ExportView.NAME);
 				}
 				

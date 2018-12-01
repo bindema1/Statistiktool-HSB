@@ -50,7 +50,7 @@ import belegung.model.UhrzeitEnum;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtBelegungView extends Composite implements View {
+public class TagesübersichtBelegungViewWinti extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Belegung-Winterthur-Übersicht";
@@ -87,7 +87,7 @@ public class TagesübersichtBelegungView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public TagesübersichtBelegungView() {
+	public TagesübersichtBelegungViewWinti() {
 
 	}
 
@@ -391,31 +391,31 @@ public class TagesübersichtBelegungView extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bErfassung) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' +" ");
 				}
 
 				if (e.getSource() == bLL) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.LL.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.LL.toString());
 				}
 
 				if (e.getSource() == b2ZG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG2.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG2.toString());
 				}
 
 				if (e.getSource() == b1ZG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG1.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG1.toString());
 				}
 
 				if (e.getSource() == bEG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString());
 				}
 
 			}

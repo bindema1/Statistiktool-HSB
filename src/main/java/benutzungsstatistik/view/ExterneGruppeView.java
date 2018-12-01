@@ -271,7 +271,7 @@ public class ExterneGruppeView extends Composite implements View {
 					if(korrektur == true) {
 						getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 					}else {
-						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikBBView.NAME);
+						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewBB.NAME);
 					}
 				}
 

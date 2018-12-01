@@ -55,7 +55,7 @@ import belegung.model.UhrzeitEnum;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class BelegungErfassenView extends Composite implements View {
+public class BelegungErfassenViewWinti extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Belegung-Winterthur";
@@ -112,7 +112,7 @@ public class BelegungErfassenView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public BelegungErfassenView() {
+	public BelegungErfassenViewWinti() {
 
 	}
 
@@ -866,7 +866,7 @@ public class BelegungErfassenView extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if (korrektur == true) {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ stockwerkEnum.toString() + '/' + false + '/' + 0 +'/' +" ");
 					} else {
 						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
@@ -1183,15 +1183,15 @@ public class BelegungErfassenView extends Composite implements View {
 
 				if (e.getSource() == bTagesübersicht) {
 					getUI().getNavigator().navigateTo(
-							TagesübersichtBelegungView.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
+							TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
 				}
 
 				if (e.getSource() == bKorrektur) {
 					if (korrektur == false) {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + true + '/' + 0 + '/' + " ");
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + " " + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ stockwerkEnum.toString() + '/' + false + '/' + 0+ '/' + " ");
 					}
 				}
@@ -1199,11 +1199,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bLL) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ StockwerkEnum.LL.toString() + '/' + korrektur + '/' + 1 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ StockwerkEnum.LL.toString() + '/' + korrektur + '/' + 1 + '/' + " ");
 					}
 				}
@@ -1211,11 +1211,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == b2ZG) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ StockwerkEnum.ZG2.toString() + '/' + korrektur + '/' + 0 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ StockwerkEnum.ZG2.toString() + '/' + korrektur + '/' + 0 + '/' + " ");
 					}
 				}
@@ -1223,11 +1223,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == b1ZG) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ StockwerkEnum.ZG1.toString() + '/' + korrektur + '/' + 0 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ StockwerkEnum.ZG1.toString() + '/' + korrektur + '/' + 0 + '/' + " ");
 					}
 				}
@@ -1235,11 +1235,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bEG) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ StockwerkEnum.EG.toString() + '/' + korrektur + '/' + 0 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ StockwerkEnum.EG.toString() + '/' + korrektur + '/' + 0 + '/' + " ");
 					}
 				}
@@ -1247,11 +1247,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bArbeitsplätze) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ stockwerkEnum.toString() + '/' + korrektur + '/' + 0 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 0 + '/' + " ");
 					}
 				}
@@ -1259,11 +1259,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bGruppenräume) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ stockwerkEnum.toString() + '/' + korrektur + '/' + 1 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 1 + '/' + " ");
 					}
 				}
@@ -1271,11 +1271,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bCarrels) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ stockwerkEnum.toString() + '/' + korrektur + '/' + 2 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 2 + '/' + " ");
 					}
 				}
@@ -1283,11 +1283,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bSektorA) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ stockwerkEnum.toString() + '/' + korrektur + '/' + 3 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 3 + '/' + " ");
 					}
 				}
@@ -1295,11 +1295,11 @@ public class BelegungErfassenView extends Composite implements View {
 				if (e.getSource() == bSektorB) {
 					if (korrektur == true && ausgewählteUhrzeit != null) {
 						getUI().getNavigator()
-								.navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+								.navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 										+ stockwerkEnum.toString() + '/' + korrektur + '/' + 4 + '/'
 										+ ausgewählteUhrzeit.toString());
 					} else {
-						getUI().getNavigator().navigateTo(BelegungErfassenView.NAME + '/' + date.getTime() + '/'
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
 								+ stockwerkEnum.toString() + '/' + korrektur + '/' + 4 + '/' + " ");
 					}
 				}

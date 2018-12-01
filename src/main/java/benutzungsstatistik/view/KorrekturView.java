@@ -448,7 +448,7 @@ public class KorrekturView extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BenutzungsstatistikBBView.NAME);
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
