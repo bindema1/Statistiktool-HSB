@@ -1,6 +1,7 @@
 package allgemein.view;
 
 import com.vaadin.navigator.View;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -17,17 +18,26 @@ import administrator.view.ExportView;
 import administrator.view.PasswortView;
 import belegung.model.StockwerkEnum;
 import belegung.view.BelegungErfassenViewWinti;
+import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
+import benutzungsstatistik.view.BenutzungsstatistikViewLL;
+import benutzungsstatistik.view.ExterneGruppeView;
+import benutzungsstatistik.view.KorrekturView;
+import benutzungsstatistik.view.TagesübersichtBenutzungView;
+import benutzungsstatistik.view.WintikurierView;
 
-public class StartseiteView extends Composite implements View{
+public class StartseiteView extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Startseite";
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistikBB;
-	private Button bBelegungWini;
+	private Button bBenutzungsstatistikLL;
+	private Button bBelegungWinti;
 	private Button bExportWinti;
 	private Button bPasswort;
+	private Button bLogout;
+	private String user;
 
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
@@ -46,7 +56,7 @@ public class StartseiteView extends Composite implements View{
 
 		return absolutLayout;
 	}
-	
+
 	public StartseiteView() {
 		setCompositionRoot(init());
 	}
@@ -58,61 +68,76 @@ public class StartseiteView extends Composite implements View{
 	// Initialisieren der GUI Komponente
 	private void initComponents() {
 
+		Label lText = new Label();
+		lText.setValue("Startseite");
+		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+		
 		bBenutzungsstatistikBB = new Button();
 		bBenutzungsstatistikBB.setCaption("Benutzungsstatistik BB");
 		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikBB.addClickListener(createClickListener());
 
-		bBelegungWini = new Button();
-		bBelegungWini.setCaption("Belegung Winti");
-		bBelegungWini.addStyleName(ValoTheme.BUTTON_LARGE);
-		bBelegungWini.addClickListener(createClickListener());
-		
+		bBenutzungsstatistikLL = new Button();
+		bBenutzungsstatistikLL.setCaption("Benutzungsstatistik LL");
+		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikLL.addClickListener(createClickListener());
+
+		bBelegungWinti = new Button();
+		bBelegungWinti.setCaption("Belegung Winti");
+		bBelegungWinti.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWinti.addClickListener(createClickListener());
+
 		bExportWinti = new Button();
 		bExportWinti.setCaption("Export Winti");
 		bExportWinti.addStyleName(ValoTheme.BUTTON_LARGE);
 		bExportWinti.addClickListener(createClickListener());
-		
+
 		bPasswort = new Button();
 		bPasswort.setCaption("Passwörter ändern");
 		bPasswort.addStyleName(ValoTheme.BUTTON_LARGE);
 		bPasswort.addClickListener(createClickListener());
 
-		
-		//Erstellt ein GridLayout, welches je nach User andere Button anzeigt
-		GridLayout grid = new GridLayout(2, 2);
+		bLogout = new Button("Logout");
+		bLogout.addClickListener(createClickListener());
+
+		// Erstellt ein GridLayout, welches je nach User andere Button anzeigt
+		GridLayout grid = new GridLayout(2, 3);
 		grid.setSizeFull();
-		String user = VaadinSession.getCurrent().getAttribute("user").toString();
+		user = VaadinSession.getCurrent().getAttribute("user").toString();
+		grid.addComponent(bLogout, 0, 0);
+		grid.addComponent(lText, 1, 0);
 		if (user.equals("Admin Winterthur")) {
-			grid.addComponent(bBenutzungsstatistikBB, 0, 0);
-			grid.addComponent(bBelegungWini, 1, 0);
-			grid.addComponent(bExportWinti, 0, 1);
-			grid.addComponent(bPasswort, 1, 1);
-		}else if(user.equals("Mitarbeitende Winterthur")) {
-			grid.addComponent(bBenutzungsstatistikBB, 0, 0);
-			grid.addComponent(bBelegungWini, 1, 0);
-			grid.addComponent(new Label(), 0, 1);
-			grid.addComponent(new Label(), 1, 1);
-		}else if(user.equals("Studentische Mitarbeitende Winterthur")) {
-			grid.addComponent(new Label(), 0, 0);
-			grid.addComponent(bBelegungWini, 1, 0);
-			grid.addComponent(new Label(), 0, 1);
-			grid.addComponent(new Label(), 1, 1);
-		}else if(user.equals("Admin Wädenswil")) {
-			grid.addComponent(bPasswort, 1, 1);
-		}else if(user.equals("Mitarbeitende Wädenswil")) {
-			
-		}else 
-			
-		System.out.println(grid.getColumns() +"  " +grid.getRows());
+			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
+			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(bExportWinti, 0, 2);
+			grid.addComponent(bPasswort, 1, 2);
+		} else if (user.equals("Mitarbeitende Winterthur")) {
+			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
+			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(new Label(), 0, 2);
+			grid.addComponent(new Label(), 1, 2);
+		} else if (user.equals("Studentische Mitarbeitende Winterthur")) {
+			grid.addComponent(bBenutzungsstatistikLL, 0, 1);
+			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(new Label(), 0, 2);
+			grid.addComponent(new Label(), 1, 2);
+		} else if (user.equals("Admin Wädenswil")) {
+			grid.addComponent(bPasswort, 1, 2);
+		} else if (user.equals("Mitarbeitende Wädenswil")) {
+
+		} else
+
+			System.out.println(grid.getColumns() + "  " + grid.getRows());
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
 				Component c = grid.getComponent(col, row);
 				grid.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
 
-				c.setHeight("50%");
-				c.setWidth("50%");
+				if(row != 0) {
+					c.setHeight("50%");
+					c.setWidth("50%");
+				}
 			}
 		}
 
@@ -127,17 +152,43 @@ public class StartseiteView extends Composite implements View{
 				if (e.getSource() == bBenutzungsstatistikBB) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
-
-				if (e.getSource() == bBelegungWini) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
-				}
 				
+				if (e.getSource() == bBenutzungsstatistikLL) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
+				}
+
+				if (e.getSource() == bBelegungWinti) {
+					if (user.equals("Studentische Mitarbeitende Winterthur")) {
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
+								+ StockwerkEnum.LL.toString() + '/' + false + '/' + 1 + '/' + " ");
+					}else {
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
+								+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
+					}
+				}
+
 				if (e.getSource() == bExportWinti) {
 					getUI().getNavigator().navigateTo(ExportView.NAME);
 				}
-				
+
 				if (e.getSource() == bPasswort) {
 					getUI().getNavigator().navigateTo(PasswortView.NAME);
+				}
+				
+				if (e.getSource() == bLogout) {
+					getUI().getNavigator().removeView(StartseiteView.NAME);
+					getUI().getNavigator().removeView(PasswortView.NAME);
+					getUI().getNavigator().removeView(ExportView.NAME);
+					getUI().getNavigator().removeView(BelegungErfassenViewWinti.NAME);
+					getUI().getNavigator().removeView(TagesübersichtBelegungViewWinti.NAME);
+					getUI().getNavigator().removeView(BenutzungsstatistikViewBB.NAME);
+					getUI().getNavigator().removeView(BenutzungsstatistikViewLL.NAME);
+					getUI().getNavigator().removeView(ExterneGruppeView.NAME);
+					getUI().getNavigator().removeView(KorrekturView.NAME);
+					getUI().getNavigator().removeView(TagesübersichtBenutzungView.NAME);
+					getUI().getNavigator().removeView(WintikurierView.NAME);
+					VaadinSession.getCurrent().setAttribute("user", null);
+					Page.getCurrent().setUriFragment("");
 				}
 
 			}

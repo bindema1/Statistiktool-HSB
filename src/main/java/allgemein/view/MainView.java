@@ -17,6 +17,7 @@ import administrator.view.PasswortView;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
+import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.ExterneGruppeView;
 import benutzungsstatistik.view.KorrekturView;
 import benutzungsstatistik.view.TagesübersichtBenutzungView;
@@ -74,6 +75,7 @@ public class MainView extends UI {
 			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
 			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
 			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
+			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
 			getNavigator().addView(ExterneGruppeView.NAME, ExterneGruppeView.class);
 			getNavigator().addView(KorrekturView.NAME, KorrekturView.class);
 			getNavigator().addView(TagesübersichtBenutzungView.NAME, TagesübersichtBenutzungView.class);
@@ -85,6 +87,8 @@ public class MainView extends UI {
 				getNavigator().navigateTo(ExportView.NAME);
 			} else if (route.equals("!"+BenutzungsstatistikViewBB.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
+			} else if (route.equals("!"+BenutzungsstatistikViewLL.NAME)) {
+				getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 			} else if (route.equals("!"+KorrekturView.NAME)) {
 				getNavigator().navigateTo(KorrekturView.NAME);
 			} else if (route.equals("!"+TagesübersichtBenutzungView.NAME)) {

@@ -27,6 +27,7 @@ import allgemein.model.MD5;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
+import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.ExterneGruppeView;
 import benutzungsstatistik.view.KorrekturView;
 import benutzungsstatistik.view.TagesübersichtBenutzungView;
@@ -47,10 +48,10 @@ public class LoginPage extends VerticalLayout implements View {
 
 		FormLayout content = new FormLayout();
 		List<String> data = new ArrayList<>();
-		for(Angestellter a : angestellterDB.selectAllAngestellte()) {
+		for (Angestellter a : angestellterDB.selectAllAngestellte()) {
 			data.add(a.getName());
 		}
-		username = new NativeSelect<>("Uhrzeit:", data);
+		username = new NativeSelect<>("User", data);
 		username.setWidth(100.0f, Unit.PERCENTAGE);
 		content.addComponent(username);
 		PasswordField password = new PasswordField("Passwort");
@@ -75,6 +76,7 @@ public class LoginPage extends VerticalLayout implements View {
 						getUI().getNavigator().addView(TagesübersichtBelegungViewWinti.NAME,
 								TagesübersichtBelegungViewWinti.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
+						getUI().getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
 						getUI().getNavigator().addView(ExterneGruppeView.NAME, ExterneGruppeView.class);
 						getUI().getNavigator().addView(KorrekturView.NAME, KorrekturView.class);
 						getUI().getNavigator().addView(TagesübersichtBenutzungView.NAME,
@@ -86,29 +88,52 @@ public class LoginPage extends VerticalLayout implements View {
 							@Override
 							public boolean beforeViewChange(ViewChangeEvent event) {
 
-								String user = VaadinSession.getCurrent().getAttribute("user").toString();
+								String user = null;
+								if (VaadinSession.getCurrent().getAttribute("user") != null) {
+									user = VaadinSession.getCurrent().getAttribute("user").toString();
 
-								if (event.getNewView() instanceof PasswortView && user.contains("Admin")
-										|| event.getNewView() instanceof ExportView && user.equals("Admin Winterthur")) {
-									return true;
+									if (event.getNewView() instanceof PasswortView && user.contains("Admin")
+											|| event.getNewView() instanceof ExportView
+													&& user.equals("Admin Winterthur")) {
+										return true;
+									}
+									if (event.getNewView() instanceof BenutzungsstatistikViewBB
+											&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof BenutzungsstatistikViewBB
+													&& user.equals("Mitarbeitende Winterthur")) {
+										return true;
+									}
+									if (event.getNewView() instanceof BenutzungsstatistikViewLL
+											&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof BenutzungsstatistikViewLL
+													&& user.equals("Studentische Mitarbeitende Winterthur")) {
+										return true;
+									}
+									if (event.getNewView() instanceof BelegungErfassenViewWinti
+											&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof TagesübersichtBelegungViewWinti
+													&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof WintikurierView
+													&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof ExterneGruppeView
+													&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof BelegungErfassenViewWinti
+													&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof TagesübersichtBenutzungView
+													&& !user.equals("Mitarbeitende Wädenswil")
+											|| event.getNewView() instanceof KorrekturView
+													&& !user.equals("Mitarbeitende Wädenswil")) {
+										return true;
+									}
+									if (event.getNewView() instanceof StartseiteView) {
+										return true;
+									}
+								}else {
+									if (event.getNewView() instanceof LoginPage) {
+										return true;
+									}
 								}
-								if (event.getNewView() instanceof BenutzungsstatistikViewBB && user.equals("Admin Winterthur")
-										|| event.getNewView() instanceof BenutzungsstatistikViewBB && user.equals("Mitarbeitende Winterthur")) {
-									return true;
-								}
-								if (event.getNewView() instanceof BelegungErfassenViewWinti && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof TagesübersichtBelegungViewWinti && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof WintikurierView && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof ExterneGruppeView && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof BelegungErfassenViewWinti && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof TagesübersichtBenutzungView && !user.equals("Mitarbeitende Wädenswil")
-										|| event.getNewView() instanceof KorrekturView && !user.equals("Mitarbeitende Wädenswil")) {
-									return true;
-								} 
-								if (event.getNewView() instanceof StartseiteView) {
-									return true;
-								}
-								
+
 								Notification.show("Zugriff verweigert", Notification.Type.WARNING_MESSAGE);
 								return false;
 							}
