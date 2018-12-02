@@ -136,19 +136,18 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		bTagesuebersicht.addClickListener(createClickListener());
 
 
-		GridLayout grid = new GridLayout(9, 7);
+		GridLayout grid = new GridLayout(3, 3);
 		grid.addStyleName("gridlayout");
-//		grid.setSizeFull();
-		grid.addComponent(bZurueck, 0, 0, 1, 0);
-		grid.addComponent(lText, 2, 0, 5, 0);
-		grid.addComponent(new Label(), 6, 0);
-		grid.addComponent(new Label(), 7, 0, 8, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1, 2, 3);
-		grid.addComponent(bIntensivFrage, 3, 1, 5, 3);
-		grid.addComponent(bTagesuebersicht, 6, 1, 8, 3);
-		grid.addComponent(bBeantwortungBibliothekspersonal, 0, 4, 2, 6);
-		grid.addComponent(sIntensivFrageSlider, 3, 4, 5, 6);
-		grid.addComponent(bKorrektur, 6, 4, 8, 6);
+		grid.setSizeFull();
+		grid.addComponent(bZurueck, 0, 0);
+		grid.addComponent(lText, 1, 0, 2, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1);
+		grid.addComponent(bIntensivFrage, 1, 1);
+		grid.addComponent(bTagesuebersicht, 2, 1);
+		grid.addComponent(bBeantwortungBibliothekspersonal, 0, 2);
+		grid.addComponent(sIntensivFrageSlider, 1, 2);
+		grid.addComponent(bKorrektur, 2, 2);
+		
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -157,7 +156,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					if(row >= 4 && row <= 6 && col >= 3 && col <= 5) {
+					if(row == 2 && col == 1) {
 						//Slider nicht verändern
 						c.setWidth("80%");
 					}else {
@@ -167,6 +166,13 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				}
 			}
 		}
+		
+		grid.setColumnExpandRatio(0, 0.33f);
+		grid.setColumnExpandRatio(1, 0.33f);
+		grid.setColumnExpandRatio(2, 0.33f);
+		grid.setRowExpandRatio(0, 0.1f);
+		grid.setRowExpandRatio(1, 0.45f);
+		grid.setRowExpandRatio(2, 0.45f);
 
 		mainLayout.addComponent(grid);
 
@@ -179,7 +185,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				beantwortungzaehler++;
 			}
 		}
-		bBeantwortungBibliothekspersonal.setCaption("Beantwortung Bibliothekspersonal, "+uhrzeit +" Uhr: "+beantwortungzaehler);
+		bBeantwortungBibliothekspersonal.setCaption("Beant. Bibliothekspersonal, "+uhrzeit +" Uhr: "+beantwortungzaehler);
 	}
 	
 	private void setBenutzerCaption() {

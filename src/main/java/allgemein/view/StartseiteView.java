@@ -71,7 +71,7 @@ public class StartseiteView extends Composite implements View {
 		Label lText = new Label();
 		lText.setValue("Startseite");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-		
+
 		bBenutzungsstatistikBB = new Button();
 		bBenutzungsstatistikBB.setCaption("Benutzungsstatistik BB");
 		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_LARGE);
@@ -101,45 +101,53 @@ public class StartseiteView extends Composite implements View {
 		bLogout.addClickListener(createClickListener());
 
 		// Erstellt ein GridLayout, welches je nach User andere Button anzeigt
-		GridLayout grid = new GridLayout(2, 3);
+		GridLayout grid = new GridLayout(3, 3);
 		grid.setSizeFull();
 		user = VaadinSession.getCurrent().getAttribute("user").toString();
 		grid.addComponent(bLogout, 0, 0);
 		grid.addComponent(lText, 1, 0);
+		grid.addComponent(new Label(), 2, 0);
 		if (user.equals("Admin Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
-			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(bBenutzungsstatistikLL, 1, 1);
+			grid.addComponent(bBelegungWinti, 2, 1);
 			grid.addComponent(bExportWinti, 0, 2);
 			grid.addComponent(bPasswort, 1, 2);
+			grid.addComponent(new Label(), 2, 2);
 		} else if (user.equals("Mitarbeitende Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
 			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(new Label(), 2, 1);
 			grid.addComponent(new Label(), 0, 2);
 			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(new Label(), 2, 2);
 		} else if (user.equals("Studentische Mitarbeitende Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikLL, 0, 1);
 			grid.addComponent(bBelegungWinti, 1, 1);
+			grid.addComponent(new Label(), 2, 1);
 			grid.addComponent(new Label(), 0, 2);
 			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(new Label(), 2, 2);
 		} else if (user.equals("Admin Wädenswil")) {
 			grid.addComponent(bPasswort, 1, 2);
 		} else if (user.equals("Mitarbeitende Wädenswil")) {
 
-		} else
-
-			System.out.println(grid.getColumns() + "  " + grid.getRows());
+		}
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
 				Component c = grid.getComponent(col, row);
 				grid.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
 
-				if(row != 0) {
-					c.setHeight("50%");
-					c.setWidth("50%");
+				if (row != 0) {
+					c.setHeight("70%");
+					c.setWidth("70%");
 				}
 			}
 		}
+		grid.setRowExpandRatio(0, 0.1f);
+		grid.setRowExpandRatio(1, 0.45f);
+		grid.setRowExpandRatio(2, 0.45f);
 
 		mainLayout.addComponent(grid);
 	}
@@ -152,7 +160,7 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bBenutzungsstatistikBB) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
-				
+
 				if (e.getSource() == bBenutzungsstatistikLL) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
@@ -161,7 +169,7 @@ public class StartseiteView extends Composite implements View {
 					if (user.equals("Studentische Mitarbeitende Winterthur")) {
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ StockwerkEnum.LL.toString() + '/' + false + '/' + 1 + '/' + " ");
-					}else {
+					} else {
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
 					}
@@ -174,7 +182,7 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bPasswort) {
 					getUI().getNavigator().navigateTo(PasswortView.NAME);
 				}
-				
+
 				if (e.getSource() == bLogout) {
 					getUI().getNavigator().removeView(StartseiteView.NAME);
 					getUI().getNavigator().removeView(PasswortView.NAME);
