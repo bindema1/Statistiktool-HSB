@@ -9,8 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Das ist die Datenklasse mit allen Attributen, damit man einen Wintikurier in
- * die Tabelle 'Wintikurier' schreiben kann.
+ * Das ist die Datenklasse mit allen Attributen, damit man einen Internenkurier
+ * in die Tabelle 'Internerkurier' schreiben kann. Der Interne Kurier ist für
+ * Wädenswil
  * 
  * @author Marvin Bindemann
  */
@@ -19,11 +20,11 @@ import javax.persistence.Table;
 public class Internerkurier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int internerkurier_ID;
-	
+
 	private int anzahl_Reidbach;
 	private int anzahl_RA;
 	private int anzahl_GS;
@@ -46,7 +47,7 @@ public class Internerkurier implements Serializable {
 	public void decreaseAnzahl_Reidbach() {
 		anzahl_Reidbach--;
 	}
-	
+
 	public void increaseAnzahl_RA() {
 		anzahl_RA++;
 	}
@@ -54,7 +55,7 @@ public class Internerkurier implements Serializable {
 	public void decreaseAnzahl_RA() {
 		anzahl_RA--;
 	}
-	
+
 	public void increaseAnzahl_GS() {
 		anzahl_GS++;
 	}
@@ -126,5 +127,5 @@ public class Internerkurier implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }

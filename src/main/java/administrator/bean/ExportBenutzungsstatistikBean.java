@@ -2,9 +2,14 @@ package administrator.bean;
 
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
+/**
+ * Bean für den Export. Das Bean ist sogesagt nur ein Container für Dateninhalt
+ * 
+ * @author Marvin Bindemann
+ */
 public class ExportBenutzungsstatistikBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private int kw;
 	private String wochentag;
 	private String datum;

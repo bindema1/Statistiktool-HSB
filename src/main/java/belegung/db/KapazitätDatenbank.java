@@ -74,7 +74,7 @@ public class KapazitätDatenbank {
 	/**
 	 * @return Kapazität
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public Kapazität selectKapazitätForStockwerk(StockwerkEnum stockwerk) {
 
 		Session tempSession = null;

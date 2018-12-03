@@ -24,6 +24,7 @@ import benutzungsstatistik.model.Wintikurier;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class BenutzungsstatistikDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -116,7 +117,7 @@ public class BenutzungsstatistikDatenbank {
 	/**
 	 * @return Liste von allen Benutzungsstatistiken
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Benutzungsstatistik> selectAllBenutzungsstatistiken() {
 
 		Session tempSession = null;
@@ -154,7 +155,7 @@ public class BenutzungsstatistikDatenbank {
 	 * @return Benutzungsstatistik für ein bestimmtes Datum an einem bestimmten
 	 *         Standort
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Benutzungsstatistik selectBenutzungsstatistikForDateAndStandort(Date date, StandortEnum standort) {
 
 		Session tempSession = null;
@@ -199,13 +200,14 @@ public class BenutzungsstatistikDatenbank {
 		// Falls es keine Benutzungsstatistik für das Datum gibt, erstelle eine
 		// Benutzungsstatistik
 		if (benutzungsstatistik == null) {
-//			WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
-			Wintikurier wintikurier = new Wintikurier(0, 0, 0, 0);
-//			wintikurierDB.insertWintikurier(wintikurier);
+			if(standort == StandortEnum.WINTERTHUR_BB) {
+				benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, new Wintikurier(0, 0, 0, 0));
+			}else if(standort == StandortEnum.WINTERTHUR_LL) {
+				benutzungsstatistik = new Benutzungsstatistik(date, standort);
+			}else if(standort == StandortEnum.WÄDENSWIL) {
+				benutzungsstatistik = new Benutzungsstatistik(date, 0, standort, new Internerkurier(0, 0, 0));
+			}
 			
-			Internerkurier internerkurier = new Internerkurier(0, 0, 0);
-
-			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier, internerkurier);
 			insertBenutzungsstatistik(benutzungsstatistik);
 			System.out.println("Benutzungsstatistik gespeichert " + benutzungsstatistik.getBenutzungsstatistik_ID());
 		}
@@ -216,7 +218,7 @@ public class BenutzungsstatistikDatenbank {
 	/**
 	 * @return Benutzungsstatistik für eine ID
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Benutzungsstatistik findBenutzungsstatistikById(int benutzungsstatistik_ID) {
 
 		Session tempSession = null;

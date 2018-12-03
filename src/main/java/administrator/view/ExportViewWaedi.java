@@ -46,6 +46,11 @@ import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Internerkurier;
 import benutzungsstatistik.model.Telefonkontakt;
 
+/**
+ * View um alle Daten für Wädenswil zu exportieren
+ * 
+ * @author Marvin Bindemann
+ */
 public class ExportViewWaedi extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
@@ -68,17 +73,26 @@ public class ExportViewWaedi extends Composite implements View {
 	private Grid<ExportBelegungNormalBean> tabelleBelegungNormal;
 	private CheckBoxGroup<String> checkUhrzeit;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
-		// mainLayout.setHeight("100%");
+		mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
 		initComponents();
@@ -92,11 +106,14 @@ public class ExportViewWaedi extends Composite implements View {
 
 	@SuppressWarnings("static-access")
 	private void initData() {
+		// Nimmt den heutigen Tag als Start- und Enddatum
 		startDate = startDate.now();
 		endDate = endDate.now();
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		Label lText = new Label();
@@ -108,6 +125,7 @@ public class ExportViewWaedi extends Composite implements View {
 		datumVon.setDateFormat("dd.MM.yyyy");
 		datumVon.setValue(startDate);
 		datumVon.addValueChangeListener(event -> {
+			// Setzt das gewählte Datum
 			startDate = event.getValue();
 		});
 
@@ -116,6 +134,7 @@ public class ExportViewWaedi extends Composite implements View {
 		datumBis.setDateFormat("dd.MM.yyyy");
 		datumBis.setValue(endDate);
 		datumBis.addValueChangeListener(event -> {
+			// Setzt das gewählte Datum
 			endDate = event.getValue();
 		});
 
@@ -135,7 +154,7 @@ public class ExportViewWaedi extends Composite implements View {
 		FileDownloader excelFileDownloader4 = new FileDownloader(excelStreamResource4);
 		excelFileDownloader4.extend(bExportBenutzung);
 
-		// Download Excelfile für Wintikurier pro Tag
+		// Download Excelfile für Interner Kurier pro Tag
 		bExportInternerkurierTag = new Button();
 		bExportInternerkurierTag.setCaption("Interner Kurier pro Tag exportieren");
 		bExportInternerkurierTag.addClickListener(createClickListener());
@@ -146,7 +165,7 @@ public class ExportViewWaedi extends Composite implements View {
 		FileDownloader excelFileDownloader = new FileDownloader(excelStreamResource);
 		excelFileDownloader.extend(bExportInternerkurierTag);
 
-		// Download Excelfile für Wintikurier pro Monat
+		// Download Excelfile für Interner Kurier pro Monat
 		bExportInternerkurierMonat = new Button();
 		bExportInternerkurierMonat.setCaption("Interner Kurier pro Monat exportieren");
 		bExportInternerkurierMonat.addClickListener(createClickListener());
@@ -162,6 +181,7 @@ public class ExportViewWaedi extends Composite implements View {
 		lBelegung.setValue("Belegung");
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
+		// Checkbox um die Zeit zu wählen
 		List<String> dataUhrzeit = Arrays.asList("9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr");
 		checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
 		checkUhrzeit.select(dataUhrzeit.get(3));
@@ -169,6 +189,7 @@ public class ExportViewWaedi extends Composite implements View {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
+		// Download Excelfile für Belegung
 		bExportBelegung = new Button();
 		bExportBelegung.setCaption("Belegung exportieren");
 		bExportBelegung.addClickListener(createClickListener());
@@ -179,6 +200,7 @@ public class ExportViewWaedi extends Composite implements View {
 		FileDownloader excelFileDownloader6 = new FileDownloader(excelStreamResource6);
 		excelFileDownloader6.extend(bExportBelegung);
 
+		// Download Excelfile für Belegung detailliert
 		bExportAllBelegung = new Button();
 		bExportAllBelegung.setCaption("Belegung komplett exportieren");
 		bExportAllBelegung.addClickListener(createClickListener());
@@ -233,13 +255,16 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für Standort Wädenswil
 				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
 
+				// Setzt die Rechercheberatung
 //				beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 //						sdf.format(datum), "", "Rechercheberatung", benutzungsstatistik.getAnzahl_Rechercheberatung()));
 
@@ -250,6 +275,7 @@ public class ExportViewWaedi extends Composite implements View {
 					// Setze die Uhrzeit für den Export
 					String uhrzeit = getUhrzeitStringByInt(i);
 
+					// Setzt die Email der Benutzungsstatistik
 					int emailzaehler = 0;
 					for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
@@ -259,6 +285,7 @@ public class ExportViewWaedi extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Email", emailzaehler));
 
+					// Setzt die Intensivfrage der Benutzungsstatistik
 					int intensivzaehler = 0;
 					for (Intensivfrage in : benutzungsstatistik.getIntensivfrageListe()) {
 						if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
@@ -268,6 +295,7 @@ public class ExportViewWaedi extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Intensive Frage", intensivzaehler));
 
+					// Setzt den Benutzerkontakt der Benutzungsstatistik
 					int benutzerzaehler = 0;
 					for (Benutzerkontakt k : benutzungsstatistik.getBenutzerkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
@@ -277,6 +305,7 @@ public class ExportViewWaedi extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Benutzerkontakt", benutzerzaehler));
 
+					// Setzt den Telefonkontakt der Benutzungsstatistik
 					int telefonzaehler = 0;
 					for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == i) {
@@ -289,6 +318,7 @@ public class ExportViewWaedi extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einer Tabelle da
 		tabelleBenutzungsstatistik.setItems(beanListe);
 	}
 
@@ -319,13 +349,16 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such den Internen Kurier für das ausgewählte Datum für Wädenswil
 				Internerkurier internerkurier = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WÄDENSWIL).getInternerkurier();
 
+				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "Kampus Reidbach", internerkurier.getAnzahl_Reidbach()));
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
@@ -335,6 +368,7 @@ public class ExportViewWaedi extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleWintikurierTag.setItems(beanListe);
 	}
 
@@ -349,10 +383,12 @@ public class ExportViewWaedi extends Composite implements View {
 
 			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+			// Such den Internen Kurier für das ausgewählte Datum für Wädenswil
 			Internerkurier internerkurier = benutzungsstatistikDB
 					.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WÄDENSWIL).getInternerkurier();
 
 			if (!getWochentagForDate(date).equals("Sonntag")) {
+				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "Kampus Reidbach", internerkurier.getAnzahl_Reidbach()));
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
@@ -365,12 +401,16 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Einträge durch und erstellt ExportWintikurierMonatBean
 		List<ExportWintikurierMonatBean> beanListeMonat = new ArrayList<>();
 
+		// Geht durch alle Jahre
 		for (int jahr = startDate.getYear(); jahr <= endDate.getYear(); jahr++) {
+			// Geht durch alle Monate
 			for (int monat = 0; monat <= 11; monat++) {
+				// Setzt die Zaehler am Anfang des Monats auf 0
 				int zaehlerRE = 0;
 				int zaehlerRA = 0;
 				int zaehlerGS = 0;
 
+				// Geht durch die Liste aller Einträge für einen Tag
 				for (ExportWintikurierTagBean e : beanListeTag) {
 					Date datum = null;
 					try {
@@ -380,6 +420,8 @@ public class ExportViewWaedi extends Composite implements View {
 					}
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(datum);
+					// Wenn das Jahr und der Monat für einen Eintrag identisch ist, erhöhe Zähler um
+					// 1
 					if (calendar.get(Calendar.YEAR) == jahr && calendar.get(Calendar.MONTH) == monat) {
 						if (e.getDepartement().equals("Kampus Reidbach")) {
 							zaehlerRE += e.getTotal();
@@ -391,6 +433,7 @@ public class ExportViewWaedi extends Composite implements View {
 					}
 				}
 
+				// Erstellt Einträge für einen Monat
 				beanListeMonat
 						.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Kampus Reidbach", zaehlerRE));
 				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Kampus RA", zaehlerRA));
@@ -398,6 +441,7 @@ public class ExportViewWaedi extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleWintikurierMonat.setItems(beanListeMonat);
 	}
 
@@ -410,10 +454,12 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für Wädenswil
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
 				String bereich = "Wädenswil";
 
@@ -525,6 +571,7 @@ public class ExportViewWaedi extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBelegungKomplett.setItems(beanListe);
 	}
 
@@ -537,12 +584,14 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für Wädenswil
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
-				
+
 //				List<UhrzeitEnum> enumListe = new ArrayList<>();
 //				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
 //				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
@@ -648,9 +697,16 @@ public class ExportViewWaedi extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBelegungNormal.setItems(beanListe);
 	}
 
+	/**
+	 * Gibt einen Monat als String zurück für eine Zahl
+	 * 
+	 * @param monat
+	 * @return String
+	 */
 	private String getMonatForInt(int monat) {
 
 		switch (monat) {
@@ -683,6 +739,12 @@ public class ExportViewWaedi extends Composite implements View {
 		return null;
 	}
 
+	/**
+	 * Gibt den Wochentag als String zurück für ein Datum
+	 * 
+	 * @param date
+	 * @return String
+	 */
 	private String getWochentagForDate(LocalDate date) {
 
 		switch (date.getDayOfWeek().toString()) {

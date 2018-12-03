@@ -3,12 +3,13 @@ package belegung.bean;
 import java.io.Serializable;
 
 /**
- * Beenklasse um Inhalt in Tabellen zu füllen
+ * Beenklasse um Inhalt in Tabellen zu füllen von der Tagesübersicht einer Belegung
+ * 
  * @author Marvin Bindemann
- *
  */
 public class TagesübersichtBelegungBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String uhrzeit;
 	private int arbeitsplätze;
 	private int sektorA;

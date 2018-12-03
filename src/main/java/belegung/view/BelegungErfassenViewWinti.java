@@ -94,8 +94,12 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	private List<String> data;
 	private Grid<TagesübersichtBelegungBean> tabelleUhrzeiten;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
@@ -103,8 +107,13 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
 		initComponents();
@@ -117,10 +126,13 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	}
 
 	private void initData() {
+		// Setzt das Datum
 		date = belegung.getDatum();
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -201,7 +213,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		data = null;
 		NativeSelect<String> uhrzeitListSelect;
 		if (korrektur == true) {
-			data = Arrays.asList(new String[] { "Bitte wählen ↓", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
+			data = Arrays.asList(
+					new String[] { "Bitte wählen ↓", "9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr" });
 			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 			uhrzeitListSelect.setEmptySelectionAllowed(false);
 			if (ausgewählteUhrzeit != null) {
@@ -262,6 +275,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 			Notification.show(event.getValue(), Type.TRAY_NOTIFICATION);
 
+			// Setzt die ausgewählte Uhrzeit
 			switch (event.getValue()) {
 			case "9 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.NEUN;
@@ -288,7 +302,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 			if (ausgewählteUhrzeit != null) {
 				// Das GridLayout mit Zahlen füllen
-				// alleButtonRotSetzenOhneZahlen();
 				layoutMitZahlenFüllen();
 
 				// Tabelle füllen
@@ -306,6 +319,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
 
+			// Sucht die Belegung für das ausgewählte Datum und für den jeweiligen Standort
 			if (stockwerkEnum == StockwerkEnum.LL) {
 				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
 			} else if (stockwerkEnum == StockwerkEnum.WÄDI) {
@@ -319,6 +333,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			setButtonEnabled(false);
 		});
 
+		// Tabelle für die Übersicht ganz oben
 		tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
 		tabelleUhrzeitenAufsetzen(tabelleUhrzeiten);
 		if (korrektur == false) {
@@ -449,6 +464,11 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		mainLayout.addComponent(grid);
 	}
 
+	/**
+	 * Enabled oder Disabled alle Button
+	 * 
+	 * @param wert
+	 */
 	private void setButtonEnabled(boolean wert) {
 		bPersonen.setEnabled(wert);
 		bPersonen5.setEnabled(wert);
@@ -468,6 +488,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
 
+		// Sucht das richtige Stockwerk
 		Stockwerk stockwerk = null;
 		for (Stockwerk s : belegung.getStockwerkListe()) {
 			if (s.getName() == stockwerkEnum) {
@@ -478,8 +499,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		UhrzeitEnum uhrzeitEnum = ausgewählteUhrzeit;
 
 		TagesübersichtBelegungBean t = new TagesübersichtBelegungBean();
+		// Setzt den UhrzeitString für die ausgewählte Uhrzeit
 		String uhrzeitEnumString = "";
-
 		switch (uhrzeitEnum) {
 		case NEUN:
 			uhrzeitEnumString = 9 + "";
@@ -503,24 +524,28 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		uhrzeitEnumString = uhrzeitEnumString + " Uhr";
 		t.setUhrzeit(uhrzeitEnumString);
 
+		// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Arbeitsplätzen
 		for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 			if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
 				t.setArbeitsplätze(arbeitsplätze.getAnzahlPersonen());
 			}
 		}
 
+		// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den SektorenA
 		for (SektorA sektorA : stockwerk.getSektorAListe()) {
 			if (uhrzeitEnum == sektorA.getUhrzeit()) {
 				t.setSektorA(sektorA.getAnzahlPersonen());
 			}
 		}
 
+		// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den SektorenB
 		for (SektorB sektorB : stockwerk.getSektorBListe()) {
 			if (uhrzeitEnum == sektorB.getUhrzeit()) {
 				t.setSektorB(sektorB.getAnzahlPersonen());
 			}
 		}
 
+		// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Gruppenräumen
 		for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 			if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
 				t.setGruppenräume(gruppenräume.getAnzahlRäume());
@@ -528,6 +553,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			}
 		}
 
+		// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Carrels
 		for (Carrels carrels : stockwerk.getCarrelsListe()) {
 			if (uhrzeitEnum == carrels.getUhrzeit()) {
 				t.setCarrels(carrels.getAnzahlRäume());
@@ -543,7 +569,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	}
 
 	/**
-	 * Setzt die Tabelle auf
+	 * Setzt die Tabelle auf für die richtige Uhrzeit mit den richtigen
+	 * Namen/Sektoren
 	 * 
 	 * @param tabelleUhrzeiten
 	 */
@@ -586,6 +613,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	 */
 	private Component createAbsoluteLayoutForImage() {
 
+		// Erstellt alle Button, um auf dem Bild zu klicken
 		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
 		bArbeitsplätze = new Button();
 		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_BORDERLESS);
@@ -603,14 +631,11 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		bCarrels.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bCarrels.addClickListener(createClickListener());
 
-		if (korrektur == false) {
-			// alleButtonRotSetzenOhneZahlen();
-		}
-
 		if (räumeVorhanden == true) {
 			bPersonen.setCaption("+1 Person");
 		}
 
+		// Setzt das Bild für das jeweilige Stockwerk
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
 			image = new Image(null, new ClassResource("/belegung/EG-lang2.png"));
@@ -657,6 +682,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			bCarrels.setWidth("125px");
 		}
 
+		// Füllt die Tabelle mit Zahlen
 		layoutMitZahlenFüllen();
 
 		return absoluteLayout;
@@ -671,10 +697,9 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		tTotalPersonen.setValue("0");
 		tTotalRäume.setValue("0");
 
+		// Prüft alle Stockwerke und setzt das jeweilige Layout dafür
 		if (stockwerkEnum == StockwerkEnum.EG) {
 			if (erfassungsSchritt == 0) {
-//				bArbeitsplätze.setStyleName(ValoTheme.BUTTON_PRIMARY);
-
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
 						for (Arbeitsplätze a : s.getArbeitsplatzListe()) {
@@ -685,7 +710,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 					}
 				}
 			} else {
-//				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				bRäume.setCaption("+1 Gruppenaum");
 
 				for (Stockwerk s : belegung.getStockwerkListe()) {
@@ -740,8 +764,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 						}
 					}
 				}
-
-//				bGruppenräume.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// Carrels
 			} else if (erfassungsSchritt == 2) {
 				bRäume.setCaption("+1 Carrel");
@@ -756,7 +778,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 						}
 					}
 				}
-//				bCarrels.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// SektorA
 			} else if (erfassungsSchritt == 3) {
 				bPersonen.setCaption("+1 Sektor A");
@@ -771,7 +792,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 					}
 				}
 
-//				bSektorA.setStyleName(ValoTheme.BUTTON_PRIMARY);
 				// SektorB
 			} else if (erfassungsSchritt == 4) {
 				bPersonen.setCaption("+1 Sektor B");
@@ -785,8 +805,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 						}
 					}
 				}
-
-//				bSektorB.setStyleName(ValoTheme.BUTTON_PRIMARY);
 			}
 
 		}
@@ -794,11 +812,17 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		// Der Eingang der Belegung ist eine lange URL, welche durch / abgetrennt wird
 		String args[] = event.getParameters().split("/");
+		// Datum für die Belegung
 		String datumString = args[0];
+		// Stockwerk der Belegung
 		String stockwerkString = args[1];
+		// Ist es eine Korrektur oder nicht
 		String korrekturString = args[2];
+		// Welchen Erfassungsschritt gibt es
 		String erfassungsSchrittString = args[3];
+		// Welche Uhrzeit wurde im Dropdown ausgewählt
 		String ausgewählteUhrzeitString = args[4];
 
 		if (datumString.equals(" ")) {
@@ -867,7 +891,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				if (e.getSource() == bZurueck) {
 					if (korrektur == true) {
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
-								+ stockwerkEnum.toString() + '/' + false + '/' + 0 +'/' +" ");
+								+ stockwerkEnum.toString() + '/' + false + '/' + 0 + '/' + " ");
 					} else {
 						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
 					}
@@ -898,6 +922,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				}
 
 				if (e.getSource() == bValidieren) {
+					// Prüft alle Eingaben und weisst den User darauf hin, wenn es irgendwo eine 0
+					// gibt
 
 					Stockwerk stockwerk = null;
 					for (Stockwerk s : belegung.getStockwerkListe()) {
@@ -997,6 +1023,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				}
 
 				if (e.getSource() == bSpeichern) {
+					// Speichert den Wert in der Datenbank
 
 					try {
 						int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
@@ -1170,6 +1197,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 							}
 						}
 
+						// Update der Belegung
 						belegungDB.updateBelegung(belegung);
 						fülleTabelleUhrzeiten(tabelleUhrzeiten);
 
@@ -1182,8 +1210,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				}
 
 				if (e.getSource() == bTagesübersicht) {
-					getUI().getNavigator().navigateTo(
-							TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + stockwerkEnum.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
+							+ stockwerkEnum.toString());
 				}
 
 				if (e.getSource() == bKorrektur) {
@@ -1192,7 +1220,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 								+ stockwerkEnum.toString() + '/' + true + '/' + 0 + '/' + " ");
 					} else {
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
-								+ stockwerkEnum.toString() + '/' + false + '/' + 0+ '/' + " ");
+								+ stockwerkEnum.toString() + '/' + false + '/' + 0 + '/' + " ");
 					}
 				}
 
@@ -1306,6 +1334,12 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 			}
 
+			/**
+			 * Erhöht oder vermindert das Textfield nach einer bestimmten Nummer
+			 * 
+			 * @param textfield
+			 * @param i
+			 */
 			private void erhöheOderVermindereTextfieldNachNummer(TextField textfield, int i) {
 				try {
 					int anzahl = Integer.parseInt(textfield.getValue());

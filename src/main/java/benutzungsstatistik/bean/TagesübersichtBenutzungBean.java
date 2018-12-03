@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 /**
  * Beenklasse um Inhalt in Tabellen zu füllen
+ * 
  * @author Marvin Bindemann
- *
  */
 public class TagesübersichtBenutzungBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String uhrzeit;
 	private int kontakt;
 	private int intensiv;

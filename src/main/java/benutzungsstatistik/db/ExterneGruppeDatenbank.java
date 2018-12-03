@@ -10,7 +10,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 
 /**
@@ -21,6 +20,7 @@ import benutzungsstatistik.model.ExterneGruppe;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class ExterneGruppeDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -152,7 +152,7 @@ public class ExterneGruppeDatenbank {
 	/**
 	 * @return Liste von allen ExterneGruppen
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<ExterneGruppe> selectAllExterneGruppen() {
 
 		Session tempSession = null;
@@ -190,7 +190,7 @@ public class ExterneGruppeDatenbank {
 	/**
 	 * @return Liste von allen ExterneGruppen für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<ExterneGruppe> selectAllExterneGruppenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// ExterneGruppe aus der DB auslesen

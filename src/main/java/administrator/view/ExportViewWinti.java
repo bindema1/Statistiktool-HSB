@@ -59,6 +59,11 @@ import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 
+/**
+ * View um alle Daten für Winterthur zu exportieren
+ * 
+ * @author Marvin Bindemann
+ */
 public class ExportViewWinti extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
@@ -86,17 +91,26 @@ public class ExportViewWinti extends Composite implements View {
 	private CheckBoxGroup<String> checkUhrzeit;
 	private CheckBoxGroup<String> checkStockwerk;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
-		// mainLayout.setHeight("100%");
+		mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initData();
 		initComponents();
@@ -110,11 +124,14 @@ public class ExportViewWinti extends Composite implements View {
 
 	@SuppressWarnings("static-access")
 	private void initData() {
+		// Nimmt den heutigen Tag als Start- und Enddatum
 		startDate = startDate.now();
 		endDate = endDate.now();
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		Label lText = new Label();
@@ -126,6 +143,7 @@ public class ExportViewWinti extends Composite implements View {
 		datumVon.setDateFormat("dd.MM.yyyy");
 		datumVon.setValue(startDate);
 		datumVon.addValueChangeListener(event -> {
+			// Setzt das gewählte Datum
 			startDate = event.getValue();
 		});
 
@@ -134,6 +152,7 @@ public class ExportViewWinti extends Composite implements View {
 		datumBis.setDateFormat("dd.MM.yyyy");
 		datumBis.setValue(endDate);
 		datumBis.addValueChangeListener(event -> {
+			// Setzt das gewählte Datum
 			endDate = event.getValue();
 		});
 
@@ -201,6 +220,7 @@ public class ExportViewWinti extends Composite implements View {
 		lBelegung.setValue("Belegung");
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
+		// Checkbox um die Zeit zu wählen
 		List<String> dataUhrzeit = Arrays.asList("9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr");
 		checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
 		checkUhrzeit.select(dataUhrzeit.get(3));
@@ -208,6 +228,7 @@ public class ExportViewWinti extends Composite implements View {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
 
+		// Download Excelfile für Belegung
 		bExportBelegung = new Button();
 		bExportBelegung.setCaption("Belegung exportieren");
 		bExportBelegung.setEnabled(false);
@@ -219,6 +240,7 @@ public class ExportViewWinti extends Composite implements View {
 		FileDownloader excelFileDownloader6 = new FileDownloader(excelStreamResource6);
 		excelFileDownloader6.extend(bExportBelegung);
 
+		// Checkbox um welche Bibliothek es sich handelt oder ob man beide möchte
 		List<String> dataStockwerk = Arrays.asList("Lernlandschaft", "Bibliothek");
 		checkStockwerk = new CheckBoxGroup<>("Stockwerk", dataStockwerk);
 		checkStockwerk.addValueChangeListener(event -> {
@@ -231,6 +253,7 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		});
 
+		// Download Excelfile für Belegung detailliert
 		bExportAllBelegung = new Button();
 		bExportAllBelegung.setCaption("Belegung komplett exportieren");
 		bExportAllBelegung.addClickListener(createClickListener());
@@ -280,7 +303,7 @@ public class ExportViewWinti extends Composite implements View {
 	}
 
 	/**
-	 * Sammelt alle Daten für den export der Externen Gruppe
+	 * Sammelt alle Daten für den Export der Externen Gruppe
 	 */
 	private void exportExterneGruppe() {
 		List<ExportExterneGruppeBean> beanListe = new ArrayList<>();
@@ -290,6 +313,7 @@ public class ExportViewWinti extends Composite implements View {
 
 			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+			// Such die Benutzungsstatistik für das ausgewählte Datum
 			Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
 					.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
 
@@ -299,11 +323,12 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleExterneGruppen.setItems(beanListe);
 	}
 
 	/**
-	 * Sammelt alle Daten für den export der Benutzungsstatistik Bibliothek
+	 * Sammelt alle Daten für den Export der Benutzungsstatistik Bibliothek
 	 */
 	private void exportBenutzungsstatistikBB() {
 		List<ExportBenutzungsstatistikBean> beanListe = new ArrayList<>();
@@ -311,13 +336,17 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
+				// Bibliothek
 				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
 
+				// Setzt die Rechercheberatung
 				beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "", "Rechercheberatung", benutzungsstatistik.getAnzahl_Rechercheberatung()));
 
@@ -328,6 +357,7 @@ public class ExportViewWinti extends Composite implements View {
 					// Setze die Uhrzeit für den Export
 					String uhrzeit = getUhrzeitStringByInt(i);
 
+					// Setzt die Email der Benutzungsstatistik
 					int emailzaehler = 0;
 					for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
@@ -337,6 +367,7 @@ public class ExportViewWinti extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Email", emailzaehler));
 
+					// Setzt die Intensivfrage der Benutzungsstatistik
 					int intensivzaehler = 0;
 					for (Intensivfrage in : benutzungsstatistik.getIntensivfrageListe()) {
 						if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
@@ -346,6 +377,7 @@ public class ExportViewWinti extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Intensive Frage", intensivzaehler));
 
+					// Setzt den Benutzerkontakt der Benutzungsstatistik
 					int benutzerzaehler = 0;
 					for (Benutzerkontakt k : benutzungsstatistik.getBenutzerkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
@@ -355,6 +387,7 @@ public class ExportViewWinti extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Benutzerkontakt", benutzerzaehler));
 
+					// Setzt den Telefonkontakt der Benutzungsstatistik
 					int telefonzaehler = 0;
 					for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == i) {
@@ -367,6 +400,7 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBenutzungsstatistikBB.setItems(beanListe);
 	}
 
@@ -379,10 +413,13 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
+				// Lernlandschaft
 				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
 
@@ -393,8 +430,10 @@ public class ExportViewWinti extends Composite implements View {
 					// Setze die Uhrzeit für den Export
 					String uhrzeit = getUhrzeitStringByInt(i);
 
+					// Setzt die BeantwortungBibliothekspersonal der Benutzungsstatistik
 					int beantwortungzaehler = 0;
-					for (BeantwortungBibliothekspersonal e : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
+					for (BeantwortungBibliothekspersonal e : benutzungsstatistik
+							.getBeantwortungBibliothekspersonalListe()) {
 						if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
 							beantwortungzaehler++;
 						}
@@ -402,6 +441,7 @@ public class ExportViewWinti extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Beant. Bibliothekspersonal", beantwortungzaehler));
 
+					// Setzt die Intensivfrage der Benutzungsstatistik
 					int intensivzaehler = 0;
 					for (Intensivfrage in : benutzungsstatistik.getIntensivfrageListe()) {
 						if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
@@ -411,6 +451,7 @@ public class ExportViewWinti extends Composite implements View {
 					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 							sdf.format(datum), uhrzeit, "Intensive Frage", intensivzaehler));
 
+					// Setzt den Benutzerkontakt der Benutzungsstatistik
 					int benutzerzaehler = 0;
 					for (Benutzerkontakt k : benutzungsstatistik.getBenutzerkontaktListe()) {
 						if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
@@ -423,10 +464,10 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBenutzungsstatistikLL.setItems(beanListe);
 	}
 
-	
 	/**
 	 * Gibt die Uhrzeit im Format 00:00 als String zurück
 	 * 
@@ -454,14 +495,17 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such den Wintikurier für das ausgewählte Datum für Winterthur Bibliothek
 				Wintikurier wintikurier = benutzungsstatistikDB
 						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB)
 						.getWintikurier();
 
+				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "G", wintikurier.getAnzahl_Gesundheit()));
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
@@ -473,6 +517,7 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleWintikurierTag.setItems(beanListe);
 	}
 
@@ -487,10 +532,12 @@ public class ExportViewWinti extends Composite implements View {
 
 			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+			// Such den Wintikurier für das ausgewählte Datum für Winterthur Bibliothek
 			Wintikurier wintikurier = benutzungsstatistikDB
 					.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB).getWintikurier();
 
 			if (!getWochentagForDate(date).equals("Sonntag")) {
+				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "G", wintikurier.getAnzahl_Gesundheit()));
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
@@ -505,13 +552,17 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Einträge durch und erstellt ExportWintikurierMonatBean
 		List<ExportWintikurierMonatBean> beanListeMonat = new ArrayList<>();
 
+		// Geht durch alle Jahre
 		for (int jahr = startDate.getYear(); jahr <= endDate.getYear(); jahr++) {
+			// Geht durch alle Monate
 			for (int monat = 0; monat <= 11; monat++) {
+				// Setzt die Zaehler am Anfang des Monats auf 0
 				int zaehlerG = 0;
 				int zaehlerL = 0;
 				int zaehlerT = 0;
 				int zaehlerW = 0;
 
+				// Geht durch die Liste aller Einträge für einen Tag
 				for (ExportWintikurierTagBean e : beanListeTag) {
 					Date datum = null;
 					try {
@@ -521,6 +572,8 @@ public class ExportViewWinti extends Composite implements View {
 					}
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(datum);
+					// Wenn das Jahr und der Monat für einen Eintrag identisch ist, erhöhe Zähler um
+					// 1
 					if (calendar.get(Calendar.YEAR) == jahr && calendar.get(Calendar.MONTH) == monat) {
 						if (e.getDepartement().equals("G")) {
 							zaehlerG += e.getTotal();
@@ -534,6 +587,7 @@ public class ExportViewWinti extends Composite implements View {
 					}
 				}
 
+				// Erstellt Einträge für einen Monat
 				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "G", zaehlerG));
 				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "L", zaehlerL));
 				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "T", zaehlerT));
@@ -541,6 +595,7 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleWintikurierMonat.setItems(beanListeMonat);
 	}
 
@@ -553,10 +608,13 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
+				// Bibliothek & Lernlandschaft
 				Belegung belegungBB = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
 				Belegung belegungLL = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
 				List<Belegung> belegungsListe = new ArrayList<>();
@@ -566,6 +624,7 @@ public class ExportViewWinti extends Composite implements View {
 				// Geht durch Bibliothek und Lernlandschaft
 				for (Belegung belegung : belegungsListe) {
 
+					// Setzt den Bereich
 					String bereich = null;
 					if (belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
 						bereich = "Lernlandschaft";
@@ -576,6 +635,7 @@ public class ExportViewWinti extends Composite implements View {
 					// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
 					for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 
+						// Setzt den Stockwerkname
 						String stockwerkName = null;
 						if (stockwerk.getName() == StockwerkEnum.EG) {
 							stockwerkName = "EG";
@@ -589,6 +649,7 @@ public class ExportViewWinti extends Composite implements View {
 
 						Kapazität kapazität = stockwerk.getKapzität();
 
+						// Erstellt eine Liste aller Uhrzeiten
 						List<UhrzeitEnum> enumListe = new ArrayList<>();
 						enumListe.add(UhrzeitEnum.NEUN);
 						enumListe.add(UhrzeitEnum.ELF);
@@ -597,10 +658,11 @@ public class ExportViewWinti extends Composite implements View {
 						enumListe.add(UhrzeitEnum.SIEBZEHN);
 						enumListe.add(UhrzeitEnum.NEUNZEHN);
 
+						// Geht einzeln alle Uhrzeiten durch
 						for (UhrzeitEnum uhrzeitEnum : enumListe) {
 
+							// Setzt den Uhrzeit String für die Excel-Tabelle
 							String uhrzeit = null;
-
 							switch (uhrzeitEnum) {
 							case NEUN:
 								uhrzeit = getUhrzeitStringByInt(9);
@@ -622,6 +684,8 @@ public class ExportViewWinti extends Composite implements View {
 								break;
 							}
 
+							// Geht durch alle Arbeitsplätze des Stockwerks und fügt für die richtige
+							// Uhrzeit den Eintrag einer Liste hinzu
 							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
 									int auslastung = arbeitsplätze.getAnzahlPersonen() * 100
@@ -633,6 +697,8 @@ public class ExportViewWinti extends Composite implements View {
 								}
 							}
 
+							// Geht durch alle SektorA des Stockwerks und fügt für die richtige Uhrzeit den
+							// Eintrag einer Liste hinzu
 							for (SektorA sektorA : stockwerk.getSektorAListe()) {
 								if (uhrzeitEnum == sektorA.getUhrzeit()) {
 									int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getMaxSektorA();
@@ -642,6 +708,8 @@ public class ExportViewWinti extends Composite implements View {
 								}
 							}
 
+							// Geht durch alle SektorB des Stockwerks und fügt für die richtige Uhrzeit den
+							// Eintrag einer Liste hinzu
 							for (SektorB sektorB : stockwerk.getSektorBListe()) {
 								if (uhrzeitEnum == sektorB.getUhrzeit()) {
 									int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getMaxSektorB();
@@ -651,6 +719,8 @@ public class ExportViewWinti extends Composite implements View {
 								}
 							}
 
+							// Geht durch alle Gruppenräume des Stockwerks und fügt für die richtige Uhrzeit
+							// den Eintrag einer Liste hinzu
 							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
 									int auslastung = gruppenräume.getAnzahlPersonen() * 100
@@ -666,6 +736,8 @@ public class ExportViewWinti extends Composite implements View {
 								}
 							}
 
+							// Geht durch alle Carrels des Stockwerks und fügt für die richtige Uhrzeit den
+							// Eintrag einer Liste hinzu
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
 									int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getMaxCarrels();
@@ -688,6 +760,7 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBelegungKomplett.setItems(beanListe);
 	}
 
@@ -700,15 +773,19 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
+			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
 				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 
+				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
+				// Bibliothek & Lernlandschaft
 				Belegung belegungBB = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_BB);
 				Belegung belegungLL = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
+
+				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
 				List<Belegung> belegungsListe = new ArrayList<>();
 				Set<String> selectedBelegung = checkStockwerk.getSelectedItems();
-				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
 				for (String s : selectedBelegung) {
 					if (s.equals("Bibliothek")) {
 						belegungsListe.add(belegungBB);
@@ -717,9 +794,9 @@ public class ExportViewWinti extends Composite implements View {
 					}
 				}
 
+				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
 				List<UhrzeitEnum> enumListe = new ArrayList<>();
 				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
-				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
 				for (String s : selectedUhrzeit) {
 					if (s.equals("9 Uhr"))
 						enumListe.add(UhrzeitEnum.NEUN);
@@ -764,6 +841,7 @@ public class ExportViewWinti extends Composite implements View {
 					// Geht durch Bibliothek und Lernlandschaft
 					for (Belegung belegung : belegungsListe) {
 
+						// Setzt den Bereich
 						String bereich = null;
 						if (belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
 							bereich = "Lernlandschaft";
@@ -777,36 +855,42 @@ public class ExportViewWinti extends Composite implements View {
 						// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
 						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 
+							// Zählt die Maximale Kapazität für das Stockwerk zusammen
 							Kapazität kapazität = stockwerk.getKapzität();
 							int maxKapazität = kapazität.getMaxArbeitsplätze() + kapazität.getMaxSektorA()
 									+ kapazität.getMaxSektorB() + kapazität.getMaxGruppenräume()
 									+ kapazität.getMaxCarrels();
 							maxAlleKapazitäten += maxKapazität;
 
+							// Zählt alle Personen zusammen für Arbeitsplätze
 							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
 									personenZaehler += arbeitsplätze.getAnzahlPersonen();
 								}
 							}
 
+							// Zählt alle Personen zusammen für SektorA
 							for (SektorA sektorA : stockwerk.getSektorAListe()) {
 								if (uhrzeitEnum == sektorA.getUhrzeit()) {
 									personenZaehler += sektorA.getAnzahlPersonen();
 								}
 							}
 
+							// Zählt alle Personen zusammen für SektorB
 							for (SektorB sektorB : stockwerk.getSektorBListe()) {
 								if (uhrzeitEnum == sektorB.getUhrzeit()) {
 									personenZaehler += sektorB.getAnzahlPersonen();
 								}
 							}
 
+							// Zählt alle Personen zusammen für Gruppenräume
 							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
 									personenZaehler += gruppenräume.getAnzahlPersonen();
 								}
 							}
 
+							// Zählt alle Personen zusammen für Carrels
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
 									personenZaehler += carrels.getAnzahlPersonen();
@@ -814,6 +898,8 @@ public class ExportViewWinti extends Composite implements View {
 							}
 						}
 
+						// Berechnet die Auslastung und fügt sie der Liste hinzu für eine jeweilige
+						// Uhrzeit in der Bibliothek oder Lernlandschaft
 						int auslastung = personenZaehler * 100 / maxAlleKapazitäten;
 						beanListe.add(new ExportBelegungNormalBean(getKWForDate(datum), getWochentagForDate(date),
 								sdf.format(datum), uhrzeit, bereich, personenZaehler, auslastung + "%"));
@@ -822,9 +908,16 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
+		// Stellt die gesamte Liste in einem Grid zusammen für den Export
 		tabelleBelegungNormal.setItems(beanListe);
 	}
 
+	/**
+	 * Gibt einen Monat als String zurück für eine Zahl
+	 * 
+	 * @param monat
+	 * @return String
+	 */
 	private String getMonatForInt(int monat) {
 
 		switch (monat) {
@@ -857,6 +950,12 @@ public class ExportViewWinti extends Composite implements View {
 		return null;
 	}
 
+	/**
+	 * Gibt den Wochentag als String zurück für ein Datum
+	 * 
+	 * @param date
+	 * @return String
+	 */
 	private String getWochentagForDate(LocalDate date) {
 
 		switch (date.getDayOfWeek().toString()) {
@@ -901,7 +1000,7 @@ public class ExportViewWinti extends Composite implements View {
 				if (e.getSource() == bExportBenutzungBB) {
 					exportBenutzungsstatistikBB();
 				}
-				
+
 				if (e.getSource() == bExportBenutzungLL) {
 					exportBenutzungsstatistikLL();
 				}

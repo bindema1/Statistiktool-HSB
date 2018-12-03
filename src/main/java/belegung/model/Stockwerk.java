@@ -45,6 +45,7 @@ public class Stockwerk implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Kapazität kapzität;
 
+	//Das Stockwerk hat eine Liste von allen Arbeitsplätzen/Sektoren/Räumen
 	@OneToMany(mappedBy = "stockwerk", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Arbeitsplätze> arbeitsplatzListe = new ArrayList<>();
 

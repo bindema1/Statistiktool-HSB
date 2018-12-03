@@ -69,8 +69,12 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 	private Image image;
 	private GridLayout grid;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
@@ -78,10 +82,14 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -91,11 +99,9 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -117,6 +123,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		bKorrektur.addStyleName(ValoTheme.BUTTON_LARGE);
 		bKorrektur.addClickListener(createClickListener());
 
+		// Erstellt eine Tabelle für alle Uhrzeiten
 		Grid<TagesübersichtBelegungBean> tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
 		tabelleUhrzeitenAufsetzen(tabelleUhrzeiten);
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
@@ -131,6 +138,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
 
+			// Sucht die Belegung für ein gewähltes Datum und für ein bestimmten Standort
 			if (stockwerkEnum == StockwerkEnum.LL) {
 				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
 			} else if (stockwerkEnum == StockwerkEnum.WÄDI) {
@@ -175,18 +183,6 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		}
 
-//		VerticalLayout overallLayout = new VerticalLayout();
-//		HorizontalLayout headerLayout = new HorizontalLayout();
-//		headerLayout.setWidth("100%");
-//		headerLayout.setSpacing(true);
-//		headerLayout.addComponent(bZurueck);
-//		headerLayout.addComponent(lText);
-//		headerLayout.addComponent(datefield);
-//		headerLayout.addComponent(bErfassung);
-//		headerLayout.addComponent(bKorrektur);
-//		overallLayout.addComponent(headerLayout);
-//		overallLayout.addComponent(tabelleUhrzeiten);
-
 		grid = new GridLayout(5, 12);
 		grid.addStyleName("backgroundTages");
 		grid.setSizeFull();
@@ -202,28 +198,28 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		grid.addComponent(bEG, 0, 10);
 		grid.addComponent(new Label(), 0, 11);
 		grid.addComponent(image, 1, 7, 4, 11);
-		
+
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
 				Component c = grid.getComponent(col, row);
 				grid.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
-				
+
 				// Button grösser machen
 				if (row == 0) {
 					if (col == 1 || col == 2) {
 						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
 					}
-				}else if(row >= 1 && row <= 6){
-					//Tabelle
+				} else if (row >= 1 && row <= 6) {
+					// Tabelle
 					c.setHeight("96%");
 					c.setWidth("95%");
-				}else {
+				} else {
 					c.setHeight("100%");
 					c.setWidth("100%");
-					
+
 					if (col == 0 && row >= 7) {
 						c.setWidth("70%");
-					} 
+					}
 				}
 			}
 		}
@@ -239,6 +235,8 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBelegungBean> tabelleUhrzeiten) {
 
 		List<TagesübersichtBelegungBean> beanListe = new ArrayList<>();
+
+		// Fügt alle Uhrzeiten einer Liste hinzu
 		List<UhrzeitEnum> enumListe = new ArrayList<>();
 		enumListe.add(UhrzeitEnum.NEUN);
 		enumListe.add(UhrzeitEnum.ELF);
@@ -247,6 +245,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		enumListe.add(UhrzeitEnum.SIEBZEHN);
 		enumListe.add(UhrzeitEnum.NEUNZEHN);
 
+		// Sucht das richtige Stockwerk
 		Stockwerk stockwerk = null;
 		for (Stockwerk s : belegung.getStockwerkListe()) {
 			if (s.getName() == stockwerkEnum) {
@@ -254,11 +253,13 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			}
 		}
 
+		// Geht durch alle Uhrzeiten durch
 		for (UhrzeitEnum uhrzeitEnum : enumListe) {
 
 			TagesübersichtBelegungBean t = new TagesübersichtBelegungBean();
-			String uhrzeitEnumString = "";
 
+			// Setzt den UhrzeitString für die ausgewählte Uhrzeit
+			String uhrzeitEnumString = "";
 			switch (uhrzeitEnum) {
 			case NEUN:
 				uhrzeitEnumString = 9 + "";
@@ -282,24 +283,28 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			uhrzeitEnumString = uhrzeitEnumString + " Uhr";
 			t.setUhrzeit(uhrzeitEnumString);
 
+			// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Arbeitsplätzen
 			for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 				if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
 					t.setArbeitsplätze(arbeitsplätze.getAnzahlPersonen());
 				}
 			}
 
+			// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den SektorenA
 			for (SektorA sektorA : stockwerk.getSektorAListe()) {
 				if (uhrzeitEnum == sektorA.getUhrzeit()) {
 					t.setSektorA(sektorA.getAnzahlPersonen());
 				}
 			}
 
+			// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den SektorenB
 			for (SektorB sektorB : stockwerk.getSektorBListe()) {
 				if (uhrzeitEnum == sektorB.getUhrzeit()) {
 					t.setSektorB(sektorB.getAnzahlPersonen());
 				}
 			}
 
+			// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Gruppenräumen
 			for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 				if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
 					t.setGruppenräume(gruppenräume.getAnzahlRäume());
@@ -307,6 +312,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 				}
 			}
 
+			// Sucht die Anzahl Personen für die ausgewählte Uhrzeit aus den Carrels
 			for (Carrels carrels : stockwerk.getCarrelsListe()) {
 				if (uhrzeitEnum == carrels.getUhrzeit()) {
 					t.setCarrels(carrels.getAnzahlRäume());
@@ -323,7 +329,8 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 	}
 
 	/**
-	 * Setzt die Tabelle auf
+	 * Setzt die Tabelle auf für die richtige Uhrzeit mit den richtigen
+	 * Namen/Sektoren
 	 * 
 	 * @param tabelleUhrzeiten
 	 */
@@ -343,10 +350,10 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			HeaderRow second = tabelleUhrzeiten.prependHeaderRow();
 			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
 			second.join(carrelColumn1, carrelColumn2).setText("Carrels");
-			
+
 		} else if (stockwerkEnum == StockwerkEnum.ZG1 || stockwerkEnum == StockwerkEnum.ZG2) {
 			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
-			
+
 		} else if (stockwerkEnum == StockwerkEnum.EG) {
 			tabelleUhrzeiten.addColumn(TagesübersichtBelegungBean::getArbeitsplätze).setCaption("Arbeitsplätze");
 			Column<TagesübersichtBelegungBean, ?> gruppeColumn1 = tabelleUhrzeiten
@@ -357,32 +364,36 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			second.join(gruppeColumn1, gruppeColumn2).setText("Gruppenräume");
 		}
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String datumString = args[0];
-	    String stockwerk = args[1];
-	    
-	    this.date = new Date(Long.parseLong(datumString));
-	    
-	    if(stockwerk.equals("LL")) {
-	    	this.stockwerkEnum = StockwerkEnum.LL;
-	    }else if(stockwerk.equals("EG")) {
-	    	this.stockwerkEnum = StockwerkEnum.EG;
-	    }else if(stockwerk.equals("ZG1")) {
-	    	this.stockwerkEnum = StockwerkEnum.ZG1;
-	    }else if(stockwerk.equals("ZG2")) {
-	    	this.stockwerkEnum = StockwerkEnum.ZG2;
-	    }
-	    
-	    if (stockwerkEnum == StockwerkEnum.LL) {
+		// Der Eingang der Tagesübersicht Belegung ist eine lange URL, welche durch /
+		// abgetrennt wird
+		String args[] = event.getParameters().split("/");
+		// Datum für die Belegung
+		String datumString = args[0];
+		// Stockwerk der Belegung
+		String stockwerk = args[1];
+
+		this.date = new Date(Long.parseLong(datumString));
+
+		if (stockwerk.equals("LL")) {
+			this.stockwerkEnum = StockwerkEnum.LL;
+		} else if (stockwerk.equals("EG")) {
+			this.stockwerkEnum = StockwerkEnum.EG;
+		} else if (stockwerk.equals("ZG1")) {
+			this.stockwerkEnum = StockwerkEnum.ZG1;
+		} else if (stockwerk.equals("ZG2")) {
+			this.stockwerkEnum = StockwerkEnum.ZG2;
+		}
+
+		if (stockwerkEnum == StockwerkEnum.LL) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
 		} else {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
 		}
 
-	    setCompositionRoot(init());
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -391,31 +402,38 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
+							+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
 				}
 
 				if (e.getSource() == bErfassung) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/' + StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
+							+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' +" ");
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
+							+ StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' + " ");
 				}
 
 				if (e.getSource() == bLL) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.LL.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
+							+ StockwerkEnum.LL.toString());
 				}
 
 				if (e.getSource() == b2ZG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG2.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
+							+ StockwerkEnum.ZG2.toString());
 				}
 
 				if (e.getSource() == b1ZG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.ZG1.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
+							+ StockwerkEnum.ZG1.toString());
 				}
 
 				if (e.getSource() == bEG) {
-					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/' + StockwerkEnum.EG.toString());
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
+							+ StockwerkEnum.EG.toString());
 				}
 
 			}

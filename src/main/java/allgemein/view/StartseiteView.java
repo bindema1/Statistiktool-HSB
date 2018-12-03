@@ -33,6 +33,12 @@ import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
 import benutzungsstatistik.view.InternerkurierViewWaedi;
 
+/**
+ * StartseiteView setzt für den jeweiligen User das Layout zusammen, sodass der
+ * User mit den richtigen Button zu seinen eigenen Views kommen kann
+ * 
+ * @author Marvin Bindemann
+ */
 public class StartseiteView extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
@@ -49,8 +55,12 @@ public class StartseiteView extends Composite implements View {
 	private Button bLogout;
 	private String user;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
@@ -58,10 +68,15 @@ public class StartseiteView extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -71,11 +86,9 @@ public class StartseiteView extends Composite implements View {
 		setCompositionRoot(init());
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		Label lText = new Label();
@@ -91,7 +104,7 @@ public class StartseiteView extends Composite implements View {
 		bBenutzungsstatistikLL.setCaption("Benutzungsstatistik LL");
 		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikLL.addClickListener(createClickListener());
-		
+
 		bBenutzungsstatistikWaedi = new Button();
 		bBenutzungsstatistikWaedi.setCaption("Benutzungsstatistik Wädi");
 		bBenutzungsstatistikWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
@@ -101,7 +114,7 @@ public class StartseiteView extends Composite implements View {
 		bBelegungWinti.setCaption("Belegung Winti");
 		bBelegungWinti.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBelegungWinti.addClickListener(createClickListener());
-		
+
 		bBelegungWaedi = new Button();
 		bBelegungWaedi.setCaption("Belegung Wädi");
 		bBelegungWaedi.setEnabled(false);
@@ -112,7 +125,7 @@ public class StartseiteView extends Composite implements View {
 		bExportWinti.setCaption("Export Winti");
 		bExportWinti.addStyleName(ValoTheme.BUTTON_LARGE);
 		bExportWinti.addClickListener(createClickListener());
-		
+
 		bExportWaedi = new Button();
 		bExportWaedi.setCaption("Export Wädi");
 		bExportWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
@@ -128,10 +141,12 @@ public class StartseiteView extends Composite implements View {
 
 		// Erstellt ein GridLayout, welches je nach User andere Button anzeigt
 		GridLayout grid = new GridLayout();
+		// holt den jeweiligen User aus der Session
 		user = VaadinSession.getCurrent().getAttribute("user").toString();
 		if (user.equals("Admin Winterthur")) {
+			// Admin Winterthur hat ein grösseres Layout als alle anderen User
 			grid = new GridLayout(3, 3);
-		}else {
+		} else {
 			grid = new GridLayout(2, 3);
 		}
 		grid.setSizeFull();
@@ -167,6 +182,7 @@ public class StartseiteView extends Composite implements View {
 			grid.addComponent(new Label(), 1, 2);
 		}
 
+		//Geht durch alle Zeilen und Columns und setzt die Button grösser
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
 				Component c = grid.getComponent(col, row);
@@ -197,13 +213,14 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bBenutzungsstatistikLL) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
-				
+
 				if (e.getSource() == bBenutzungsstatistikWaedi) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
 				}
 
 				if (e.getSource() == bBelegungWinti) {
 					if (user.equals("Studentische Mitarbeitende Winterthur")) {
+						//Studentische Mitarbeiter werden automatisch zur Belegung der Lernlandschaft geleitet
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ StockwerkEnum.LL.toString() + '/' + false + '/' + 1 + '/' + " ");
 					} else {
@@ -211,7 +228,7 @@ public class StartseiteView extends Composite implements View {
 								+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
 					}
 				}
-				
+
 				if (e.getSource() == bBelegungWaedi) {
 //					getUI().getNavigator().navigateTo();
 				}
@@ -219,7 +236,7 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bExportWinti) {
 					getUI().getNavigator().navigateTo(ExportViewWinti.NAME);
 				}
-				
+
 				if (e.getSource() == bExportWaedi) {
 					getUI().getNavigator().navigateTo(ExportViewWaedi.NAME);
 				}
@@ -229,6 +246,7 @@ public class StartseiteView extends Composite implements View {
 				}
 
 				if (e.getSource() == bLogout) {
+					//Wenn der User sich ausloggt, werden alle Views gelöscht
 					getUI().getNavigator().removeView(StartseiteView.NAME);
 					getUI().getNavigator().removeView(PasswortView.NAME);
 					getUI().getNavigator().removeView(ExportViewWinti.NAME);

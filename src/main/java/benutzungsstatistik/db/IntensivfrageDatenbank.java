@@ -20,6 +20,7 @@ import benutzungsstatistik.model.Intensivfrage;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class IntensivfrageDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -113,7 +114,7 @@ public class IntensivfrageDatenbank {
 	/**
 	 * @return Liste von allen Intensivfragen
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Intensivfrage> selectAllIntensivfragen() {
 
 		Session tempSession = null;
@@ -151,7 +152,7 @@ public class IntensivfrageDatenbank {
 	/**
 	 * @return Liste von allen Intensivfragen für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Intensivfrage> selectAllIntensivfragenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Intensivfragen aus der DB auslesen

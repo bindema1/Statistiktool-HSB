@@ -66,6 +66,8 @@ public class TestBelegungDatenbank {
 		stockwerk.addArbeitsplätze(arbeitsplatz2);		
 		stockwerk.addSektorA(sektorA1);
 		stockwerk.addSektorA(sektorA2);
+		stockwerk.addSektorB(sektorB1);
+		stockwerk.addSektorB(sektorB2);
 		stockwerk.addGruppenräume(gruppenräume1);
 		stockwerk.addGruppenräume(gruppenräume2);
 		stockwerk.addCarrels(carrels1);

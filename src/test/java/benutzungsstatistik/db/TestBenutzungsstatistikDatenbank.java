@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import allgemein.model.StandortEnum;
 import benutzungsstatistik.model.Benutzungsstatistik;
-import benutzungsstatistik.model.Internerkurier;
 import benutzungsstatistik.model.Wintikurier;
 
 /**
@@ -41,7 +40,7 @@ public class TestBenutzungsstatistikDatenbank {
 		wintikurier1 = new Wintikurier(6, 2, 9, 5);
 		wintikurierDB.insertWintikurier(wintikurier1);
 		
-		benutzungsstatistik = new Benutzungsstatistik(date, 8, true, StandortEnum.TEST, wintikurier1, new Internerkurier(0,0,0));
+		benutzungsstatistik = new Benutzungsstatistik(date, 8, true, StandortEnum.TEST, wintikurier1);
 	}
 
 	@Test

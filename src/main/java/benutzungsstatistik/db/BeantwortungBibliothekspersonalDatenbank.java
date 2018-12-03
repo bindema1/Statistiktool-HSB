@@ -20,6 +20,7 @@ import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class BeantwortungBibliothekspersonalDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -113,7 +114,7 @@ public class BeantwortungBibliothekspersonalDatenbank {
 	/**
 	 * @return Liste von allen BeantwortungBibliothekspersonalen
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<BeantwortungBibliothekspersonal> selectAllBeantwortungBibliothekspersonalen() {
 
 		Session tempSession = null;
@@ -151,7 +152,7 @@ public class BeantwortungBibliothekspersonalDatenbank {
 	/**
 	 * @return Liste von allen BeantwortungBibliothekspersonalen für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<BeantwortungBibliothekspersonal> selectAllBeantwortungBibliothekspersonalenForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		Session tempSession = null;

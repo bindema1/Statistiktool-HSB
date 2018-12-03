@@ -112,7 +112,7 @@ public class WintikurierDatenbank {
 	/**
 	 * @return Liste von allen Wintikuriern
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Wintikurier> selectAllWintikuriere() {
 
 		Session tempSession = null;

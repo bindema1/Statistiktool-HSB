@@ -47,12 +47,15 @@ public class Benutzungsstatistik implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private StandortEnum standort;
 
+	//Wintikurier wird für die Bibliothek Winterthur benutzt
 	@OneToOne(cascade = CascadeType.ALL)
 	private Wintikurier wintikurier;
 
+	//Internerkurier wird für Wädenswil benutzt
 	@OneToOne(cascade = CascadeType.ALL)
 	private Internerkurier internerkurier;
 
+	//Eine Benutzungsstatistik hat eine Liste aller Kontakte
 	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Benutzerkontakt> benutzerkontaktListe = new ArrayList<>();
 
@@ -76,15 +79,14 @@ public class Benutzungsstatistik implements Serializable {
 
 	}
 
-	// Für Benutzungsstatistik Bibliothek
+	//Für Benutzungsstatistik Bibliothek
 	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort,
-			Wintikurier wintikurier, Internerkurier internerkurier) {
+			Wintikurier wintikurier) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
 		this.kassenbeleg = kassenbeleg;
 		this.standort = standort;
 		this.wintikurier = wintikurier;
-		this.internerkurier = internerkurier;
 	}
 
 	// Für Benutzungsstatistik Wädenswil

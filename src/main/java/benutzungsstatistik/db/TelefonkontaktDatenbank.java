@@ -20,6 +20,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class TelefonkontaktDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -113,7 +114,7 @@ public class TelefonkontaktDatenbank {
 	/**
 	 * @return Liste von allen Telefonkontakten
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Telefonkontakt> selectAllTelefonkontakte() {
 
 		Session tempSession = null;
@@ -151,7 +152,7 @@ public class TelefonkontaktDatenbank {
 	/**
 	 * @return Liste von allen Telefonkontakten für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Telefonkontakt> selectAllTelefonkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Telefonkontakt aus der DB auslesen

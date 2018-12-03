@@ -20,6 +20,7 @@ import allgemein.model.Angestellter;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class AngestellterDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -151,7 +152,7 @@ public class AngestellterDatenbank {
 	/**
 	 * @return Angestellter für einen Namen
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Angestellter getAngestellterByName(String name) {
 
 		Session tempSession = null;

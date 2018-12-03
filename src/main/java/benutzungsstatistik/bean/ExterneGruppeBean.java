@@ -3,11 +3,12 @@ package benutzungsstatistik.bean;
 import java.io.Serializable;
 /**
  * Beenklasse um Inhalt in Tabellen zu füllen
+ * 
  * @author Marvin Bindemann
- *
  */
 public class ExterneGruppeBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private int anzahl_personen;
 	private String erfasstUm;

@@ -20,6 +20,7 @@ import benutzungsstatistik.model.Emailkontakt;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class EmailkontaktDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -113,7 +114,7 @@ public class EmailkontaktDatenbank {
 	/**
 	 * @return Liste von allen Emailkontakten
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Emailkontakt> selectAllEmailkontakte() {
 
 		Session tempSession = null;
@@ -151,7 +152,7 @@ public class EmailkontaktDatenbank {
 	/**
 	 * @return Liste von allen Emailkontakten für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Emailkontakt> selectAllEmailkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		// Emailkontakte aus der DB auslesen

@@ -20,6 +20,7 @@ import benutzungsstatistik.model.Benutzerkontakt;
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 public class BenutzerkontaktDatenbank {
 
 	private static SessionFactory sessionFactory;
@@ -110,7 +111,7 @@ public class BenutzerkontaktDatenbank {
 	/**
 	 * @return Liste von allen Benutzerkontakten
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Benutzerkontakt> selectAllBenutzerkontakte() {
 
 		Session tempSession = null;
@@ -148,7 +149,7 @@ public class BenutzerkontaktDatenbank {
 	/**
 	 * @return Liste von allen Benutzerkontakten für eine Benutzungsstatistik
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Benutzerkontakt> selectAllBenutzerkontakteForBenutzungsstatistik(int benutzungsstatistik_ID) {
 
 		Session tempSession = null;

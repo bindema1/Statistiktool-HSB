@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 /**
  * Das ist die Datenklasse mit allen Attributen, damit man einen Wintikurier in
- * die Tabelle 'Wintikurier' schreiben kann.
+ * die Tabelle 'Wintikurier' schreiben kann. Der Wintikurier ist für Winterthur
  * 
  * @author Marvin Bindemann
  */

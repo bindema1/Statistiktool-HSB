@@ -1,11 +1,15 @@
 package administrator.bean;
 
 import java.io.Serializable;
-import java.util.Date;
 
-@SuppressWarnings("serial")
+/**
+ * Bean für den Export. Das Bean ist sogesagt nur ein Container für Dateninhalt
+ * 
+ * @author Marvin Bindemann
+ */
 public class ExportWintikurierMonatBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String monat;
 	private int jahr;
 	private String department;

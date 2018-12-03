@@ -22,6 +22,11 @@ import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
 
+/**
+ * View um Passwörter zu ändern als Administrator
+ * 
+ * @author Marvin Bindemann
+ */
 public class PasswortView extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
@@ -35,19 +40,27 @@ public class PasswortView extends Composite implements View {
 	private Label passwortDatum;
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
-		
+
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -57,23 +70,22 @@ public class PasswortView extends Composite implements View {
 		setCompositionRoot(init());
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		Label lText = new Label();
 		lText.setValue("Passwörter ändern");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-		
+
+		//Dropdown aller Angestellten
 		Collection<Angestellter> angestelltenListe = angestellterDB.selectAllAngestellte();
 		NativeSelect<Angestellter> dropdown = new NativeSelect<>("Wählen Sie einen User aus", angestelltenListe);
 		dropdown.setWidth("350px");
 		dropdown.setEmptySelectionAllowed(false);
-
 		dropdown.addValueChangeListener(event -> {
+			//Setzt den gewählten Angestellten und verändert das Label: passwortDatum
 			this.angestellter = (Angestellter) event.getValue();
 			passwortDatum.setCaption("Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
 		});
@@ -100,25 +112,28 @@ public class PasswortView extends Composite implements View {
 
 		mainLayout.addComponent(layout, "top:20%;left:30%");
 	}
-	
-	
+
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener() {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bSpeichern) {
+					//Wenn beide Passwörter den selben Wert haben
 					if (passwort1.getValue().equals(passwort2.getValue())) {
 						String passwort = passwort1.getValue();
 						MD5 md5 = new MD5();
+						//Verschlüsselt das Passwort mit MD5 in der Datenbank
 						angestellter.setPasswort(md5.convertMD5(passwort));
 						angestellter.setPasswort_datum(new Date());
+						//Updatet den Angestellten in der Datenbank
 						angestellterDB.updateAngestellter(angestellter);
 
 						// Daten wieder auf 0 setzen
 						passwort1.setValue("");
 						passwort2.setValue("");
-						passwortDatum.setCaption("Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
+						passwortDatum.setCaption(
+								"Passwort zuletzt geändert am: " + sdf.format(angestellter.getPasswort_datum()));
 
 						Notification.show("Passwort gespeichert für User " + angestellter.getName(),
 								Type.TRAY_NOTIFICATION);

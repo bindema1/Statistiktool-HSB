@@ -22,6 +22,7 @@ import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
 import benutzungsstatistik.view.ExterneGruppeViewBB;
+import benutzungsstatistik.view.InternerkurierViewWaedi;
 import benutzungsstatistik.view.KorrekturViewBB;
 import benutzungsstatistik.view.KorrekturViewLL;
 import benutzungsstatistik.view.KorrekturViewWaedi;
@@ -29,34 +30,36 @@ import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
-import benutzungsstatistik.view.InternerkurierViewWaedi;
 import testdaten.TestDaten;
 
 /**
- * MainView setzt den Content und gibt seine eigene MainView an die
- * entsprechende View weiter
+ * MainView ist die Anfangsklasse, welche das VaadinServlet aufsetzt.
  * 
  * @author Marvin Bindemann
  */
+@SuppressWarnings("deprecation")
 @Theme("mytheme")
 public class MainView extends UI {
 
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("deprecation")
 	protected void init(VaadinRequest request) {
 
-		//Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein SQL-Skript
+		// Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein
+		// SQL-Skript
 		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-		if(benutzungsstatistikDB.selectAllBenutzungsstatistiken().size() == 0) {
+		if (benutzungsstatistikDB.selectAllBenutzungsstatistiken().size() == 0) {
 			new TestDaten();
 		}
-		
-		new Navigator(this, this);
 
+		// Ein Navigator wird gesetzt, sodass verschiedene Views gesetzt werden können
+		// und die Navigation per URL funktioniert
+		new Navigator(this, this);
+		// Am Anfang gelangt man automatisch zur LoginPage
 		getNavigator().addView(LoginPage.NAME, LoginPage.class);
 		getNavigator().setErrorView(LoginPage.class);
 
+		// Falls man eine eigene URL eingibt
 		Page.getCurrent().addUriFragmentChangedListener(new UriFragmentChangedListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -73,13 +76,16 @@ public class MainView extends UI {
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = MainView.class, productionMode = false)
 	public static class MyServlet extends VaadinServlet {
+		private static final long serialVersionUID = 5334673737128772893L;
 	}
 
 	private void router(String route) {
 
-		System.out.println("ROUTE: " +route);
-		
+		System.out.println("ROUTE: " + route);
+
+		// Wenn der User existiert
 		if (getSession().getAttribute("user") != null) {
+			// Alle Views hinzufügen
 			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
 			getNavigator().addView(PasswortView.NAME, PasswortView.class);
 			getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
@@ -98,40 +104,29 @@ public class MainView extends UI {
 			getNavigator().addView(TagesübersichtBenutzungViewWaedi.NAME, TagesübersichtBenutzungViewWaedi.class);
 			getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
 			getNavigator().addView(InternerkurierViewWaedi.NAME, InternerkurierViewWaedi.class);
-			
-			if (route.equals("!"+PasswortView.NAME)) {
+
+			// Wenn der User eine bestimmte URL eingegeben hat, wird es hier auf die
+			// richtige URL weitergeleitet
+			if (route.equals("!" + PasswortView.NAME)) {
 				getNavigator().navigateTo(PasswortView.NAME);
-			} else if (route.equals("!"+ExportViewWinti.NAME)) {
+			} else if (route.equals("!" + ExportViewWinti.NAME)) {
 				getNavigator().navigateTo(ExportViewWinti.NAME);
-			} else if (route.equals("!"+ExportViewWaedi.NAME)) {
+			} else if (route.equals("!" + ExportViewWaedi.NAME)) {
 				getNavigator().navigateTo(ExportViewWaedi.NAME);
-			} else if (route.equals("!"+BenutzungsstatistikViewBB.NAME)) {
+			} else if (route.equals("!" + BenutzungsstatistikViewBB.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
-			} else if (route.equals("!"+BenutzungsstatistikViewLL.NAME)) {
+			} else if (route.equals("!" + BenutzungsstatistikViewLL.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
-			} else if (route.equals("!"+BenutzungsstatistikViewWaedi.NAME)) {
+			} else if (route.equals("!" + BenutzungsstatistikViewWaedi.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
-//			} else if (route.equals("!"+KorrekturViewBB.NAME)) {
-//				getNavigator().navigateTo(KorrekturViewBB.NAME);
-//			} else if (route.equals("!"+KorrekturViewLL.NAME)) {
-//				getNavigator().navigateTo(KorrekturViewLL.NAME);
-//			} else if (route.equals("!"+TagesübersichtBenutzungViewBB.NAME)) {
-//				getNavigator().navigateTo(TagesübersichtBenutzungViewBB.NAME);
-//			} else if (route.equals("!"+TagesübersichtBenutzungViewLL.NAME)) {
-//				getNavigator().navigateTo(TagesübersichtBenutzungViewLL.NAME);
-//			} else if (route.equals("!"+WintikurierViewBB.NAME)) {
-//				getNavigator().navigateTo(WintikurierViewBB.NAME);
-//			} else if (route.equals("!"+ExterneGruppeViewBB.NAME)) {
-//				getNavigator().navigateTo(ExterneGruppeViewBB.NAME);
-//			} else if (route.equals("!"+TagesübersichtBelegungViewWinti.NAME)) {
-//				getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME);
-			} else if (route.equals("!"+BelegungErfassenViewWinti.NAME)) {
+			} else if (route.equals("!" + BelegungErfassenViewWinti.NAME)) {
 				getNavigator().navigateTo(BelegungErfassenViewWinti.NAME);
 			} else {
 				getNavigator().navigateTo(StartseiteView.NAME);
 			}
 		} else {
 			getUI().getSession().setAttribute("route", route);
+			// Falls es keinen User gibt, wird es automatisch zur LoginPage geleitet
 			getNavigator().navigateTo(LoginPage.NAME);
 		}
 	}
