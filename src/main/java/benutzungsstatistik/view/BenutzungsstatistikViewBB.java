@@ -19,7 +19,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Slider;
@@ -49,7 +48,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
-	private int slider;
+	private Slider sIntensivFrageSlider;
 	private Button bRechercheBeratung;
 	private Button bEmailkontakt;
 	private Button bTelefonkontakt;
@@ -61,11 +60,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 	private Label lText;
 	private Label lKassenbeleg;
 	private int uhrzeit;
-//	private EmailkontaktDatenbank emailKontaktDB = new EmailkontaktDatenbank();
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-//	private IntensivfrageDatenbank intensivFrageDB = new IntensivfrageDatenbank();
-//	private BenutzerkontaktDatenbank benutzerKontaktDB = new BenutzerkontaktDatenbank();
-//	private TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 	private SimpleDateFormat stundenFormat = new SimpleDateFormat("HH");
 
@@ -128,16 +123,12 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 		
-		Slider sIntensivFrageSlider = new Slider();
+		sIntensivFrageSlider = new Slider();
 		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
 		sIntensivFrageSlider.setMax(30.0);
 		sIntensivFrageSlider.setValue(5.0);
-		sIntensivFrageSlider.addValueChangeListener(event -> {
-			slider = event.getValue().intValue();
-		});
-              
-
+		
 		bRechercheBeratung = new Button();
 		setRechercheCaption();
 		bRechercheBeratung.setIcon(VaadinIcons.GLASSES);
@@ -305,6 +296,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 
 				if (e.getSource() == bIntensivFrage) {
 					int zaehler = 0;
+					int slider = sIntensivFrageSlider.getValue().intValue();
 					for(int i = 1; i<=slider; i+=5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
@@ -349,19 +341,19 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bWintikurier) {
-					getUI().getNavigator().navigateTo(WintikurierView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 				if (e.getSource() == bExterneGruppe) {
-					getUI().getNavigator().navigateTo(ExterneGruppeView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
+					getUI().getNavigator().navigateTo(ExterneGruppeViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					getUI().getNavigator().navigateTo(TagesübersichtBenutzungView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

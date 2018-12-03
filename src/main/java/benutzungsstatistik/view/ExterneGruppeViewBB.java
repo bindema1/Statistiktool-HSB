@@ -45,7 +45,7 @@ import benutzungsstatistik.model.ExterneGruppe;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class ExterneGruppeView extends Composite implements View {
+public class ExterneGruppeViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Benutzung-ExterneGruppe";
@@ -79,7 +79,7 @@ public class ExterneGruppeView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public ExterneGruppeView() {
+	public ExterneGruppeViewBB() {
 
 	}
 
@@ -269,7 +269,7 @@ public class ExterneGruppeView extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if(korrektur == true) {
-						getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+						getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 					}else {
 						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewBB.NAME);
 					}

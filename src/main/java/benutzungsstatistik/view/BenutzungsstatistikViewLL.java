@@ -44,7 +44,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
-	private int slider;
+	private Slider sIntensivFrageSlider;
 	private Button bBeantwortungBibliothekspersonal;
 	private Button bKorrektur;
 	private Button bTagesuebersicht;
@@ -108,14 +108,11 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 		
-		Slider sIntensivFrageSlider = new Slider();
+		sIntensivFrageSlider = new Slider();
 		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
 		sIntensivFrageSlider.setMax(30.0);
 		sIntensivFrageSlider.setValue(5.0);
-		sIntensivFrageSlider.addValueChangeListener(event -> {
-			slider = event.getValue().intValue();
-		});
 
 		bBeantwortungBibliothekspersonal = new Button();
 		setBeantwortungCaption();
@@ -229,6 +226,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 
 				if (e.getSource() == bIntensivFrage) {
 					int zaehler = 0;
+					int slider = sIntensivFrageSlider.getValue().intValue();
 					for(int i = 1; i<=slider; i+=5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
@@ -255,11 +253,11 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				}
 
 				if (e.getSource() == bKorrektur) {
-//					getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(KorrekturViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-//					getUI().getNavigator().navigateTo(TagesübersichtBenutzungView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

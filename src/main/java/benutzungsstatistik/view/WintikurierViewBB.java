@@ -37,7 +37,7 @@ import benutzungsstatistik.model.Wintikurier;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class WintikurierView extends Composite implements View {
+public class WintikurierViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Benutzung-Wintikurier";
@@ -83,7 +83,7 @@ public class WintikurierView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public WintikurierView() {
+	public WintikurierViewBB() {
 		
 	}
 
@@ -270,7 +270,7 @@ public class WintikurierView extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					if(korrektur == true) {
-						getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+						getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 					}else {
 						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewBB.NAME);
 					}

@@ -28,10 +28,12 @@ import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
-import benutzungsstatistik.view.ExterneGruppeView;
-import benutzungsstatistik.view.KorrekturView;
-import benutzungsstatistik.view.TagesübersichtBenutzungView;
-import benutzungsstatistik.view.WintikurierView;
+import benutzungsstatistik.view.ExterneGruppeViewBB;
+import benutzungsstatistik.view.KorrekturViewBB;
+import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.WintikurierViewBB;
 
 public class LoginPage extends VerticalLayout implements View {
 
@@ -77,11 +79,12 @@ public class LoginPage extends VerticalLayout implements View {
 								TagesübersichtBelegungViewWinti.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
-						getUI().getNavigator().addView(ExterneGruppeView.NAME, ExterneGruppeView.class);
-						getUI().getNavigator().addView(KorrekturView.NAME, KorrekturView.class);
-						getUI().getNavigator().addView(TagesübersichtBenutzungView.NAME,
-								TagesübersichtBenutzungView.class);
-						getUI().getNavigator().addView(WintikurierView.NAME, WintikurierView.class);
+						getUI().getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
+						getUI().getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
+						getUI().getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
+						getUI().getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
+						getUI().getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
+						getUI().getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
 
 						getUI().getNavigator().addViewChangeListener(new ViewChangeListener() {
 
@@ -92,48 +95,69 @@ public class LoginPage extends VerticalLayout implements View {
 								if (VaadinSession.getCurrent().getAttribute("user") != null) {
 									user = VaadinSession.getCurrent().getAttribute("user").toString();
 
+									//Export, Passwort View dürfen nur Admins
 									if (event.getNewView() instanceof PasswortView && user.contains("Admin")
 											|| event.getNewView() instanceof ExportView
 													&& user.equals("Admin Winterthur")) {
 										return true;
 									}
+									//Benutzungsstatistik Bibliothek darf nur Admin und Mitarbeitende Winterthur
 									if (event.getNewView() instanceof BenutzungsstatistikViewBB
 											&& user.equals("Admin Winterthur")
 											|| event.getNewView() instanceof BenutzungsstatistikViewBB
-													&& user.equals("Mitarbeitende Winterthur")) {
+													&& user.equals("Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof WintikurierViewBB
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof WintikurierViewBB
+													&& user.equals("Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof ExterneGruppeViewBB
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof ExterneGruppeViewBB
+													&& user.equals("Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof TagesübersichtBenutzungViewBB
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof TagesübersichtBenutzungViewBB
+													&& user.equals("Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof KorrekturViewBB
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof KorrekturViewBB
+													&& user.equals("Mitarbeitende Winterthur")){
 										return true;
 									}
+									//Benutzungsstatistik Lernlandschaft darf nur Admin und Studentische Mitarbeiter Winterthur
 									if (event.getNewView() instanceof BenutzungsstatistikViewLL
 											&& user.equals("Admin Winterthur")
 											|| event.getNewView() instanceof BenutzungsstatistikViewLL
+													&& user.equals("Studentische Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof TagesübersichtBenutzungViewLL
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof TagesübersichtBenutzungViewLL
+													&& user.equals("Studentische Mitarbeitende Winterthur")
+											|| event.getNewView() instanceof KorrekturViewLL
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof KorrekturViewLL
 													&& user.equals("Studentische Mitarbeitende Winterthur")) {
 										return true;
 									}
+									//Belegung Winterthur dürfen nur alle mit Wort "Winterthur" im Namen
 									if (event.getNewView() instanceof BelegungErfassenViewWinti
-											&& !user.equals("Mitarbeitende Wädenswil")
+											&& user.contains("Winterthur")
 											|| event.getNewView() instanceof TagesübersichtBelegungViewWinti
-													&& !user.equals("Mitarbeitende Wädenswil")
-											|| event.getNewView() instanceof WintikurierView
-													&& !user.equals("Mitarbeitende Wädenswil")
-											|| event.getNewView() instanceof ExterneGruppeView
-													&& !user.equals("Mitarbeitende Wädenswil")
-											|| event.getNewView() instanceof BelegungErfassenViewWinti
-													&& !user.equals("Mitarbeitende Wädenswil")
-											|| event.getNewView() instanceof TagesübersichtBenutzungView
-													&& !user.equals("Mitarbeitende Wädenswil")
-											|| event.getNewView() instanceof KorrekturView
-													&& !user.equals("Mitarbeitende Wädenswil")) {
+													&& user.contains("Winterthur")){
 										return true;
 									}
+									//Jeder darf auf die Startseite
 									if (event.getNewView() instanceof StartseiteView) {
 										return true;
 									}
 								}else {
+									//Wenn User null ist
 									if (event.getNewView() instanceof LoginPage) {
 										return true;
 									}
 								}
 
+								//Ansonsten wird Zugriff verweigert angezeigt
 								Notification.show("Zugriff verweigert", Notification.Type.WARNING_MESSAGE);
 								return false;
 							}

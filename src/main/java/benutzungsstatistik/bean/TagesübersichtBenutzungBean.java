@@ -14,6 +14,7 @@ public class TagesübersichtBenutzungBean implements Serializable{
 	private int intensiv;
 	private int email;
 	private int telefon;
+	private int beantwortungBibi;
 	
 	public TagesübersichtBenutzungBean() {
 		
@@ -58,6 +59,13 @@ public class TagesübersichtBenutzungBean implements Serializable{
 	public void setTelefon(int telefon) {
 		this.telefon = telefon;
 	}
-	
+
+	public int getBeantwortungBibi() {
+		return beantwortungBibi;
+	}
+
+	public void setBeantwortungBibi(int beantwortungBibi) {
+		this.beantwortungBibi = beantwortungBibi;
+	}
 	
 }

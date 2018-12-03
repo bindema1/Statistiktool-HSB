@@ -21,10 +21,12 @@ import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
-import benutzungsstatistik.view.ExterneGruppeView;
-import benutzungsstatistik.view.KorrekturView;
-import benutzungsstatistik.view.TagesübersichtBenutzungView;
-import benutzungsstatistik.view.WintikurierView;
+import benutzungsstatistik.view.ExterneGruppeViewBB;
+import benutzungsstatistik.view.KorrekturViewBB;
+import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.WintikurierViewBB;
 
 public class StartseiteView extends Composite implements View {
 
@@ -191,10 +193,12 @@ public class StartseiteView extends Composite implements View {
 					getUI().getNavigator().removeView(TagesübersichtBelegungViewWinti.NAME);
 					getUI().getNavigator().removeView(BenutzungsstatistikViewBB.NAME);
 					getUI().getNavigator().removeView(BenutzungsstatistikViewLL.NAME);
-					getUI().getNavigator().removeView(ExterneGruppeView.NAME);
-					getUI().getNavigator().removeView(KorrekturView.NAME);
-					getUI().getNavigator().removeView(TagesübersichtBenutzungView.NAME);
-					getUI().getNavigator().removeView(WintikurierView.NAME);
+					getUI().getNavigator().removeView(ExterneGruppeViewBB.NAME);
+					getUI().getNavigator().removeView(KorrekturViewBB.NAME);
+					getUI().getNavigator().removeView(KorrekturViewLL.NAME);
+					getUI().getNavigator().removeView(TagesübersichtBenutzungViewBB.NAME);
+					getUI().getNavigator().removeView(TagesübersichtBenutzungViewLL.NAME);
+					getUI().getNavigator().removeView(WintikurierViewBB.NAME);
 					VaadinSession.getCurrent().setAttribute("user", null);
 					Page.getCurrent().setUriFragment("");
 				}

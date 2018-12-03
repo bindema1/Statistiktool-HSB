@@ -22,8 +22,8 @@ import javax.persistence.TemporalType;
 import allgemein.model.StandortEnum;
 
 /**
- * Das ist die Datenklasse mit allen Attributen, damit man eine Benutzungsstatistik in
- * die Tabelle 'Benutzungsstatistik' schreiben kann.
+ * Das ist die Datenklasse mit allen Attributen, damit man eine
+ * Benutzungsstatistik in die Tabelle 'Benutzungsstatistik' schreiben kann.
  * 
  * @author Marvin Bindemann
  */
@@ -32,24 +32,24 @@ import allgemein.model.StandortEnum;
 public class Benutzungsstatistik implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="benutzungsstatistik_ID")
+	@Column(name = "benutzungsstatistik_ID")
 	private int benutzungsstatistik_ID;
-	
+
 	@Temporal(TemporalType.DATE)
 	private Date datum;
-	
+
 	private int anzahl_Rechercheberatung;
 	private boolean kassenbeleg;
-	
+
 	@Enumerated(EnumType.STRING)
 	private StandortEnum standort;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Wintikurier wintikurier;
-	
+
 	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Benutzerkontakt> benutzerkontaktListe = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class Benutzungsstatistik implements Serializable {
 
 	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Intensivfrage> intensivfrageListe = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ExterneGruppe> externeGruppeListe = new ArrayList<>();
 
@@ -81,16 +81,23 @@ public class Benutzungsstatistik implements Serializable {
 		this.standort = standort;
 		this.wintikurier = wintikurier;
 	}
-	
-	//Ohne Wintikurier für Testzwecke
-	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort) {
+
+	// Ohne Wintikurier und Kassenbeleg für Benutzungsstatistik Lernlandschaft
+	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, StandortEnum standort) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
-		this.kassenbeleg = kassenbeleg;
 		this.standort = standort;
 	}
-	
-	//Add and Remove from List Methoden
+
+	// Ohne Wintikurier für Testzwecke
+	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort) {
+		this.datum = datum;
+		this.kassenbeleg = kassenbeleg;
+		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
+		this.standort = standort;
+	}
+
+	// Add and Remove from List Methoden
 	public void addBenutzerkontakt(Benutzerkontakt benutzerkontakt) {
 		benutzerkontaktListe.add(benutzerkontakt);
 		benutzerkontakt.setBenutzungsstatistik(this);
@@ -100,7 +107,7 @@ public class Benutzungsstatistik implements Serializable {
 		benutzerkontaktListe.remove(benutzerkontakt);
 		benutzerkontakt.setBenutzungsstatistik(null);
 	}
-	
+
 	public void addBeantwortungBibliothekspersonal(BeantwortungBibliothekspersonal beantwortungBibliothekspersonal) {
 		beantwortungBibliothekspersonalListe.add(beantwortungBibliothekspersonal);
 		beantwortungBibliothekspersonal.setBenutzungsstatistik(this);
@@ -110,7 +117,7 @@ public class Benutzungsstatistik implements Serializable {
 		beantwortungBibliothekspersonalListe.remove(beantwortungBibliothekspersonal);
 		beantwortungBibliothekspersonal.setBenutzungsstatistik(null);
 	}
-	
+
 	public void addEmailkontakt(Emailkontakt emailkontakt) {
 		emailkontaktListe.add(emailkontakt);
 		emailkontakt.setBenutzungsstatistik(this);
@@ -120,7 +127,7 @@ public class Benutzungsstatistik implements Serializable {
 		emailkontaktListe.remove(emailkontakt);
 		emailkontakt.setBenutzungsstatistik(null);
 	}
-	
+
 	public void addTelefonkontakt(Telefonkontakt telefonkontakt) {
 		telefonkontaktListe.add(telefonkontakt);
 		telefonkontakt.setBenutzungsstatistik(this);
@@ -130,7 +137,7 @@ public class Benutzungsstatistik implements Serializable {
 		telefonkontaktListe.remove(telefonkontakt);
 		telefonkontakt.setBenutzungsstatistik(null);
 	}
-	
+
 	public void addIntensivfrage(Intensivfrage intensivfrage) {
 		intensivfrageListe.add(intensivfrage);
 		intensivfrage.setBenutzungsstatistik(this);
@@ -140,7 +147,7 @@ public class Benutzungsstatistik implements Serializable {
 		intensivfrageListe.remove(intensivfrage);
 		intensivfrage.setBenutzungsstatistik(null);
 	}
-	
+
 	public void addExterneGruppe(ExterneGruppe externeGruppe) {
 		externeGruppeListe.add(externeGruppe);
 		externeGruppe.setBenutzungsstatistik(this);
@@ -150,8 +157,8 @@ public class Benutzungsstatistik implements Serializable {
 		externeGruppeListe.remove(externeGruppe);
 		externeGruppe.setBenutzungsstatistik(null);
 	}
-	
-	//Getter Methoden
+
+	// Getter Methoden
 	public int getBenutzungsstatistik_ID() {
 		return benutzungsstatistik_ID;
 	}
@@ -175,7 +182,7 @@ public class Benutzungsstatistik implements Serializable {
 	public Wintikurier getWintikurier() {
 		return wintikurier;
 	}
-	
+
 	public List<Benutzerkontakt> getBenutzerkontaktListe() {
 		return benutzerkontaktListe;
 	}
@@ -224,7 +231,7 @@ public class Benutzungsstatistik implements Serializable {
 	public void setWintikurier(Wintikurier wintikurier) {
 		this.wintikurier = wintikurier;
 	}
-	
+
 	public void setBenutzerkontaktListe(List<Benutzerkontakt> benutzerkontaktListe) {
 		this.benutzerkontaktListe = benutzerkontaktListe;
 	}

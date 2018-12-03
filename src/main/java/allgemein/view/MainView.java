@@ -18,10 +18,12 @@ import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
-import benutzungsstatistik.view.ExterneGruppeView;
-import benutzungsstatistik.view.KorrekturView;
-import benutzungsstatistik.view.TagesübersichtBenutzungView;
-import benutzungsstatistik.view.WintikurierView;
+import benutzungsstatistik.view.ExterneGruppeViewBB;
+import benutzungsstatistik.view.KorrekturViewBB;
+import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.WintikurierViewBB;
 import testdaten.TestDaten;
 
 /**
@@ -76,10 +78,12 @@ public class MainView extends UI {
 			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
 			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
-			getNavigator().addView(ExterneGruppeView.NAME, ExterneGruppeView.class);
-			getNavigator().addView(KorrekturView.NAME, KorrekturView.class);
-			getNavigator().addView(TagesübersichtBenutzungView.NAME, TagesübersichtBenutzungView.class);
-			getNavigator().addView(WintikurierView.NAME, WintikurierView.class);
+			getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
+			getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
+			getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
+			getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
+			getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
+			getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
 			
 			if (route.equals("!"+PasswortView.NAME)) {
 				getNavigator().navigateTo(PasswortView.NAME);
@@ -89,16 +93,20 @@ public class MainView extends UI {
 				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 			} else if (route.equals("!"+BenutzungsstatistikViewLL.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
-			} else if (route.equals("!"+KorrekturView.NAME)) {
-				getNavigator().navigateTo(KorrekturView.NAME);
-			} else if (route.equals("!"+TagesübersichtBenutzungView.NAME)) {
-				getNavigator().navigateTo(TagesübersichtBenutzungView.NAME);
-			} else if (route.equals("!"+WintikurierView.NAME)) {
-				getNavigator().navigateTo(WintikurierView.NAME);
-			} else if (route.equals("!"+ExterneGruppeView.NAME)) {
-				getNavigator().navigateTo(ExterneGruppeView.NAME);
-			} else if (route.equals("!"+TagesübersichtBelegungViewWinti.NAME)) {
-				getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME);
+//			} else if (route.equals("!"+KorrekturViewBB.NAME)) {
+//				getNavigator().navigateTo(KorrekturViewBB.NAME);
+//			} else if (route.equals("!"+KorrekturViewLL.NAME)) {
+//				getNavigator().navigateTo(KorrekturViewLL.NAME);
+//			} else if (route.equals("!"+TagesübersichtBenutzungViewBB.NAME)) {
+//				getNavigator().navigateTo(TagesübersichtBenutzungViewBB.NAME);
+//			} else if (route.equals("!"+TagesübersichtBenutzungViewLL.NAME)) {
+//				getNavigator().navigateTo(TagesübersichtBenutzungViewLL.NAME);
+//			} else if (route.equals("!"+WintikurierViewBB.NAME)) {
+//				getNavigator().navigateTo(WintikurierViewBB.NAME);
+//			} else if (route.equals("!"+ExterneGruppeViewBB.NAME)) {
+//				getNavigator().navigateTo(ExterneGruppeViewBB.NAME);
+//			} else if (route.equals("!"+TagesübersichtBelegungViewWinti.NAME)) {
+//				getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME);
 			} else if (route.equals("!"+BelegungErfassenViewWinti.NAME)) {
 				getNavigator().navigateTo(BelegungErfassenViewWinti.NAME);
 			} else {

@@ -63,7 +63,7 @@ public class TestDaten {
 
 	private void initAllgemein() throws ParseException {
 		
-		Date date = sdf2.parse("01.11.2018");
+		Date date = sdf2.parse("01.12.2018");
 
 		MD5 md5 = new MD5();
 		
@@ -91,9 +91,10 @@ public class TestDaten {
 //		TelefonkontaktDatenbank telefonKontaktDB = new TelefonkontaktDatenbank();
 //		WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 		
-		date = sdf2.parse("01.11.2018");
+		date = sdf2.parse("01.12.2018");
 
 		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, new Wintikurier(6, 2, 9, 5));
+		Benutzungsstatistik benutzungsstatistikLL = new Benutzungsstatistik(date, 0, StandortEnum.WINTERTHUR_LL);
 
 //		Timestamp timestamp = new Timestamp(date.getTime());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -124,6 +125,20 @@ public class TestDaten {
 		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt5);
 		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt6);
 		benutzungsstatistik1.addBenutzerkontakt(benutzerkontakt7);
+		Benutzerkontakt benutzerkontakt8 = new Benutzerkontakt(timestamp8, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt9 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt10 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt11 = new Benutzerkontakt(timestamp9, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt12 = new Benutzerkontakt(timestamp14, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt13 = new Benutzerkontakt(timestamp15, benutzungsstatistik1);
+		Benutzerkontakt benutzerkontakt14 = new Benutzerkontakt(timestamp16, benutzungsstatistik1);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt8);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt9);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt10);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt11);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt12);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt13);
+		benutzungsstatistikLL.addBenutzerkontakt(benutzerkontakt14);
 
 		Intensivfrage intensivfrage1 = new Intensivfrage(timestamp9, benutzungsstatistik1);
 		Intensivfrage intensivfrage2 = new Intensivfrage(timestamp10, benutzungsstatistik1);
@@ -141,6 +156,22 @@ public class TestDaten {
 		benutzungsstatistik1.addIntensivfrage(intensivfrage6);
 		benutzungsstatistik1.addIntensivfrage(intensivfrage7);
 		benutzungsstatistik1.addIntensivfrage(intensivfrage8);
+		Intensivfrage intensivfrage9 = new Intensivfrage(timestamp9, benutzungsstatistik1);
+		Intensivfrage intensivfrage10 = new Intensivfrage(timestamp10, benutzungsstatistik1);
+		Intensivfrage intensivfrage11 = new Intensivfrage(timestamp12, benutzungsstatistik1);
+		Intensivfrage intensivfrage12 = new Intensivfrage(timestamp13, benutzungsstatistik1);
+		Intensivfrage intensivfrage13 = new Intensivfrage(timestamp14, benutzungsstatistik1);
+		Intensivfrage intensivfrage14 = new Intensivfrage(timestamp15, benutzungsstatistik1);
+		Intensivfrage intensivfrage15 = new Intensivfrage(timestamp16, benutzungsstatistik1);
+		Intensivfrage intensivfrage16 = new Intensivfrage(timestamp17, benutzungsstatistik1);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage9);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage10);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage11);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage12);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage13);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage14);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage15);
+		benutzungsstatistikLL.addIntensivfrage(intensivfrage16);
 
 		Telefonkontakt telefonkontakt1 = new Telefonkontakt(timestamp8, benutzungsstatistik1);
 		Telefonkontakt telefonkontakt2 = new Telefonkontakt(timestamp10, benutzungsstatistik1);
@@ -180,9 +211,24 @@ public class TestDaten {
 		benutzungsstatistik1.addEmailkontakt(emailkontakt8);
 		benutzungsstatistik1.addEmailkontakt(emailkontakt9);
 
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal1 = new BeantwortungBibliothekspersonal(
-				timestamp8, benutzungsstatistik1);
-		benutzungsstatistik1.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal1 = new BeantwortungBibliothekspersonal(timestamp8, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal2 = new BeantwortungBibliothekspersonal(timestamp9, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal3 = new BeantwortungBibliothekspersonal(timestamp11, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal4 = new BeantwortungBibliothekspersonal(timestamp11, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal5 = new BeantwortungBibliothekspersonal(timestamp13, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal6 = new BeantwortungBibliothekspersonal(timestamp13, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal7 = new BeantwortungBibliothekspersonal(timestamp14, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal8 = new BeantwortungBibliothekspersonal(timestamp15, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal9 = new BeantwortungBibliothekspersonal(timestamp17, benutzungsstatistik1);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal2);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal3);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal4);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal5);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal6);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal7);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal8);
+		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal9);
 
 		ExterneGruppe externeGruppe1 = new ExterneGruppe("Test Gruppe", 10, "10:30", benutzungsstatistik1);
 		ExterneGruppe externeGruppe2 = new ExterneGruppe("Winterthur Stadtführung", 14, "12:15", benutzungsstatistik1);
@@ -193,13 +239,14 @@ public class TestDaten {
 
 		
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik1);
+		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistikLL);
 	}
 
 	private void initBelegung() throws ParseException {
 
 	    BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 		
-		Date date = sdf2.parse("01.11.2018 12:00:00");
+		Date date = sdf2.parse("01.12.2018 12:00:00");
 
 		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
 		Belegung belegungLL = new Belegung(date, StandortEnum.WINTERTHUR_LL);

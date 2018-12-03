@@ -47,7 +47,7 @@ import benutzungsstatistik.model.Telefonkontakt;
  * @author Marvin Bindemann
  */
 @Theme("mytheme")
-public class TagesübersichtBenutzungView extends Composite implements View {
+public class TagesübersichtBenutzungViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Benutzung-Übersicht";
@@ -75,7 +75,7 @@ public class TagesübersichtBenutzungView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public TagesübersichtBenutzungView() {
+	public TagesübersichtBenutzungViewBB() {
 		
 	}
 
@@ -348,7 +348,7 @@ public class TagesübersichtBenutzungView extends Composite implements View {
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

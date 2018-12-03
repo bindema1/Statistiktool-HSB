@@ -10,10 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.vaadin.teemu.switchui.Switch;
-
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -34,11 +31,10 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
+import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
-import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.Intensivfrage;
-import benutzungsstatistik.model.Telefonkontakt;
 
 /**
  * View der Korrektur. Zeigt alle Button, Label, Felder etc. in einem Layout an.
@@ -47,34 +43,25 @@ import benutzungsstatistik.model.Telefonkontakt;
  */
 @SuppressWarnings("serial")
 @Theme("mytheme")
-public class KorrekturView extends Composite implements View {
+public class KorrekturViewLL extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "Benutzung-Korrektur";
+	public static final String NAME = "Benutzung-Korrektur-LL";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
-	private Button bEmailkontakt;
-	private Button bTelefonkontakt;
+	private Button bBeantwortung;
 	private Button bBenutzerkontaktMinus;
 	private Button bIntensivFrageMinus;
-	private Button bEmailkontaktMinus;
-	private Button bTelefonkontaktMinus;
-	private Button bRechercheBeratung;
-	private Button bRechercheBeratungMinus;
-	private Button bKorrekturWintikurier;
-	private Button bKorrekturGruppen;
+	private Button bBeantwortungMinus;
 	private Label lBenutzerkontakt;
-	private Label lRechercheberatung;
 	private Label lIntensivFrage;
-	private Label lEmailkontakt;
-	private Label lTelefonkontakt;
+	private Label lBeantwortung;
 	private int ausgewählteUhrzeit;
 	private int benutzerzaehler = 0;
-	private int emailzaehler = 0;
 	private int intensivzaehler = 0;
-	private int telefonzaehler = 0;
+	private int beantwortungzaehler = 0;
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	private Benutzungsstatistik benutzungsstatistik;
 	private SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd-yyyy");
@@ -100,9 +87,8 @@ public class KorrekturView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public KorrekturView() {
-//		this.benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
-//		setCompositionRoot(init());
+	public KorrekturViewLL() {
+
 	}
 
 	private void initData() {
@@ -126,7 +112,7 @@ public class KorrekturView extends Composite implements View {
 		bBenutzerkontakt.setCaption("Kontakt");
 		bBenutzerkontakt.setEnabled(false);
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		lBenutzerkontakt = new Label();
@@ -140,10 +126,10 @@ public class KorrekturView extends Composite implements View {
 		bBenutzerkontaktMinus.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
-		bIntensivFrage.setCaption("Frage");
+		bIntensivFrage.setCaption("Intensivfrage");
 		bIntensivFrage.setEnabled(false);
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 
 		lIntensivFrage = new Label();
@@ -156,58 +142,22 @@ public class KorrekturView extends Composite implements View {
 		bIntensivFrageMinus.addStyleName(ValoTheme.BUTTON_DANGER);
 		bIntensivFrageMinus.addClickListener(createClickListener());
 
-		bEmailkontakt = new Button();
-		bEmailkontakt.setCaption("Email");
-		bEmailkontakt.setEnabled(false);
-		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
-		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bEmailkontakt.addClickListener(createClickListener());
+		bBeantwortung = new Button();
+		bBeantwortung.setCaption("Beant. Bilbiothekspersonal");
+		bBeantwortung.setEnabled(false);
+		bBeantwortung.setIcon(VaadinIcons.BOOK);
+		bBeantwortung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBeantwortung.addClickListener(createClickListener());
 
-		lEmailkontakt = new Label();
-		lEmailkontakt.setValue("0");
-		lEmailkontakt.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
+		lBeantwortung = new Label();
+		lBeantwortung.setValue("0");
+		lBeantwortung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		bEmailkontaktMinus = new Button();
-		bEmailkontaktMinus.setCaption("Korrektur -1");
-		bEmailkontaktMinus.setEnabled(false);
-		bEmailkontaktMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bEmailkontaktMinus.addClickListener(createClickListener());
-
-		bTelefonkontakt = new Button();
-		bTelefonkontakt.setCaption("Telefon");
-		bTelefonkontakt.setEnabled(false);
-		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
-		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " " + ValoTheme.BUTTON_LARGE);
-		bTelefonkontakt.addClickListener(createClickListener());
-
-		lTelefonkontakt = new Label();
-		lTelefonkontakt.setValue("0");
-		lTelefonkontakt.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-
-		bTelefonkontaktMinus = new Button();
-		bTelefonkontaktMinus.setCaption("Korrektur -1");
-		bTelefonkontaktMinus.setEnabled(false);
-		bTelefonkontaktMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bTelefonkontaktMinus.addClickListener(createClickListener());
-
-		Label lKassenbeleg = new Label();
-		lKassenbeleg.setValue("Kassenbeleg");
-		lKassenbeleg.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-
-		Switch kassenbeleg = new Switch();
-		if (benutzungsstatistik.isKassenbeleg()) {
-			kassenbeleg.setValue(true);
-		} else {
-			kassenbeleg.setValue(false);
-		}
-		kassenbeleg.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
-			Boolean item = event.getValue();
-
-			benutzungsstatistik.setKassenbeleg(item);
-			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
-			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
-		});
+		bBeantwortungMinus = new Button();
+		bBeantwortungMinus.setCaption("Korrektur -1");
+		bBeantwortungMinus.setEnabled(false);
+		bBeantwortungMinus.addStyleName(ValoTheme.BUTTON_DANGER);
+		bBeantwortungMinus.addClickListener(createClickListener());
 
 		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
 				"14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
@@ -219,12 +169,10 @@ public class KorrekturView extends Composite implements View {
 			if (!String.valueOf(event.getValue()).equals("Bitte wählen ↓")) {
 				bBenutzerkontakt.setEnabled(true);
 				bBenutzerkontaktMinus.setEnabled(true);
-				bEmailkontakt.setEnabled(true);
-				bEmailkontaktMinus.setEnabled(true);
+				bBeantwortung.setEnabled(true);
+				bBeantwortungMinus.setEnabled(true);
 				bIntensivFrage.setEnabled(true);
 				bIntensivFrageMinus.setEnabled(true);
-				bTelefonkontakt.setEnabled(true);
-				bTelefonkontaktMinus.setEnabled(true);
 
 				ausgewählteUhrzeit = 0;
 
@@ -268,68 +216,36 @@ public class KorrekturView extends Composite implements View {
 				}
 
 				benutzerzaehler = 0;
-				emailzaehler = 0;
+				beantwortungzaehler = 0;
 				intensivzaehler = 0;
-				telefonzaehler = 0;
 				for (Benutzerkontakt b : benutzungsstatistik.getBenutzerkontaktListe()) {
 					if (Integer.parseInt(dateFormat.format(b.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						benutzerzaehler++;
 					}
 				}
 				lBenutzerkontakt.setValue("" + benutzerzaehler);
-				for (Emailkontakt e : benutzungsstatistik.getEmailkontaktListe()) {
+				for (BeantwortungBibliothekspersonal e : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
 					if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == ausgewählteUhrzeit) {
-						emailzaehler++;
+						beantwortungzaehler++;
 					}
 				}
-				lEmailkontakt.setValue("" + emailzaehler);
+				lBeantwortung.setValue("" + beantwortungzaehler);
 				for (Intensivfrage i : benutzungsstatistik.getIntensivfrageListe()) {
 					if (Integer.parseInt(dateFormat.format(i.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						intensivzaehler++;
 					}
 				}
 				lIntensivFrage.setValue("" + intensivzaehler);
-				for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
-					if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == ausgewählteUhrzeit) {
-						telefonzaehler++;
-					}
-				}
-				lTelefonkontakt.setValue("" + telefonzaehler);
-
 			} else {
 				bBenutzerkontakt.setEnabled(false);
 				bBenutzerkontaktMinus.setEnabled(false);
-				bEmailkontakt.setEnabled(false);
-				bEmailkontaktMinus.setEnabled(false);
+				bBeantwortung.setEnabled(false);
+				bBeantwortungMinus.setEnabled(false);
 				bIntensivFrage.setEnabled(false);
 				bIntensivFrageMinus.setEnabled(false);
-				bTelefonkontakt.setEnabled(false);
-				bTelefonkontaktMinus.setEnabled(false);
 			}
 
 		});
-
-		lRechercheberatung = new Label();
-		lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
-		lRechercheberatung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-
-		bRechercheBeratung = new Button();
-		bRechercheBeratung.setCaption("Rechercheb. +1");
-		bRechercheBeratung.addClickListener(createClickListener());
-
-		bRechercheBeratungMinus = new Button();
-		bRechercheBeratungMinus.setCaption("Rechercheb. -1");
-		bRechercheBeratungMinus.addStyleName(ValoTheme.BUTTON_DANGER);
-		bRechercheBeratungMinus.addClickListener(createClickListener());
-
-		bKorrekturWintikurier = new Button();
-		bKorrekturWintikurier.setCaption("Wintikurier");
-		bKorrekturWintikurier.addClickListener(createClickListener());
-
-		bKorrekturGruppen = new Button();
-		bKorrekturGruppen.setCaption("Gruppen");
-		bKorrekturGruppen.setCaptionAsHtml(true);
-		bKorrekturGruppen.addClickListener(createClickListener());
 
 		DateField datefield = new DateField();
 		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
@@ -345,25 +261,16 @@ public class KorrekturView extends Composite implements View {
 					StandortEnum.WINTERTHUR_BB);
 
 			// Alle Werte anpassen
-			if (benutzungsstatistik.isKassenbeleg()) {
-				kassenbeleg.setValue(true);
-			} else {
-				kassenbeleg.setValue(false);
-			}
 			uhrzeitListSelect.setSelectedItem(data.get(0));
 			bBenutzerkontakt.setEnabled(false);
 			bBenutzerkontaktMinus.setEnabled(false);
-			bEmailkontakt.setEnabled(false);
-			bEmailkontaktMinus.setEnabled(false);
-			bTelefonkontakt.setEnabled(false);
-			bTelefonkontaktMinus.setEnabled(false);
+			bBeantwortung.setEnabled(false);
+			bBeantwortungMinus.setEnabled(false);
 			bIntensivFrage.setEnabled(false);
 			bIntensivFrageMinus.setEnabled(false);
 			lBenutzerkontakt.setValue("0");
-			lEmailkontakt.setValue("0");
-			lTelefonkontakt.setValue("0");
+			lBeantwortung.setValue("0");
 			lIntensivFrage.setValue("0");
-			lRechercheberatung.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
 		});
 
 		GridLayout grid = new GridLayout(5, 8);
@@ -382,19 +289,19 @@ public class KorrekturView extends Composite implements View {
 		grid.addComponent(bIntensivFrage, 2, 1, 2, 3);
 		grid.addComponent(lIntensivFrage, 2, 4);
 		grid.addComponent(bIntensivFrageMinus, 2, 5);
-		grid.addComponent(bEmailkontakt, 3, 1, 3, 3);
-		grid.addComponent(lEmailkontakt, 3, 4);
-		grid.addComponent(bEmailkontaktMinus, 3, 5);
-		grid.addComponent(bTelefonkontakt, 4, 1, 4, 3);
-		grid.addComponent(lTelefonkontakt, 4, 4);
-		grid.addComponent(bTelefonkontaktMinus, 4, 5);
-		grid.addComponent(lKassenbeleg, 0, 6);
-		grid.addComponent(kassenbeleg, 0, 7);
-		grid.addComponent(lRechercheberatung, 1, 6, 2, 6);
-		grid.addComponent(bRechercheBeratung, 1, 7);
-		grid.addComponent(bRechercheBeratungMinus, 2, 7);
-		grid.addComponent(bKorrekturWintikurier, 3, 6, 3, 7);
-		grid.addComponent(bKorrekturGruppen, 4, 6, 4, 7);
+		grid.addComponent(bBeantwortung, 3, 1, 4, 3);
+		grid.addComponent(lBeantwortung, 3, 4, 4, 4);
+		grid.addComponent(bBeantwortungMinus, 3, 5, 4, 5);
+//		grid.addComponent(new Label(), 4, 1, 4, 3);
+//		grid.addComponent(new Label(), 4, 4);
+//		grid.addComponent(new Label(), 4, 5);
+		grid.addComponent(new Label(), 0, 6);
+		grid.addComponent(new Label(), 0, 7);
+		grid.addComponent(new Label(), 1, 6, 2, 6);
+		grid.addComponent(new Label(), 1, 7);
+		grid.addComponent(new Label(), 2, 7);
+		grid.addComponent(new Label(), 3, 6, 3, 7);
+		grid.addComponent(new Label(), 4, 6, 4, 7);
 		grid.setColumnExpandRatio(0, 0.2f);
 		grid.setColumnExpandRatio(1, 0.2f);
 		grid.setColumnExpandRatio(2, 0.2f);
@@ -448,7 +355,7 @@ public class KorrekturView extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
@@ -470,7 +377,7 @@ public class KorrekturView extends Composite implements View {
 
 					benutzerzaehler++;
 					lBenutzerkontakt.setValue("" + benutzerzaehler);
-					Notification.show("+1 Benutzerkontakt" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+					Notification.show("+1 Benutzerkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bBenutzerkontaktMinus) {
@@ -512,7 +419,7 @@ public class KorrekturView extends Composite implements View {
 
 					intensivzaehler++;
 					lIntensivFrage.setValue("" + intensivzaehler);
-					Notification.show("+1 Intensivfrage" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+					Notification.show("+1 Intensivfrage " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bIntensivFrageMinus) {
@@ -535,7 +442,7 @@ public class KorrekturView extends Composite implements View {
 					}
 				}
 
-				if (e.getSource() == bEmailkontakt) {
+				if (e.getSource() == bBeantwortung) {
 
 					Date date = null;
 					try {
@@ -549,113 +456,33 @@ public class KorrekturView extends Composite implements View {
 					}
 
 					benutzungsstatistik
-							.addEmailkontakt(new Emailkontakt(new Timestamp(date.getTime()), benutzungsstatistik));
+							.addBeantwortungBibliothekspersonal(new BeantwortungBibliothekspersonal(new Timestamp(date.getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-					emailzaehler++;
-					lEmailkontakt.setValue("" + emailzaehler);
-					Notification.show("+1 Emailkontakt" + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+					beantwortungzaehler++;
+					lBeantwortung.setValue("" + beantwortungzaehler);
+					Notification.show("+1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 				}
 
-				if (e.getSource() == bEmailkontaktMinus) {
+				if (e.getSource() == bBeantwortungMinus) {
 
-					if (emailzaehler != 0) {
-						Emailkontakt emailkontakt = null;
-						for (Emailkontakt e1 : benutzungsstatistik.getEmailkontaktListe()) {
+					if (beantwortungzaehler != 0) {
+						BeantwortungBibliothekspersonal beantwortungBibliothekspersonal = null;
+						for (BeantwortungBibliothekspersonal e1 : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
 							if (Integer
 									.parseInt(dateFormat.format(e1.getTimestamp().getTime())) == ausgewählteUhrzeit) {
-								emailkontakt = e1;
+								beantwortungBibliothekspersonal = e1;
 							}
 						}
-						benutzungsstatistik.removeEmailkontakt(emailkontakt);
+						benutzungsstatistik.removeBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal);
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-						emailzaehler--;
-						lEmailkontakt.setValue("" + emailzaehler);
-						Notification.show("-1 Emailkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+						beantwortungzaehler--;
+						lBeantwortung.setValue("" + beantwortungzaehler);
+						Notification.show("-1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
 					} else {
-						Notification.show("Der Emailkontakt ist bereits 0", Type.WARNING_MESSAGE);
+						Notification.show("Die Beantwortung Bibliothekspersonal ist bereits 0", Type.WARNING_MESSAGE);
 					}
-				}
-
-				if (e.getSource() == bTelefonkontakt) {
-
-					Date date = null;
-					try {
-						String datumStatistik = sdfDate.format(benutzungsstatistik.getDatum());
-						String gewählteUhrzeit = sdfHour.format(
-								sdfTimestamp.parse(sdfDate.format(new Date()) + " " + ausgewählteUhrzeit + ":00:00"));
-						String timestamp = datumStatistik + " " + gewählteUhrzeit;
-						date = sdfTimestamp.parse(timestamp);
-					} catch (ParseException e1) {
-						e1.printStackTrace();
-					}
-
-					benutzungsstatistik
-							.addTelefonkontakt(new Telefonkontakt(new Timestamp(date.getTime()), benutzungsstatistik));
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
-					telefonzaehler++;
-					lTelefonkontakt.setValue("" + telefonzaehler);
-					Notification.show("+1 Telefonkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
-				}
-
-				if (e.getSource() == bTelefonkontaktMinus) {
-
-					if (telefonzaehler != 0) {
-						Telefonkontakt telefonkontakt = null;
-						for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
-							if (Integer.parseInt(dateFormat.format(t.getTimestamp().getTime())) == ausgewählteUhrzeit) {
-								telefonkontakt = t;
-							}
-						}
-						benutzungsstatistik.removeTelefonkontakt(telefonkontakt);
-						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
-						telefonzaehler--;
-						lTelefonkontakt.setValue("" + telefonzaehler);
-						Notification.show("-1 Telefonkontakt " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
-					} else {
-						Notification.show("Der Telefonkontakt ist bereits 0", Type.WARNING_MESSAGE);
-					}
-				}
-
-				if (e.getSource() == bRechercheBeratung) {
-					benutzungsstatistik
-							.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() + 1);
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
-					lRechercheberatung
-							.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
-
-					Notification.show(
-							"+1 Rechercheberatung, insgesamt " + benutzungsstatistik.getAnzahl_Rechercheberatung(),
-							Type.TRAY_NOTIFICATION);
-				}
-
-				if (e.getSource() == bRechercheBeratungMinus) {
-					if (benutzungsstatistik.getAnzahl_Rechercheberatung() > 0) {
-						benutzungsstatistik
-								.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() - 1);
-						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-
-						lRechercheberatung
-								.setValue("Rechercheberatung: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
-
-						Notification.show(
-								"+1 Rechercheberatung, insgesamt " + benutzungsstatistik.getAnzahl_Rechercheberatung(),
-								Type.TRAY_NOTIFICATION);
-					} else {
-						Notification.show("Die Rechercheberatung ist bereits 0", Type.WARNING_MESSAGE);
-					}
-				}
-
-				if (e.getSource() == bKorrekturWintikurier) {
-					getUI().getNavigator().navigateTo(WintikurierView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
-				}
-
-				if (e.getSource() == bKorrekturGruppen) {
-					getUI().getNavigator().navigateTo(ExterneGruppeView.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
 				}
 
 			}
