@@ -19,7 +19,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.VerticalLayout;
 
-import administrator.view.ExportView;
+import administrator.view.ExportViewWaedi;
+import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
@@ -28,12 +29,16 @@ import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
+import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
 import benutzungsstatistik.view.ExterneGruppeViewBB;
 import benutzungsstatistik.view.KorrekturViewBB;
 import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.KorrekturViewWaedi;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
+import benutzungsstatistik.view.InternerkurierViewWaedi;
 
 public class LoginPage extends VerticalLayout implements View {
 
@@ -73,20 +78,27 @@ public class LoginPage extends VerticalLayout implements View {
 						VaadinSession.getCurrent().setAttribute("user", username.getValue());
 						getUI().getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
 						getUI().getNavigator().addView(PasswortView.NAME, PasswortView.class);
-						getUI().getNavigator().addView(ExportView.NAME, ExportView.class);
+						getUI().getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
+						getUI().getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);
 						getUI().getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
 						getUI().getNavigator().addView(TagesübersichtBelegungViewWinti.NAME,
 								TagesübersichtBelegungViewWinti.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
+						getUI().getNavigator().addView(BenutzungsstatistikViewWaedi.NAME, BenutzungsstatistikViewWaedi.class);
 						getUI().getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
 						getUI().getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
 						getUI().getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
+						getUI().getNavigator().addView(KorrekturViewWaedi.NAME, KorrekturViewWaedi.class);
 						getUI().getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
 						getUI().getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
+						getUI().getNavigator().addView(TagesübersichtBenutzungViewWaedi.NAME, TagesübersichtBenutzungViewWaedi.class);
 						getUI().getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
+						getUI().getNavigator().addView(InternerkurierViewWaedi.NAME, InternerkurierViewWaedi.class);
 
 						getUI().getNavigator().addViewChangeListener(new ViewChangeListener() {
+
+							private static final long serialVersionUID = 1L;
 
 							@Override
 							public boolean beforeViewChange(ViewChangeEvent event) {
@@ -97,8 +109,10 @@ public class LoginPage extends VerticalLayout implements View {
 
 									//Export, Passwort View dürfen nur Admins
 									if (event.getNewView() instanceof PasswortView && user.contains("Admin")
-											|| event.getNewView() instanceof ExportView
-													&& user.equals("Admin Winterthur")) {
+											|| event.getNewView() instanceof ExportViewWinti
+													&& user.equals("Admin Winterthur")
+											|| event.getNewView() instanceof ExportViewWaedi
+													&& user.equals("Admin Wädenswil")) {
 										return true;
 									}
 									//Benutzungsstatistik Bibliothek darf nur Admin und Mitarbeitende Winterthur
@@ -137,6 +151,17 @@ public class LoginPage extends VerticalLayout implements View {
 													&& user.equals("Admin Winterthur")
 											|| event.getNewView() instanceof KorrekturViewLL
 													&& user.equals("Studentische Mitarbeitende Winterthur")) {
+										return true;
+									}
+									//Benutzungsstatistik Wädenswil dürfen nur User aus Wädenswil
+									if (event.getNewView() instanceof BenutzungsstatistikViewWaedi
+											&& user.contains("Wädenswil")
+											|| event.getNewView() instanceof InternerkurierViewWaedi
+													&& user.contains("Wädenswil")
+											|| event.getNewView() instanceof TagesübersichtBenutzungViewWaedi
+													&& user.contains("Wädenswil")
+											|| event.getNewView() instanceof KorrekturViewWaedi
+													&& user.contains("Wädenswil")){
 										return true;
 									}
 									//Belegung Winterthur dürfen nur alle mit Wort "Winterthur" im Namen

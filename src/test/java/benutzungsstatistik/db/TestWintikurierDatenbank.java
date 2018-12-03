@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import allgemein.model.StandortEnum;
 import benutzungsstatistik.model.Benutzungsstatistik;
+import benutzungsstatistik.model.Internerkurier;
 import benutzungsstatistik.model.Wintikurier;
 
 /**
@@ -28,7 +29,7 @@ public class TestWintikurierDatenbank {
 	public void initComponents() {
 		wintikurier = new Wintikurier(5, 7, 2, 10);
 		
-		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST, wintikurier);
+		Benutzungsstatistik benutzungsstatistik = new Benutzungsstatistik(new Date(), 8, true, StandortEnum.TEST, wintikurier, new Internerkurier(0,0,0));
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik);
 
 	}

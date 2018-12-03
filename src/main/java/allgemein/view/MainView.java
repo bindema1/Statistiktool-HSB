@@ -12,18 +12,23 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
-import administrator.view.ExportView;
+import administrator.view.ExportViewWaedi;
+import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
+import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
 import benutzungsstatistik.view.ExterneGruppeViewBB;
 import benutzungsstatistik.view.KorrekturViewBB;
 import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.KorrekturViewWaedi;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
+import benutzungsstatistik.view.InternerkurierViewWaedi;
 import testdaten.TestDaten;
 
 /**
@@ -73,26 +78,35 @@ public class MainView extends UI {
 		if (getSession().getAttribute("user") != null) {
 			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
 			getNavigator().addView(PasswortView.NAME, PasswortView.class);
-			getNavigator().addView(ExportView.NAME, ExportView.class);
+			getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
+			getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);
 			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
 			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
 			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
+			getNavigator().addView(BenutzungsstatistikViewWaedi.NAME, BenutzungsstatistikViewWaedi.class);
 			getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
 			getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
 			getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
+			getNavigator().addView(KorrekturViewWaedi.NAME, KorrekturViewWaedi.class);
 			getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
 			getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
+			getNavigator().addView(TagesübersichtBenutzungViewWaedi.NAME, TagesübersichtBenutzungViewWaedi.class);
 			getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
+			getNavigator().addView(InternerkurierViewWaedi.NAME, InternerkurierViewWaedi.class);
 			
 			if (route.equals("!"+PasswortView.NAME)) {
 				getNavigator().navigateTo(PasswortView.NAME);
-			} else if (route.equals("!"+ExportView.NAME)) {
-				getNavigator().navigateTo(ExportView.NAME);
+			} else if (route.equals("!"+ExportViewWinti.NAME)) {
+				getNavigator().navigateTo(ExportViewWinti.NAME);
+			} else if (route.equals("!"+ExportViewWaedi.NAME)) {
+				getNavigator().navigateTo(ExportViewWaedi.NAME);
 			} else if (route.equals("!"+BenutzungsstatistikViewBB.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 			} else if (route.equals("!"+BenutzungsstatistikViewLL.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
+			} else if (route.equals("!"+BenutzungsstatistikViewWaedi.NAME)) {
+				getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
 //			} else if (route.equals("!"+KorrekturViewBB.NAME)) {
 //				getNavigator().navigateTo(KorrekturViewBB.NAME);
 //			} else if (route.equals("!"+KorrekturViewLL.NAME)) {

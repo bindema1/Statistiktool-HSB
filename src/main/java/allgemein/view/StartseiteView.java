@@ -14,19 +14,24 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 
-import administrator.view.ExportView;
+import administrator.view.ExportViewWaedi;
+import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import belegung.model.StockwerkEnum;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
+import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
 import benutzungsstatistik.view.ExterneGruppeViewBB;
 import benutzungsstatistik.view.KorrekturViewBB;
 import benutzungsstatistik.view.KorrekturViewLL;
+import benutzungsstatistik.view.KorrekturViewWaedi;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
+import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
+import benutzungsstatistik.view.InternerkurierViewWaedi;
 
 public class StartseiteView extends Composite implements View {
 
@@ -35,8 +40,10 @@ public class StartseiteView extends Composite implements View {
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistikBB;
 	private Button bBenutzungsstatistikLL;
+	private Button bBenutzungsstatistikWaedi;
 	private Button bBelegungWinti;
 	private Button bExportWinti;
+	private Button bExportWaedi;
 	private Button bPasswort;
 	private Button bLogout;
 	private String user;
@@ -83,6 +90,11 @@ public class StartseiteView extends Composite implements View {
 		bBenutzungsstatistikLL.setCaption("Benutzungsstatistik LL");
 		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikLL.addClickListener(createClickListener());
+		
+		bBenutzungsstatistikWaedi = new Button();
+		bBenutzungsstatistikWaedi.setCaption("Benutzungsstatistik Wädi");
+		bBenutzungsstatistikWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikWaedi.addClickListener(createClickListener());
 
 		bBelegungWinti = new Button();
 		bBelegungWinti.setCaption("Belegung Winti");
@@ -93,6 +105,11 @@ public class StartseiteView extends Composite implements View {
 		bExportWinti.setCaption("Export Winti");
 		bExportWinti.addStyleName(ValoTheme.BUTTON_LARGE);
 		bExportWinti.addClickListener(createClickListener());
+		
+		bExportWaedi = new Button();
+		bExportWaedi.setCaption("Export Wädi");
+		bExportWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
+		bExportWaedi.addClickListener(createClickListener());
 
 		bPasswort = new Button();
 		bPasswort.setCaption("Passwörter ändern");
@@ -131,9 +148,19 @@ public class StartseiteView extends Composite implements View {
 			grid.addComponent(new Label(), 1, 2);
 			grid.addComponent(new Label(), 2, 2);
 		} else if (user.equals("Admin Wädenswil")) {
+			grid.addComponent(bBenutzungsstatistikWaedi, 0, 1);
+			grid.addComponent(new Label(), 1, 1);
+			grid.addComponent(new Label(), 2, 1);
+			grid.addComponent(bExportWaedi, 0, 2);
 			grid.addComponent(bPasswort, 1, 2);
+			grid.addComponent(new Label(), 2, 2);
 		} else if (user.equals("Mitarbeitende Wädenswil")) {
-
+			grid.addComponent(bBenutzungsstatistikWaedi, 0, 1);
+			grid.addComponent(new Label(), 1, 1);
+			grid.addComponent(new Label(), 2, 1);
+			grid.addComponent(new Label(), 0, 2);
+			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(new Label(), 2, 2);
 		}
 
 		for (int col = 0; col < grid.getColumns(); col++) {
@@ -166,6 +193,10 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bBenutzungsstatistikLL) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
+				
+				if (e.getSource() == bBenutzungsstatistikWaedi) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
+				}
 
 				if (e.getSource() == bBelegungWinti) {
 					if (user.equals("Studentische Mitarbeitende Winterthur")) {
@@ -178,7 +209,11 @@ public class StartseiteView extends Composite implements View {
 				}
 
 				if (e.getSource() == bExportWinti) {
-					getUI().getNavigator().navigateTo(ExportView.NAME);
+					getUI().getNavigator().navigateTo(ExportViewWinti.NAME);
+				}
+				
+				if (e.getSource() == bExportWaedi) {
+					getUI().getNavigator().navigateTo(ExportViewWaedi.NAME);
 				}
 
 				if (e.getSource() == bPasswort) {
@@ -188,17 +223,22 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bLogout) {
 					getUI().getNavigator().removeView(StartseiteView.NAME);
 					getUI().getNavigator().removeView(PasswortView.NAME);
-					getUI().getNavigator().removeView(ExportView.NAME);
+					getUI().getNavigator().removeView(ExportViewWinti.NAME);
+					getUI().getNavigator().removeView(ExportViewWaedi.NAME);
 					getUI().getNavigator().removeView(BelegungErfassenViewWinti.NAME);
 					getUI().getNavigator().removeView(TagesübersichtBelegungViewWinti.NAME);
 					getUI().getNavigator().removeView(BenutzungsstatistikViewBB.NAME);
 					getUI().getNavigator().removeView(BenutzungsstatistikViewLL.NAME);
+					getUI().getNavigator().removeView(BenutzungsstatistikViewWaedi.NAME);
 					getUI().getNavigator().removeView(ExterneGruppeViewBB.NAME);
 					getUI().getNavigator().removeView(KorrekturViewBB.NAME);
 					getUI().getNavigator().removeView(KorrekturViewLL.NAME);
+					getUI().getNavigator().removeView(KorrekturViewWaedi.NAME);
 					getUI().getNavigator().removeView(TagesübersichtBenutzungViewBB.NAME);
 					getUI().getNavigator().removeView(TagesübersichtBenutzungViewLL.NAME);
+					getUI().getNavigator().removeView(TagesübersichtBenutzungViewWaedi.NAME);
 					getUI().getNavigator().removeView(WintikurierViewBB.NAME);
+					getUI().getNavigator().removeView(InternerkurierViewWaedi.NAME);
 					VaadinSession.getCurrent().setAttribute("user", null);
 					Page.getCurrent().setUriFragment("");
 				}

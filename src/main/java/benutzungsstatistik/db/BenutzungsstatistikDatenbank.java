@@ -13,6 +13,7 @@ import org.hibernate.cfg.Configuration;
 
 import allgemein.model.StandortEnum;
 import benutzungsstatistik.model.Benutzungsstatistik;
+import benutzungsstatistik.model.Internerkurier;
 import benutzungsstatistik.model.Wintikurier;
 
 /**
@@ -198,11 +199,13 @@ public class BenutzungsstatistikDatenbank {
 		// Falls es keine Benutzungsstatistik für das Datum gibt, erstelle eine
 		// Benutzungsstatistik
 		if (benutzungsstatistik == null) {
-			WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
+//			WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 			Wintikurier wintikurier = new Wintikurier(0, 0, 0, 0);
-			wintikurierDB.insertWintikurier(wintikurier);
+//			wintikurierDB.insertWintikurier(wintikurier);
+			
+			Internerkurier internerkurier = new Internerkurier(0, 0, 0);
 
-			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier);
+			benutzungsstatistik = new Benutzungsstatistik(date, 0, false, standort, wintikurier, internerkurier);
 			insertBenutzungsstatistik(benutzungsstatistik);
 			System.out.println("Benutzungsstatistik gespeichert " + benutzungsstatistik.getBenutzungsstatistik_ID());
 		}

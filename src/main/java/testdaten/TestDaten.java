@@ -29,6 +29,7 @@ import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
 import benutzungsstatistik.model.ExterneGruppe;
 import benutzungsstatistik.model.Intensivfrage;
+import benutzungsstatistik.model.Internerkurier;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 
@@ -93,8 +94,8 @@ public class TestDaten {
 		
 		date = sdf2.parse("01.12.2018");
 
-		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, new Wintikurier(6, 2, 9, 5));
-		Benutzungsstatistik benutzungsstatistikLL = new Benutzungsstatistik(date, 0, StandortEnum.WINTERTHUR_LL);
+		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, new Wintikurier(6, 2, 9, 5), new Internerkurier(0,0,0));
+		Benutzungsstatistik benutzungsstatistikLL = new Benutzungsstatistik(date, StandortEnum.WINTERTHUR_LL);
 
 //		Timestamp timestamp = new Timestamp(date.getTime());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

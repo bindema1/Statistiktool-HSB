@@ -50,6 +50,9 @@ public class Benutzungsstatistik implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Wintikurier wintikurier;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	private Internerkurier internerkurier;
+
 	@OneToMany(mappedBy = "benutzungsstatistik", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Benutzerkontakt> benutzerkontaktListe = new ArrayList<>();
 
@@ -73,19 +76,29 @@ public class Benutzungsstatistik implements Serializable {
 
 	}
 
+	// Für Benutzungsstatistik Bibliothek
 	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, boolean kassenbeleg, StandortEnum standort,
-			Wintikurier wintikurier) {
+			Wintikurier wintikurier, Internerkurier internerkurier) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
 		this.kassenbeleg = kassenbeleg;
 		this.standort = standort;
 		this.wintikurier = wintikurier;
+		this.internerkurier = internerkurier;
 	}
 
-	// Ohne Wintikurier und Kassenbeleg für Benutzungsstatistik Lernlandschaft
-	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, StandortEnum standort) {
+	// Für Benutzungsstatistik Wädenswil
+	public Benutzungsstatistik(Date datum, int anzahl_Rechercheberatung, StandortEnum standort,
+			Internerkurier internerkurier) {
 		this.datum = datum;
 		this.anzahl_Rechercheberatung = anzahl_Rechercheberatung;
+		this.standort = standort;
+		this.internerkurier = internerkurier;
+	}
+
+	// Für Benutzungsstatistik Lernlandschaft
+	public Benutzungsstatistik(Date datum, StandortEnum standort) {
+		this.datum = datum;
 		this.standort = standort;
 	}
 
@@ -206,10 +219,18 @@ public class Benutzungsstatistik implements Serializable {
 	public List<ExterneGruppe> getExterneGruppeListe() {
 		return externeGruppeListe;
 	}
+	
+	public Internerkurier getInternerkurier() {
+		return internerkurier;
+	}
 
 	// Für Hibernate alle Set-Methoden, Hashcode und equals
 	public void setBenutzungsstatistik_ID(int benutzungsstatistik_ID) {
 		this.benutzungsstatistik_ID = benutzungsstatistik_ID;
+	}
+	
+	public void setInternerkurier(Internerkurier internerkurier) {
+		this.internerkurier = internerkurier;
 	}
 
 	public void setDatum(Date datum) {
@@ -261,15 +282,16 @@ public class Benutzungsstatistik implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + anzahl_Rechercheberatung;
 		result = prime * result + ((beantwortungBibliothekspersonalListe == null) ? 0
 				: beantwortungBibliothekspersonalListe.hashCode());
-		result = prime * result + anzahl_Rechercheberatung;
 		result = prime * result + ((benutzerkontaktListe == null) ? 0 : benutzerkontaktListe.hashCode());
 		result = prime * result + benutzungsstatistik_ID;
 		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
 		result = prime * result + ((emailkontaktListe == null) ? 0 : emailkontaktListe.hashCode());
 		result = prime * result + ((externeGruppeListe == null) ? 0 : externeGruppeListe.hashCode());
 		result = prime * result + ((intensivfrageListe == null) ? 0 : intensivfrageListe.hashCode());
+		result = prime * result + ((internerkurier == null) ? 0 : internerkurier.hashCode());
 		result = prime * result + (kassenbeleg ? 1231 : 1237);
 		result = prime * result + ((standort == null) ? 0 : standort.hashCode());
 		result = prime * result + ((telefonkontaktListe == null) ? 0 : telefonkontaktListe.hashCode());
@@ -286,12 +308,12 @@ public class Benutzungsstatistik implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Benutzungsstatistik other = (Benutzungsstatistik) obj;
+		if (anzahl_Rechercheberatung != other.anzahl_Rechercheberatung)
+			return false;
 		if (beantwortungBibliothekspersonalListe == null) {
 			if (other.beantwortungBibliothekspersonalListe != null)
 				return false;
 		} else if (!beantwortungBibliothekspersonalListe.equals(other.beantwortungBibliothekspersonalListe))
-			return false;
-		if (anzahl_Rechercheberatung != other.anzahl_Rechercheberatung)
 			return false;
 		if (benutzerkontaktListe == null) {
 			if (other.benutzerkontaktListe != null)
@@ -319,6 +341,11 @@ public class Benutzungsstatistik implements Serializable {
 			if (other.intensivfrageListe != null)
 				return false;
 		} else if (!intensivfrageListe.equals(other.intensivfrageListe))
+			return false;
+		if (internerkurier == null) {
+			if (other.internerkurier != null)
+				return false;
+		} else if (!internerkurier.equals(other.internerkurier))
 			return false;
 		if (kassenbeleg != other.kassenbeleg)
 			return false;

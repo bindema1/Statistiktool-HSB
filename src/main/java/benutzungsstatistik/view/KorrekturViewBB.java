@@ -50,7 +50,7 @@ import benutzungsstatistik.model.Telefonkontakt;
 public class KorrekturViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "Benutzung-Korrektur";
+	public static final String NAME = "Benutzung-Korrektur-BB";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bBenutzerkontakt;

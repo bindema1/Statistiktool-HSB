@@ -58,10 +58,10 @@ import benutzungsstatistik.model.Intensivfrage;
 import benutzungsstatistik.model.Telefonkontakt;
 import benutzungsstatistik.model.Wintikurier;
 
-public class ExportView extends Composite implements View {
+public class ExportViewWinti extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "Export";
+	public static final String NAME = "Export-Winti";
 	private AbsoluteLayout mainLayout;
 	private Button bExportBenutzung;
 	private Button bExportWintikurierTag;
@@ -101,7 +101,7 @@ public class ExportView extends Composite implements View {
 		return absolutLayout;
 	}
 
-	public ExportView() {
+	public ExportViewWinti() {
 		setCompositionRoot(init());
 	}
 

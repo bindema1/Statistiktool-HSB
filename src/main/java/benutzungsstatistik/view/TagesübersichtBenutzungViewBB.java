@@ -50,7 +50,7 @@ import benutzungsstatistik.model.Telefonkontakt;
 public class TagesübersichtBenutzungViewBB extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "Benutzung-Übersicht";
+	public static final String NAME = "Benutzung-Übersicht-BB";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bKorrektur;
