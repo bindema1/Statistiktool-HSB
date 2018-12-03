@@ -50,6 +50,7 @@ import belegung.model.Stockwerk;
 import belegung.model.StockwerkEnum;
 import belegung.model.UhrzeitEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
+import benutzungsstatistik.model.BeantwortungBibliothekspersonal;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
 import benutzungsstatistik.model.Emailkontakt;
@@ -63,7 +64,8 @@ public class ExportViewWinti extends Composite implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Export-Winti";
 	private AbsoluteLayout mainLayout;
-	private Button bExportBenutzung;
+	private Button bExportBenutzungBB;
+	private Button bExportBenutzungLL;
 	private Button bExportWintikurierTag;
 	private Button bExportWintikurierMonat;
 	private Button bExportGruppen;
@@ -75,7 +77,8 @@ public class ExportViewWinti extends Composite implements View {
 	private LocalDate endDate;
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	private Grid<ExportExterneGruppeBean> tabelleExterneGruppen;
-	private Grid<ExportBenutzungsstatistikBean> tabelleBenutzungsstatistik;
+	private Grid<ExportBenutzungsstatistikBean> tabelleBenutzungsstatistikBB;
+	private Grid<ExportBenutzungsstatistikBean> tabelleBenutzungsstatistikLL;
 	private Grid<ExportWintikurierTagBean> tabelleWintikurierTag;
 	private Grid<ExportWintikurierMonatBean> tabelleWintikurierMonat;
 	private Grid<ExportBelegungKomplettBean> tabelleBelegungKomplett;
@@ -139,16 +142,27 @@ public class ExportViewWinti extends Composite implements View {
 		lBenutzung.setValue("Benutzungsstatistik");
 		lBenutzung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
-		// Download Excelfile für Benutzungsstatistik
-		bExportBenutzung = new Button();
-		bExportBenutzung.setCaption("Benutzungsstatistik exportieren");
-		bExportBenutzung.addClickListener(createClickListener());
-		tabelleBenutzungsstatistik = new Grid<>(ExportBenutzungsstatistikBean.class);
+		// Download Excelfile für Benutzungsstatistik Bibliothek
+		bExportBenutzungBB = new Button();
+		bExportBenutzungBB.setCaption("Benutzungsstatistik Bibliothek exportieren");
+		bExportBenutzungBB.addClickListener(createClickListener());
+		tabelleBenutzungsstatistikBB = new Grid<>(ExportBenutzungsstatistikBean.class);
 		StreamResource excelStreamResource4 = new StreamResource(
-				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBenutzungsstatistik),
-				"Benutzungsstatistik.xls");
+				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBenutzungsstatistikBB),
+				"Benutzungsstatistik-BB.xls");
 		FileDownloader excelFileDownloader4 = new FileDownloader(excelStreamResource4);
-		excelFileDownloader4.extend(bExportBenutzung);
+		excelFileDownloader4.extend(bExportBenutzungBB);
+
+		// Download Excelfile für Benutzungsstatistik Lernlandschaft
+		bExportBenutzungLL = new Button();
+		bExportBenutzungLL.setCaption("Benutzungsstatistik Lernlandschaft exportieren");
+		bExportBenutzungLL.addClickListener(createClickListener());
+		tabelleBenutzungsstatistikLL = new Grid<>(ExportBenutzungsstatistikBean.class);
+		StreamResource excelStreamResource7 = new StreamResource(
+				(StreamResource.StreamSource) () -> Exporter.exportAsExcel(tabelleBenutzungsstatistikLL),
+				"Benutzungsstatistik-LL.xls");
+		FileDownloader excelFileDownloader7 = new FileDownloader(excelStreamResource7);
+		excelFileDownloader7.extend(bExportBenutzungLL);
 
 		// Download Excelfile für Wintikurier pro Tag
 		bExportWintikurierTag = new Button();
@@ -229,20 +243,21 @@ public class ExportViewWinti extends Composite implements View {
 
 		// Layout
 		AbsoluteLayout overallLayout = new AbsoluteLayout();
-		overallLayout.addComponent(lText, "top:10%; left:5%");
+		overallLayout.addComponent(lText, "top:10%; left:3%");
 
 		// Datum
 		HorizontalLayout datumLayout = new HorizontalLayout();
 		datumLayout.addComponent(datumVon);
 		datumLayout.addComponent(datumBis);
-		overallLayout.addComponent(datumLayout, "top:18%; left:5%");
+		overallLayout.addComponent(datumLayout, "top:18%; left:3%");
 
 		HorizontalLayout exportLayout = new HorizontalLayout();
 
 		// Benutzung
 		VerticalLayout benutzungsLayout = new VerticalLayout();
 		benutzungsLayout.addComponent(lBenutzung);
-		benutzungsLayout.addComponent(bExportBenutzung);
+		benutzungsLayout.addComponent(bExportBenutzungBB);
+		benutzungsLayout.addComponent(bExportBenutzungLL);
 		benutzungsLayout.addComponent(bExportGruppen);
 		benutzungsLayout.addComponent(bExportWintikurierTag);
 		benutzungsLayout.addComponent(bExportWintikurierMonat);
@@ -261,7 +276,7 @@ public class ExportViewWinti extends Composite implements View {
 
 		overallLayout.addComponent(exportLayout, "top:25%;");
 
-		mainLayout.addComponent(overallLayout, "left:25%");
+		mainLayout.addComponent(overallLayout, "left:15%");
 	}
 
 	/**
@@ -288,9 +303,9 @@ public class ExportViewWinti extends Composite implements View {
 	}
 
 	/**
-	 * Sammelt alle Daten für den export der Benutzungsstatistik
+	 * Sammelt alle Daten für den export der Benutzungsstatistik Bibliothek
 	 */
-	private void exportBenutzungsstatistik() {
+	private void exportBenutzungsstatistikBB() {
 		List<ExportBenutzungsstatistikBean> beanListe = new ArrayList<>();
 
 		// Geht durch alle Tage vom Startdatum bis Enddatum
@@ -305,7 +320,7 @@ public class ExportViewWinti extends Composite implements View {
 
 				beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
 						sdf.format(datum), "", "Rechercheberatung", benutzungsstatistik.getAnzahl_Rechercheberatung()));
-				
+
 				// Geht durch alle Uhrzeiten eines Tages
 				for (int i = 8; i <= 19; i++) {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
@@ -352,9 +367,66 @@ public class ExportViewWinti extends Composite implements View {
 			}
 		}
 
-		tabelleBenutzungsstatistik.setItems(beanListe);
+		tabelleBenutzungsstatistikBB.setItems(beanListe);
 	}
 
+	/**
+	 * Sammelt alle Daten für den export der Benutzungsstatistik Lernlandschaft
+	 */
+	private void exportBenutzungsstatistikLL() {
+		List<ExportBenutzungsstatistikBean> beanListe = new ArrayList<>();
+
+		// Geht durch alle Tage vom Startdatum bis Enddatum
+		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
+
+			if (!getWochentagForDate(date).equals("Sonntag")) {
+
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+
+				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
+						.selectBenutzungsstatistikForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
+
+				// Geht durch alle Uhrzeiten eines Tages
+				for (int i = 8; i <= 19; i++) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
+
+					// Setze die Uhrzeit für den Export
+					String uhrzeit = getUhrzeitStringByInt(i);
+
+					int beantwortungzaehler = 0;
+					for (BeantwortungBibliothekspersonal e : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
+						if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == i) {
+							beantwortungzaehler++;
+						}
+					}
+					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
+							sdf.format(datum), uhrzeit, "Beant. Bibliothekspersonal", beantwortungzaehler));
+
+					int intensivzaehler = 0;
+					for (Intensivfrage in : benutzungsstatistik.getIntensivfrageListe()) {
+						if (Integer.parseInt(dateFormat.format(in.getTimestamp().getTime())) == i) {
+							intensivzaehler++;
+						}
+					}
+					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
+							sdf.format(datum), uhrzeit, "Intensive Frage", intensivzaehler));
+
+					int benutzerzaehler = 0;
+					for (Benutzerkontakt k : benutzungsstatistik.getBenutzerkontaktListe()) {
+						if (Integer.parseInt(dateFormat.format(k.getTimestamp().getTime())) == i) {
+							benutzerzaehler++;
+						}
+					}
+					beanListe.add(new ExportBenutzungsstatistikBean(getKWForDate(datum), getWochentagForDate(date),
+							sdf.format(datum), uhrzeit, "Benutzerkontakt", benutzerzaehler));
+				}
+			}
+		}
+
+		tabelleBenutzungsstatistikLL.setItems(beanListe);
+	}
+
+	
 	/**
 	 * Gibt die Uhrzeit im Format 00:00 als String zurück
 	 * 
@@ -636,30 +708,30 @@ public class ExportViewWinti extends Composite implements View {
 				Belegung belegungLL = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WINTERTHUR_LL);
 				List<Belegung> belegungsListe = new ArrayList<>();
 				Set<String> selectedBelegung = checkStockwerk.getSelectedItems();
-				//Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
-				for(String s : selectedBelegung) {
-					if(s.equals("Bibliothek")) {
+				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
+				for (String s : selectedBelegung) {
+					if (s.equals("Bibliothek")) {
 						belegungsListe.add(belegungBB);
-					}else if(s.equals("Lernlandschaft")) {
+					} else if (s.equals("Lernlandschaft")) {
 						belegungsListe.add(belegungLL);
 					}
 				}
-				
+
 				List<UhrzeitEnum> enumListe = new ArrayList<>();
 				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
-				//Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
-				for(String s : selectedUhrzeit) {
-					if(s.equals("9 Uhr"))
+				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
+				for (String s : selectedUhrzeit) {
+					if (s.equals("9 Uhr"))
 						enumListe.add(UhrzeitEnum.NEUN);
-					if(s.equals("11 Uhr"))
+					if (s.equals("11 Uhr"))
 						enumListe.add(UhrzeitEnum.ELF);
-					if(s.equals("13 Uhr"))
+					if (s.equals("13 Uhr"))
 						enumListe.add(UhrzeitEnum.DREIZEHN);
-					if(s.equals("15 Uhr"))
+					if (s.equals("15 Uhr"))
 						enumListe.add(UhrzeitEnum.FÜNFZEHN);
-					if(s.equals("17 Uhr"))
+					if (s.equals("17 Uhr"))
 						enumListe.add(UhrzeitEnum.SIEBZEHN);
-					if(s.equals("19 Uhr"))
+					if (s.equals("19 Uhr"))
 						enumListe.add(UhrzeitEnum.NEUNZEHN);
 				}
 
@@ -744,8 +816,7 @@ public class ExportViewWinti extends Composite implements View {
 
 						int auslastung = personenZaehler * 100 / maxAlleKapazitäten;
 						beanListe.add(new ExportBelegungNormalBean(getKWForDate(datum), getWochentagForDate(date),
-								sdf.format(datum), uhrzeit, bereich, personenZaehler,
-								auslastung + "%"));
+								sdf.format(datum), uhrzeit, bereich, personenZaehler, auslastung + "%"));
 					}
 				}
 			}
@@ -827,8 +898,12 @@ public class ExportViewWinti extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 
-				if (e.getSource() == bExportBenutzung) {
-					exportBenutzungsstatistik();
+				if (e.getSource() == bExportBenutzungBB) {
+					exportBenutzungsstatistikBB();
+				}
+				
+				if (e.getSource() == bExportBenutzungLL) {
+					exportBenutzungsstatistikLL();
 				}
 
 				if (e.getSource() == bExportWintikurierTag) {

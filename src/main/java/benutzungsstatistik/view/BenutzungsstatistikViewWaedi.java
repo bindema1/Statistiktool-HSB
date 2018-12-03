@@ -154,24 +154,22 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
 		bTagesuebersicht.addClickListener(createClickListener());
 
-		GridLayout grid = new GridLayout(9, 10);
+		GridLayout grid = new GridLayout(3, 10);
 		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
-		grid.addComponent(bZurueck, 0, 0, 1, 0);
-		grid.addComponent(lText, 2, 0, 5, 0);
-		grid.addComponent(new Label(), 6, 0);
-		grid.addComponent(new Label(), 7, 0, 8, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1, 2, 3);
-		grid.addComponent(bIntensivFrage, 3, 1, 5, 2);
-		grid.addComponent(sIntensivFrageSlider, 3, 3, 5, 3);
-		grid.addComponent(bTagesuebersicht, 6, 1, 8, 3);
-		grid.addComponent(bEmailkontakt, 0, 4, 2, 6);
-		grid.addComponent(bTelefonkontakt, 3, 4, 5, 6);
-		grid.addComponent(bKorrektur, 6, 4, 8, 6);
-		grid.addComponent(bInternerkurier, 0, 7, 2, 9);
-//		grid.addComponent(bRechercheBeratung, 3, 7, 5, 9);
-		grid.addComponent(new Label(), 3, 7, 5, 9);
-		grid.addComponent(new Label(), 6, 7, 8, 9);
+		grid.addComponent(bZurueck, 0, 0);
+		grid.addComponent(lText, 1, 0, 2, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 0, 3);
+		grid.addComponent(bIntensivFrage, 1, 1, 1, 2);
+		grid.addComponent(sIntensivFrageSlider, 1, 3, 1, 3);
+		grid.addComponent(bTagesuebersicht, 2, 1, 2, 3);
+		grid.addComponent(bEmailkontakt, 0, 4, 0, 6);
+		grid.addComponent(bTelefonkontakt, 1, 4, 1, 6);
+		grid.addComponent(bKorrektur, 2, 4, 2, 6);
+		grid.addComponent(bInternerkurier, 0, 7, 0, 9);
+//		grid.addComponent(bRechercheBeratung, 1, 7, 1, 9);
+		grid.addComponent(new Label(), 1, 7, 1, 9);
+		grid.addComponent(new Label(), 2, 7, 2, 9);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -180,7 +178,7 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					if(row == 3 && col == 3 || row == 3 && col == 4 || row == 3 && col == 5) {
+					if(row == 3 && col == 1) {
 						//Slider nicht verändern
 						c.setWidth("80%");
 					}else {
@@ -190,9 +188,12 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				}
 			}
 		}
+		
+		grid.setColumnExpandRatio(0, 0.33f);
+		grid.setColumnExpandRatio(1, 0.33f);
+		grid.setColumnExpandRatio(2, 0.33f);
 
 		mainLayout.addComponent(grid);
-
 	}
 
 	private void setTelefonCaption() {

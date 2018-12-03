@@ -137,7 +137,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		bTagesübersicht = new Button();
-		bTagesübersicht.setCaption("Tagesübersicht");
+		bTagesübersicht.setCaption("Übersicht");
 		bTagesübersicht.addStyleName(ValoTheme.BUTTON_LARGE);
 		bTagesübersicht.addClickListener(createClickListener());
 

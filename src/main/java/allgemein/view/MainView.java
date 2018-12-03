@@ -17,6 +17,7 @@ import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
@@ -46,7 +47,10 @@ public class MainView extends UI {
 	protected void init(VaadinRequest request) {
 
 		//Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein SQL-Skript
-		new TestDaten();
+		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
+		if(benutzungsstatistikDB.selectAllBenutzungsstatistiken().size() == 0) {
+			new TestDaten();
+		}
 		
 		new Navigator(this, this);
 
@@ -73,7 +77,7 @@ public class MainView extends UI {
 
 	private void router(String route) {
 
-//		System.out.println("ROUTE: " +route);
+		System.out.println("ROUTE: " +route);
 		
 		if (getSession().getAttribute("user") != null) {
 			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
