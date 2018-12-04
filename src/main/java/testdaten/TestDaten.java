@@ -244,10 +244,10 @@ public class TestDaten {
 		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
 		Belegung belegungLL = new Belegung(date, StandortEnum.WINTERTHUR_LL);
 
-		Kapazität kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 12);
-		Kapazität kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0);
-		Kapazität kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0);
-		Kapazität kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 24);
+		Kapazität kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 0, 3, 12, 100, 0, 0, 0, 0, 3, 25);
+		Kapazität kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0);
+		Kapazität kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0, 0, 0, 190, 0, 0, 0, 0, 0, 0);
+		Kapazität kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 12, 8, 24, 0, 160, 150, 12, 25, 8, 45);
 
 		Stockwerk stockwerkEG = new Stockwerk(StockwerkEnum.EG, false, false, true, false, kapazitätEG);
 		Stockwerk stockwerk1ZG = new Stockwerk(StockwerkEnum.ZG1, false, false, false, false, kapazität1ZG);

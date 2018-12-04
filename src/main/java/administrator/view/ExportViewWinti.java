@@ -689,7 +689,7 @@ public class ExportViewWinti extends Composite implements View {
 							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
 								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
 									int auslastung = arbeitsplätze.getAnzahlPersonen() * 100
-											/ kapazität.getMaxArbeitsplätze();
+											/ kapazität.getHunderProzentArbeitsplätze();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Arbeitsplätze", arbeitsplätze.getAnzahlPersonen(),
@@ -701,7 +701,7 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (SektorA sektorA : stockwerk.getSektorAListe()) {
 								if (uhrzeitEnum == sektorA.getUhrzeit()) {
-									int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getMaxSektorA();
+									int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getHunderProzentSektorA();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Sektor A", sektorA.getAnzahlPersonen(), auslastung + "%"));
@@ -712,7 +712,7 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (SektorB sektorB : stockwerk.getSektorBListe()) {
 								if (uhrzeitEnum == sektorB.getUhrzeit()) {
-									int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getMaxSektorB();
+									int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getHunderProzentSektorB();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Sektor B", sektorB.getAnzahlPersonen(), auslastung + "%"));
@@ -724,7 +724,7 @@ public class ExportViewWinti extends Composite implements View {
 							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
 									int auslastung = gruppenräume.getAnzahlPersonen() * 100
-											/ kapazität.getMaxGruppenräume();
+											/ kapazität.getHunderProzentGruppenräume();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Gruppenräume - Räume", gruppenräume.getAnzahlRäume(),
@@ -740,7 +740,7 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
-									int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getMaxCarrels();
+									int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getHunderProzentCarrels();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Carrels - Räume", carrels.getAnzahlRäume(),
@@ -857,9 +857,9 @@ public class ExportViewWinti extends Composite implements View {
 
 							// Zählt die Maximale Kapazität für das Stockwerk zusammen
 							Kapazität kapazität = stockwerk.getKapzität();
-							int maxKapazität = kapazität.getMaxArbeitsplätze() + kapazität.getMaxSektorA()
-									+ kapazität.getMaxSektorB() + kapazität.getMaxGruppenräume()
-									+ kapazität.getMaxCarrels();
+							int maxKapazität = kapazität.getHunderProzentArbeitsplätze() + kapazität.getHunderProzentSektorA()
+									+ kapazität.getHunderProzentSektorB() + kapazität.getHunderProzentGruppenräume()
+									+ kapazität.getHunderProzentCarrels();
 							maxAlleKapazitäten += maxKapazität;
 
 							// Zählt alle Personen zusammen für Arbeitsplätze

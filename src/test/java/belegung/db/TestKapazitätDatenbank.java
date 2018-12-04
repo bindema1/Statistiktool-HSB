@@ -20,11 +20,11 @@ public class TestKapazitätDatenbank {
 	
 	@Before
 	public void initComponents() {
-		kapazitätTest = new Kapazität(StockwerkEnum.TEST, 80, 120, 135, 12, 24);
-		kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 12);
-		kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0);
-		kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0);
-		kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 24);
+		kapazitätTest = new Kapazität(StockwerkEnum.TEST, 80, 0, 0, 0, 0, 3, 12, 100, 0, 0, 0, 0, 3, 25);
+		kapazitätEG = new Kapazität(StockwerkEnum.EG, 80, 0, 0, 0, 0, 3, 12, 100, 0, 0, 0, 0, 3, 25);
+		kapazität1ZG = new Kapazität(StockwerkEnum.ZG1, 80, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0);
+		kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0, 0, 0, 190, 0, 0, 0, 0, 0, 0);
+		kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 12, 8, 24, 0, 160, 150, 12, 25, 8, 45);
 	}
 	
 	@Test
@@ -46,7 +46,7 @@ public class TestKapazitätDatenbank {
 		
 		Kapazität k = kapazitätsDB.selectKapazitätForStockwerk(StockwerkEnum.TEST);
 
-		assertEquals(k.getMaxArbeitsplätze(), kapazitätTest.getMaxArbeitsplätze());
+		assertEquals(k.getHunderProzentArbeitsplätze(), kapazitätTest.getHunderProzentArbeitsplätze());
 		assertEquals(k.getMaxCarrels(), kapazitätTest.getMaxCarrels());
 		assertEquals(k.getMaxGruppenräume(), kapazitätTest.getMaxGruppenräume());
 		assertEquals(k.getMaxSektorA(), kapazitätTest.getMaxSektorA());

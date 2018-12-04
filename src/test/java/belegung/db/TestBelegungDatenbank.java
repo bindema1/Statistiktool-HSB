@@ -47,7 +47,7 @@ public class TestBelegungDatenbank {
 
 		belegung = new Belegung(date, StandortEnum.TEST);
 
-		Kapazität kapazität = new Kapazität(StockwerkEnum.TEST, 80, 120, 135, 12, 24);
+		Kapazität kapazität = new Kapazität(StockwerkEnum.TEST, 80, 0, 0, 0, 0, 3, 12, 100, 0, 0, 0, 0, 3, 25);
 		Stockwerk stockwerk = new Stockwerk(StockwerkEnum.TEST, true, true, true, true, kapazität);
 		Arbeitsplätze arbeitsplatz1 = new Arbeitsplätze(7, UhrzeitEnum.NEUN, stockwerk);
 		Arbeitsplätze arbeitsplatz2 = new Arbeitsplätze(34, UhrzeitEnum.ELF, stockwerk);
