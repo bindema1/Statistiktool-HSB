@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.vaadin.haijian.Exporter;
 
@@ -37,7 +38,11 @@ import administrator.bean.ExportWintikurierMonatBean;
 import administrator.bean.ExportWintikurierTagBean;
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank;
+import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
+import belegung.model.Kapazität;
+import belegung.model.Stockwerk;
+import belegung.model.UhrzeitEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzerkontakt;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -182,9 +187,9 @@ public class ExportViewWaedi extends Composite implements View {
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		// Checkbox um die Zeit zu wählen
-		List<String> dataUhrzeit = Arrays.asList("9 Uhr", "11 Uhr", "13 Uhr", "15 Uhr", "17 Uhr", "19 Uhr");
+		List<String> dataUhrzeit = Arrays.asList("11 Uhr", "15 Uhr");
 		checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
-		checkUhrzeit.select(dataUhrzeit.get(3));
+		checkUhrzeit.select(dataUhrzeit.get(1));
 		checkUhrzeit.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
@@ -463,110 +468,41 @@ public class ExportViewWaedi extends Composite implements View {
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
 				String bereich = "Wädenswil";
 
-				// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
-//				for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
-//
-//					String stockwerkName = null;
-//					if (stockwerk.getName() == StockwerkEnum.EG) {
-//						stockwerkName = "EG";
-//					} else if (stockwerk.getName() == StockwerkEnum.ZG1) {
-//						stockwerkName = "1.ZG";
-//					} else if (stockwerk.getName() == StockwerkEnum.ZG2) {
-//						stockwerkName = "2.ZG";
-//					} else if (stockwerk.getName() == StockwerkEnum.LL) {
-//						stockwerkName = "Lernlandschaft";
-//					}
-//
-//					Kapazität kapazität = stockwerk.getKapzität();
-//
-//					List<UhrzeitEnum> enumListe = new ArrayList<>();
-//					enumListe.add(UhrzeitEnum.NEUN);
-//					enumListe.add(UhrzeitEnum.ELF);
-//					enumListe.add(UhrzeitEnum.DREIZEHN);
-//					enumListe.add(UhrzeitEnum.FÜNFZEHN);
-//					enumListe.add(UhrzeitEnum.SIEBZEHN);
-//					enumListe.add(UhrzeitEnum.NEUNZEHN);
-//
-//					for (UhrzeitEnum uhrzeitEnum : enumListe) {
-//
-//						String uhrzeit = null;
-//
-//						switch (uhrzeitEnum) {
-//						case NEUN:
-//							uhrzeit = getUhrzeitStringByInt(9);
-//							break;
-//						case ELF:
-//							uhrzeit = getUhrzeitStringByInt(11);
-//							break;
-//						case DREIZEHN:
-//							uhrzeit = getUhrzeitStringByInt(13);
-//							break;
-//						case FÜNFZEHN:
-//							uhrzeit = getUhrzeitStringByInt(15);
-//							break;
-//						case SIEBZEHN:
-//							uhrzeit = getUhrzeitStringByInt(17);
-//							break;
-//						case NEUNZEHN:
-//							uhrzeit = getUhrzeitStringByInt(19);
-//							break;
-//						}
-//
-//						for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
-//							if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
-//								int auslastung = arbeitsplätze.getAnzahlPersonen() * 100
-//										/ kapazität.getMaxArbeitsplätze();
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Arbeitsplätze", arbeitsplätze.getAnzahlPersonen(), auslastung + "%"));
-//							}
-//						}
-//
-//						for (SektorA sektorA : stockwerk.getSektorAListe()) {
-//							if (uhrzeitEnum == sektorA.getUhrzeit()) {
-//								int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getMaxSektorA();
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Sektor A", sektorA.getAnzahlPersonen(), auslastung + "%"));
-//							}
-//						}
-//
-//						for (SektorB sektorB : stockwerk.getSektorBListe()) {
-//							if (uhrzeitEnum == sektorB.getUhrzeit()) {
-//								int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getMaxSektorB();
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Sektor B", sektorB.getAnzahlPersonen(), auslastung + "%"));
-//							}
-//						}
-//
-//						for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
-//							if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
-//								int auslastung = gruppenräume.getAnzahlPersonen() * 100
-//										/ kapazität.getMaxGruppenräume();
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Gruppenräume - Räume", gruppenräume.getAnzahlRäume(), auslastung + "%"));
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Gruppenräume - Personen", gruppenräume.getAnzahlPersonen(), auslastung + "%"));
-//							}
-//						}
-//
-//						for (Carrels carrels : stockwerk.getCarrelsListe()) {
-//							if (uhrzeitEnum == carrels.getUhrzeit()) {
-//								int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getMaxCarrels();
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Carrels - Räume", carrels.getAnzahlRäume(), auslastung + "%"));
-//								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
-//										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
-//										"Carrels - Personen", carrels.getAnzahlPersonen(), auslastung + "%"));
-//							}
-//						}
-//
-//					}
-//				}
+				// Geht durch das Stockwerk
+				for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
+					String stockwerkName = "EG";
+					Kapazität kapazität = stockwerk.getKapzität();
+
+					List<UhrzeitEnum> enumListe = new ArrayList<>();
+					enumListe.add(UhrzeitEnum.ELF);
+					enumListe.add(UhrzeitEnum.FÜNFZEHN);
+
+					for (UhrzeitEnum uhrzeitEnum : enumListe) {
+
+						String uhrzeit = null;
+
+						switch (uhrzeitEnum) {
+						case ELF:
+							uhrzeit = getUhrzeitStringByInt(11);
+							break;
+						case FÜNFZEHN:
+							uhrzeit = getUhrzeitStringByInt(15);
+							break;
+						default:
+							break;
+						}
+
+						for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+							if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
+								int auslastung = arbeitsplätze.getAnzahlPersonen() * 100
+										/ kapazität.getHunderProzentArbeitsplätze();
+								beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
+										getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich, stockwerkName,
+										"Arbeitsplätze", arbeitsplätze.getAnzahlPersonen(), auslastung + "%"));
+							}
+						}
+					}
+				}
 
 			}
 		}
@@ -592,108 +528,56 @@ public class ExportViewWaedi extends Composite implements View {
 				// Such die Benutzungsstatistik für das ausgewählte Datum für Wädenswil
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
 
-//				List<UhrzeitEnum> enumListe = new ArrayList<>();
-//				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
-//				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
-//				for (String s : selectedUhrzeit) {
-//					if (s.equals("9 Uhr"))
-//						enumListe.add(UhrzeitEnum.NEUN);
-//					if (s.equals("11 Uhr"))
-//						enumListe.add(UhrzeitEnum.ELF);
-//					if (s.equals("13 Uhr"))
-//						enumListe.add(UhrzeitEnum.DREIZEHN);
-//					if (s.equals("15 Uhr"))
-//						enumListe.add(UhrzeitEnum.FÜNFZEHN);
-//					if (s.equals("17 Uhr"))
-//						enumListe.add(UhrzeitEnum.SIEBZEHN);
-//					if (s.equals("19 Uhr"))
-//						enumListe.add(UhrzeitEnum.NEUNZEHN);
-//				}
-//
-//				// Geht durch alle Uhrzeiten
-//				for (UhrzeitEnum uhrzeitEnum : enumListe) {
-//
-//					String uhrzeit = null;
-//
-//					switch (uhrzeitEnum) {
-//					case NEUN:
-//						uhrzeit = getUhrzeitStringByInt(9);
-//						break;
-//					case ELF:
-//						uhrzeit = getUhrzeitStringByInt(11);
-//						break;
-//					case DREIZEHN:
-//						uhrzeit = getUhrzeitStringByInt(13);
-//						break;
-//					case FÜNFZEHN:
-//						uhrzeit = getUhrzeitStringByInt(15);
-//						break;
-//					case SIEBZEHN:
-//						uhrzeit = getUhrzeitStringByInt(17);
-//						break;
-//					case NEUNZEHN:
-//						uhrzeit = getUhrzeitStringByInt(19);
-//						break;
-//					}
-//
-//					// Geht durch Bibliothek und Lernlandschaft
-//					for (Belegung belegung : belegungsListe) {
-//
-//						String bereich = null;
-//						if (belegung.getStandort() == StandortEnum.WINTERTHUR_LL) {
-//							bereich = "Lernlandschaft";
-//						} else if (belegung.getStandort() == StandortEnum.WINTERTHUR_BB) {
-//							bereich = "Bibliothek";
-//						}
-//
-//						int maxAlleKapazitäten = 0;
-//						int personenZaehler = 0;
-//
-//						// Geht durch alle 4 Stockwerke, EG, 1.ZG, 2.ZG, LL
-//						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
-//
-//							Kapazität kapazität = stockwerk.getKapzität();
-//							int maxKapazität = kapazität.getMaxArbeitsplätze() + kapazität.getMaxSektorA()
-//									+ kapazität.getMaxSektorB() + kapazität.getMaxGruppenräume()
-//									+ kapazität.getMaxCarrels();
-//							maxAlleKapazitäten += maxKapazität;
-//
-//							for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
-//								if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
-//									personenZaehler += arbeitsplätze.getAnzahlPersonen();
-//								}
-//							}
-//
-//							for (SektorA sektorA : stockwerk.getSektorAListe()) {
-//								if (uhrzeitEnum == sektorA.getUhrzeit()) {
-//									personenZaehler += sektorA.getAnzahlPersonen();
-//								}
-//							}
-//
-//							for (SektorB sektorB : stockwerk.getSektorBListe()) {
-//								if (uhrzeitEnum == sektorB.getUhrzeit()) {
-//									personenZaehler += sektorB.getAnzahlPersonen();
-//								}
-//							}
-//
-//							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
-//								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
-//									personenZaehler += gruppenräume.getAnzahlPersonen();
-//								}
-//							}
-//
-//							for (Carrels carrels : stockwerk.getCarrelsListe()) {
-//								if (uhrzeitEnum == carrels.getUhrzeit()) {
-//									personenZaehler += carrels.getAnzahlPersonen();
-//								}
-//							}
-//						}
-//
-//						int auslastung = personenZaehler * 100 / maxAlleKapazitäten;
-//						beanListe.add(new ExportBelegungNormalBean(getKWForDate(datum), getWochentagForDate(date),
-//								sdf.format(datum), uhrzeit, bereich, personenZaehler, auslastung + "%"));
-//					}
-//				}
+				List<UhrzeitEnum> enumListe = new ArrayList<>();
+				Set<String> selectedUhrzeit = checkUhrzeit.getSelectedItems();
+				// Nur die ausgewählten Objekte der Checkbox für die Datensammlung benutzen
+				for (String s : selectedUhrzeit) {
+					if (s.equals("11 Uhr"))
+						enumListe.add(UhrzeitEnum.ELF);
+					if (s.equals("15 Uhr"))
+						enumListe.add(UhrzeitEnum.FÜNFZEHN);
+				}
+
+				// Geht durch alle Uhrzeiten
+				for (UhrzeitEnum uhrzeitEnum : enumListe) {
+
+					String uhrzeit = null;
+
+					switch (uhrzeitEnum) {
+					case ELF:
+						uhrzeit = getUhrzeitStringByInt(11);
+						break;
+					case FÜNFZEHN:
+						uhrzeit = getUhrzeitStringByInt(15);
+						break;
+					default:
+						break;
+					}
+
+					// Geht durch Bibliothek
+					String bereich = "Wädenswil";
+
+					int maxAlleKapazitäten = 0;
+					int personenZaehler = 0;
+
+					// Geht durch das Stockwerk
+					for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
+
+						Kapazität kapazität = stockwerk.getKapzität();
+						int maxKapazität = kapazität.getHunderProzentArbeitsplätze();
+						maxAlleKapazitäten += maxKapazität;
+
+						for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+							if (uhrzeitEnum == arbeitsplätze.getUhrzeit()) {
+								personenZaehler += arbeitsplätze.getAnzahlPersonen();
+							}
+						}
+
+						int auslastung = personenZaehler * 100 / maxAlleKapazitäten;
+						beanListe.add(new ExportBelegungNormalBean(getKWForDate(datum), getWochentagForDate(date),
+								sdf.format(datum), uhrzeit, bereich, personenZaehler, auslastung + "%"));
+					}
+				}
 			}
 		}
 

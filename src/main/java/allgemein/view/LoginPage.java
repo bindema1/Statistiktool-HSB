@@ -24,7 +24,9 @@ import administrator.view.PasswortView;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
+import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
+import belegung.view.TagesübersichtBelegungViewWaedi;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
@@ -69,6 +71,7 @@ public class LoginPage extends VerticalLayout implements View {
 		username.setWidth(100.0f, Unit.PERCENTAGE);
 		content.addComponent(username);
 		PasswordField password = new PasswordField("Passwort");
+		password.setValue("123");
 		content.addComponent(password);
 
 		Button send = new Button("Login");
@@ -93,6 +96,9 @@ public class LoginPage extends VerticalLayout implements View {
 						getUI().getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
 						getUI().getNavigator().addView(TagesübersichtBelegungViewWinti.NAME,
 								TagesübersichtBelegungViewWinti.class);
+						getUI().getNavigator().addView(BelegungErfassenViewWaedi.NAME, BelegungErfassenViewWaedi.class);
+						getUI().getNavigator().addView(TagesübersichtBelegungViewWaedi.NAME,
+								TagesübersichtBelegungViewWaedi.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
 						getUI().getNavigator().addView(BenutzungsstatistikViewWaedi.NAME,
@@ -185,6 +191,13 @@ public class LoginPage extends VerticalLayout implements View {
 											&& user.contains("Winterthur")
 											|| event.getNewView() instanceof TagesübersichtBelegungViewWinti
 													&& user.contains("Winterthur")) {
+										return true;
+									}
+									// Belegung Wädenswil dürfen nur alle mit Wort "Wädenswil" im Namen
+									if (event.getNewView() instanceof BelegungErfassenViewWaedi
+											&& user.contains("Wädenswil")
+											|| event.getNewView() instanceof TagesübersichtBelegungViewWaedi
+													&& user.contains("Wädenswil")) {
 										return true;
 									}
 									// Jeder darf auf die Startseite

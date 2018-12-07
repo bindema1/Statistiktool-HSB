@@ -47,6 +47,7 @@ benutzungsstatistik\db\ExterneGruppeDatenbank.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL.class
 belegung\model\SektorA.class
 administrator\view\PasswortView$1.class
+allgemein\model\SpringEmailService.class
 benutzungsstatistik\db\BenutzerkontaktDatenbank.class
 benutzungsstatistik\view\KorrekturViewLL$1.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewLL$1.class
@@ -85,5 +86,6 @@ belegung\model\SektorB.class
 benutzungsstatistik\view\KorrekturViewWaedi.class
 benutzungsstatistik\view\InternerkurierViewWaedi$1.class
 belegung\model\Belegung.class
+administrator\view\ExportViewWaedi$2.class
 benutzungsstatistik\db\BeantwortungBibliothekspersonalDatenbank.class
 belegung\db\KapazitätDatenbank.class

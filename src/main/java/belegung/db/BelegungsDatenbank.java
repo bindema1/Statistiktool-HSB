@@ -210,7 +210,10 @@ public class BelegungsDatenbank {
 			} else if (standort == StandortEnum.WINTERTHUR_LL) {
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.LL, true, true, true, true,
 						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.LL)));
-			} //TODO elseif für Wädenswil
+			} else if (standort == StandortEnum.WÄDENSWIL) {
+				belegung.addStockwerk(new Stockwerk(StockwerkEnum.WÄDI, false, false, false, false,
+						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.WÄDI)));
+			} 
 
 			insertBelegung(belegung);
 			System.out.println("Belegung gespeichert " + belegung.getBelegungs_ID());

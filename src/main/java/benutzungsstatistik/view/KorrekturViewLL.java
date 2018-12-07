@@ -72,6 +72,8 @@ public class KorrekturViewLL extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundKorrektur");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -112,7 +114,7 @@ public class KorrekturViewLL extends Composite implements View {
 		bBenutzerkontakt.setCaption("Kontakt");
 		bBenutzerkontakt.setEnabled(false);
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		lBenutzerkontakt = new Label();
@@ -129,7 +131,7 @@ public class KorrekturViewLL extends Composite implements View {
 		bIntensivFrage.setCaption("Intensivfrage");
 		bIntensivFrage.setEnabled(false);
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 
 		lIntensivFrage = new Label();
@@ -146,7 +148,7 @@ public class KorrekturViewLL extends Composite implements View {
 		bBeantwortung.setCaption("Beant. Bilbiothekspersonal");
 		bBeantwortung.setEnabled(false);
 		bBeantwortung.setIcon(VaadinIcons.BOOK);
-		bBeantwortung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBeantwortung.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBeantwortung.addClickListener(createClickListener());
 
 		lBeantwortung = new Label();
@@ -159,8 +161,8 @@ public class KorrekturViewLL extends Composite implements View {
 		bBeantwortungMinus.addStyleName(ValoTheme.BUTTON_DANGER);
 		bBeantwortungMinus.addClickListener(createClickListener());
 
-		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
-				"14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
+		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13",
+				"13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
 		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 		uhrzeitListSelect.setSelectedItem(data.get(0));
 		uhrzeitListSelect.setEmptySelectionAllowed(false);
@@ -224,7 +226,8 @@ public class KorrekturViewLL extends Composite implements View {
 					}
 				}
 				lBenutzerkontakt.setValue("" + benutzerzaehler);
-				for (BeantwortungBibliothekspersonal e : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
+				for (BeantwortungBibliothekspersonal e : benutzungsstatistik
+						.getBeantwortungBibliothekspersonalListe()) {
 					if (Integer.parseInt(dateFormat.format(e.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 						beantwortungzaehler++;
 					}
@@ -274,7 +277,6 @@ public class KorrekturViewLL extends Composite implements View {
 		});
 
 		GridLayout grid = new GridLayout(5, 8);
-		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0, 2, 0);
@@ -327,9 +329,9 @@ public class KorrekturViewLL extends Composite implements View {
 				} else if (row == 6) {
 					grid.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				} else {
-					if(row == 7 && col == 0) {
-						//Kassenbeleg
-					}else {
+					if (row == 7 && col == 0) {
+						// Kassenbeleg
+					} else {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
@@ -340,14 +342,14 @@ public class KorrekturViewLL extends Composite implements View {
 		mainLayout.addComponent(grid);
 
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+
+		setCompositionRoot(init());
 	}
 
 	public ClickListener createClickListener() {
@@ -455,20 +457,22 @@ public class KorrekturViewLL extends Composite implements View {
 						e1.printStackTrace();
 					}
 
-					benutzungsstatistik
-							.addBeantwortungBibliothekspersonal(new BeantwortungBibliothekspersonal(new Timestamp(date.getTime()), benutzungsstatistik));
+					benutzungsstatistik.addBeantwortungBibliothekspersonal(
+							new BeantwortungBibliothekspersonal(new Timestamp(date.getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					beantwortungzaehler++;
 					lBeantwortung.setValue("" + beantwortungzaehler);
-					Notification.show("+1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+					Notification.show("+1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr",
+							Type.TRAY_NOTIFICATION);
 				}
 
 				if (e.getSource() == bBeantwortungMinus) {
 
 					if (beantwortungzaehler != 0) {
 						BeantwortungBibliothekspersonal beantwortungBibliothekspersonal = null;
-						for (BeantwortungBibliothekspersonal e1 : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
+						for (BeantwortungBibliothekspersonal e1 : benutzungsstatistik
+								.getBeantwortungBibliothekspersonalListe()) {
 							if (Integer
 									.parseInt(dateFormat.format(e1.getTimestamp().getTime())) == ausgewählteUhrzeit) {
 								beantwortungBibliothekspersonal = e1;
@@ -479,7 +483,8 @@ public class KorrekturViewLL extends Composite implements View {
 
 						beantwortungzaehler--;
 						lBeantwortung.setValue("" + beantwortungzaehler);
-						Notification.show("-1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr", Type.TRAY_NOTIFICATION);
+						Notification.show("-1 Beantwortung Bibliothekspersonal " + ausgewählteUhrzeit + " Uhr",
+								Type.TRAY_NOTIFICATION);
 					} else {
 						Notification.show("Die Beantwortung Bibliothekspersonal ist bereits 0", Type.WARNING_MESSAGE);
 					}

@@ -55,8 +55,10 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundTages");
 		mainLayout.setWidth("100%");
-		//mainLayout.setHeight("100%");
+		// mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
@@ -71,7 +73,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 	}
 
 	public TagesübersichtBenutzungViewLL() {
-		
+
 	}
 
 	private void initData() {
@@ -98,7 +100,8 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getUhrzeit).setCaption("Uhrzeit");
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getKontakt).setCaption("Benutzer");
 		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getIntensiv).setCaption("Intensivfrage");
-		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getBeantwortungBibi).setCaption("Beantwortung Bibliothek");
+		tabelleUhrzeiten.addColumn(TagesübersichtBenutzungBean::getBeantwortungBibi)
+				.setCaption("Beantwortung Bibliothek");
 		fülleTabelleUhrzeiten(tabelleUhrzeiten);
 
 		DateField datefield = new DateField();
@@ -141,7 +144,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 				}
 			}
 		}
-		
+
 		grid.setRowExpandRatio(0, 0.1f);
 		grid.setRowExpandRatio(1, 0.9f);
 
@@ -189,13 +192,13 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 		tabelleUhrzeiten.setWidth("450px");
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -208,7 +211,8 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator()
+							.navigateTo(KorrekturViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

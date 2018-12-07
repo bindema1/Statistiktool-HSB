@@ -81,6 +81,8 @@ public class KorrekturViewWaedi extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundKorrektur");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -332,7 +334,6 @@ public class KorrekturViewWaedi extends Composite implements View {
 		});
 
 		GridLayout grid = new GridLayout(5, 7);
-		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0, 2, 0);

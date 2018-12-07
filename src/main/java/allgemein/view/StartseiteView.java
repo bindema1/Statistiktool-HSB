@@ -18,6 +18,7 @@ import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import belegung.model.StockwerkEnum;
+import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
@@ -117,7 +118,6 @@ public class StartseiteView extends Composite implements View {
 
 		bBelegungWaedi = new Button();
 		bBelegungWaedi.setCaption("Belegung Wädi");
-		bBelegungWaedi.setEnabled(false);
 		bBelegungWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBelegungWaedi.addClickListener(createClickListener());
 
@@ -197,6 +197,16 @@ public class StartseiteView extends Composite implements View {
 		grid.setRowExpandRatio(0, 0.1f);
 		grid.setRowExpandRatio(1, 0.45f);
 		grid.setRowExpandRatio(2, 0.45f);
+		
+		if (user.equals("Admin Winterthur")) {
+			// Admin Winterthur hat ein grösseres Layout als alle anderen User
+			grid.setColumnExpandRatio(0, 0.333f);
+			grid.setColumnExpandRatio(1, 0.333f);
+			grid.setColumnExpandRatio(2, 0.333f);
+		} else {
+			grid.setColumnExpandRatio(0, 0.5f);
+			grid.setColumnExpandRatio(1, 0.5f);
+		}
 
 		mainLayout.addComponent(grid);
 	}
@@ -230,7 +240,8 @@ public class StartseiteView extends Composite implements View {
 				}
 
 				if (e.getSource() == bBelegungWaedi) {
-//					getUI().getNavigator().navigateTo();
+					getUI().getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME + '/' + " " + '/'
+							+ StockwerkEnum.WÄDI.toString() + '/' + false + '/' + " ");
 				}
 
 				if (e.getSource() == bExportWinti) {

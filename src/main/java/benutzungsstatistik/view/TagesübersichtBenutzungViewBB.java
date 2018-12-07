@@ -60,6 +60,8 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		//Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundTages");
 		mainLayout.setWidth("100%");
 		//mainLayout.setHeight("100%");
 

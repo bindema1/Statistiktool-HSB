@@ -61,6 +61,8 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -83,7 +85,7 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 	private void initData() {
 		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WÄDENSWIL);
-		
+
 		uhrzeit = Integer.parseInt(stundenFormat.format(new Date().getTime()));
 	}
 
@@ -103,21 +105,21 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 		bBenutzerkontakt = new Button();
 		setBenutzerCaption();
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
 		setIntensivCaption();
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
 		bIntensivFrage.addClickListener(createClickListener());
-		
+
 		sIntensivFrageSlider = new Slider();
 		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
 		sIntensivFrageSlider.setMax(30.0);
 		sIntensivFrageSlider.setValue(5.0);
-		
+
 //		bRechercheBeratung = new Button();
 //		setRechercheCaption();
 //		bRechercheBeratung.setIcon(VaadinIcons.GLASSES);
@@ -127,35 +129,34 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 		bEmailkontakt = new Button();
 		setEmailCaption();
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
-		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bEmailkontakt.addClickListener(createClickListener());
 
 		bTelefonkontakt = new Button();
 		setTelefonCaption();
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
-		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bTelefonkontakt.addClickListener(createClickListener());
 
 		bInternerkurier = new Button();
 		bInternerkurier.setCaption("Interner Kurier");
 		bInternerkurier.setIcon(VaadinIcons.TRUCK);
-		bInternerkurier.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bInternerkurier.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bInternerkurier.addClickListener(createClickListener());
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.setIcon(VaadinIcons.EDIT);
-		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bKorrektur.addClickListener(createClickListener());
 
 		bTagesuebersicht = new Button();
 		bTagesuebersicht.setCaption("Tagesübersicht");
 		bTagesuebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
-		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bTagesuebersicht.addClickListener(createClickListener());
 
 		GridLayout grid = new GridLayout(3, 10);
-		grid.addStyleName("gridlayout");
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
 		grid.addComponent(lText, 1, 0, 2, 0);
@@ -178,17 +179,17 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					if(row == 3 && col == 1) {
-						//Slider nicht verändern
+					if (row == 3 && col == 1) {
+						// Slider nicht verändern
 						c.setWidth("80%");
-					}else {
+					} else {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
 				}
 			}
 		}
-		
+
 		grid.setColumnExpandRatio(0, 0.33f);
 		grid.setColumnExpandRatio(1, 0.33f);
 		grid.setColumnExpandRatio(2, 0.33f);
@@ -203,9 +204,9 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				telefonzaehler++;
 			}
 		}
-		bTelefonkontakt.setCaption("Telefon, "+uhrzeit +" Uhr: "+telefonzaehler);
+		bTelefonkontakt.setCaption("Telefon, " + uhrzeit + " Uhr: " + telefonzaehler);
 	}
-	
+
 	private void setEmailCaption() {
 		int emailzaehler = 0;
 		for (Emailkontakt email : benutzungsstatistik.getEmailkontaktListe()) {
@@ -213,9 +214,9 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				emailzaehler++;
 			}
 		}
-		bEmailkontakt.setCaption("Email, "+uhrzeit +" Uhr: "+emailzaehler);
+		bEmailkontakt.setCaption("Email, " + uhrzeit + " Uhr: " + emailzaehler);
 	}
-	
+
 	private void setBenutzerCaption() {
 		int benutzerzaehler = 0;
 		for (Benutzerkontakt benutzer : benutzungsstatistik.getBenutzerkontaktListe()) {
@@ -223,9 +224,9 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				benutzerzaehler++;
 			}
 		}
-		bBenutzerkontakt.setCaption("Benutzerkontakt, "+uhrzeit +" Uhr: "+benutzerzaehler);
+		bBenutzerkontakt.setCaption("Benutzerkontakt, " + uhrzeit + " Uhr: " + benutzerzaehler);
 	}
-	
+
 	private void setIntensivCaption() {
 		int intensivzaehler = 0;
 		for (Intensivfrage intensiv : benutzungsstatistik.getIntensivfrageListe()) {
@@ -233,14 +234,13 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				intensivzaehler++;
 			}
 		}
-		bIntensivFrage.setCaption("Intensivfrage, "+uhrzeit +" Uhr: "+intensivzaehler);
-	}	
-	
+		bIntensivFrage.setCaption("Intensivfrage, " + uhrzeit + " Uhr: " + intensivzaehler);
+	}
+
 //	private void setRechercheCaption() {
 //		benutzungsstatistik.getAnzahl_Rechercheberatung();
 //		bRechercheBeratung.setCaption("Rechercheberatung, Total: "+benutzungsstatistik.getAnzahl_Rechercheberatung());
 //	}	
-	
 
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener() {
@@ -256,26 +256,27 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
-					
+
 					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bIntensivFrage) {
 					int zaehler = 0;
 					int slider = sIntensivFrageSlider.getValue().intValue();
-					for(int i = 1; i<=slider; i+=5) {
+					for (int i = 1; i <= slider; i += 5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						zaehler++;
 					}
-					Notification.show("+ "+zaehler +" Intensivfrage", Type.TRAY_NOTIFICATION);
-					
+					Notification.show("+ " + zaehler + " Intensivfrage", Type.TRAY_NOTIFICATION);
+
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-					
+
 					setIntensivCaption();
+					sIntensivFrageSlider.setValue(5.0);
 					setBenutzerCaption();
 				}
 
@@ -291,9 +292,9 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 				if (e.getSource() == bEmailkontakt) {
 					benutzungsstatistik.addEmailkontakt(
 							new Emailkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);					
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
-					
+
 					setEmailCaption();
 				}
 
@@ -302,20 +303,23 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 							new Telefonkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);
-					
+
 					setTelefonCaption();
 				}
 
 				if (e.getSource() == bInternerkurier) {
-					getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
+					getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(
+							KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewWaedi.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

@@ -29,7 +29,7 @@ public class Kapazität implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private StockwerkEnum stockwerk;
 
-	//100% Zahlen der Arbeitsplätze z.B. 80
+	// 100% Zahlen der Arbeitsplätze z.B. 80
 	private int hunderProzentArbeitsplätze;
 	private int hunderProzentSektorA;
 	private int hunderProzentSektorB;
@@ -37,7 +37,7 @@ public class Kapazität implements Serializable {
 	private int hunderProzentCarrelsPersonen;
 	private int hunderProzentGruppenräume;
 	private int hunderProzentGruppenräumePersonen;
-	//Maximalanzahl was möglich ist. z.B. Arbeitsplätze 100
+	// Maximalanzahl was möglich ist. z.B. Arbeitsplätze 100
 	private int maxArbeitsplätze;
 	private int maxSektorA;
 	private int maxSektorB;
@@ -45,7 +45,6 @@ public class Kapazität implements Serializable {
 	private int maxCarrelsPersonen;
 	private int maxGruppenräume;
 	private int maxGruppenräumePersonen;
-	
 
 	// Für Hibernate
 	public Kapazität() {
@@ -101,7 +100,7 @@ public class Kapazität implements Serializable {
 	public int getHunderProzentGruppenräume() {
 		return hunderProzentGruppenräume;
 	}
-	
+
 	public int getHunderProzentCarrelsPersonen() {
 		return hunderProzentCarrelsPersonen;
 	}

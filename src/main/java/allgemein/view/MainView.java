@@ -1,6 +1,10 @@
 package allgemein.view;
 
+import java.io.InputStream;
+
 import javax.servlet.annotation.WebServlet;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -10,12 +14,16 @@ import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
+import allgemein.model.SpringEmailService;
+import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
+import belegung.view.TagesübersichtBelegungViewWaedi;
 import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
@@ -41,6 +49,9 @@ import testdaten.TestDaten;
 @Theme("mytheme")
 public class MainView extends UI {
 
+	@Autowired
+    private SpringEmailService springEmailService;
+    
 	private static final long serialVersionUID = 1L;
 
 	protected void init(VaadinRequest request) {
@@ -92,6 +103,8 @@ public class MainView extends UI {
 			getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);
 			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
 			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
+			getNavigator().addView(BelegungErfassenViewWaedi.NAME, BelegungErfassenViewWaedi.class);
+			getNavigator().addView(TagesübersichtBelegungViewWaedi.NAME, TagesübersichtBelegungViewWaedi.class);
 			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
 			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
 			getNavigator().addView(BenutzungsstatistikViewWaedi.NAME, BenutzungsstatistikViewWaedi.class);
@@ -121,6 +134,8 @@ public class MainView extends UI {
 				getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
 			} else if (route.equals("!" + BelegungErfassenViewWinti.NAME)) {
 				getNavigator().navigateTo(BelegungErfassenViewWinti.NAME);
+			} else if (route.equals("!" + BelegungErfassenViewWaedi.NAME)) {
+				getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME);
 			} else {
 				getNavigator().navigateTo(StartseiteView.NAME);
 			}
@@ -130,5 +145,31 @@ public class MainView extends UI {
 			getNavigator().navigateTo(LoginPage.NAME);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param to
+	 */
+	private void sendEmail(String to) {
+        try {
+            // all values as variables to clarify its usage
+            InputStream inputStream = getClass().getResourceAsStream("/file.pdf");
+            String from = "sender@test.com";
+            String subject = "Your PDF";
+            String text = "Here there is your <b>PDF</b> file!";
+            String fileName = "file.pdf";
+            String mimeType = "application/pdf";
+
+            springEmailService.send(from, to, subject, text, inputStream, fileName, mimeType);
+
+            inputStream.close();
+
+            Notification.show("Email sent");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Notification.show("Error sending the email", Notification.Type.ERROR_MESSAGE);
+        }
+    }
 
 }

@@ -15067,3 +15067,11 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .backgroundTages {
 	background-color: #99c8ff;
 }
+
+.mytheme .backgroundErfassung {
+	background-color: #82e5a3;
+}
+
+.mytheme .layout-with-border {
+	border: 1px solid black;
+}

@@ -56,8 +56,10 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundTages");
 		mainLayout.setWidth("100%");
-		//mainLayout.setHeight("100%");
+		// mainLayout.setHeight("100%");
 
 		return mainLayout;
 	}
@@ -72,7 +74,7 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 	}
 
 	public TagesübersichtBenutzungViewWaedi() {
-		
+
 	}
 
 	private void initData() {
@@ -228,13 +230,13 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 		tabelleUhrzeiten.setWidth("450px");
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -247,7 +249,8 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(
+							KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

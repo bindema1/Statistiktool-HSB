@@ -57,6 +57,8 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Farbe des Layouts
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -79,7 +81,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 	private void initData() {
 		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WINTERTHUR_LL);
-		
+
 		uhrzeit = Integer.parseInt(stundenFormat.format(new Date().getTime()));
 	}
 
@@ -99,15 +101,15 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		bBenutzerkontakt = new Button();
 		setBenutzerCaption();
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		bIntensivFrage = new Button();
 		setIntensivCaption();
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
 		bIntensivFrage.addClickListener(createClickListener());
-		
+
 		sIntensivFrageSlider = new Slider();
 		sIntensivFrageSlider.setCaption("Intensive Frage - Dauer in Minuten");
 		sIntensivFrageSlider.setMin(1.0);
@@ -117,34 +119,34 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		bBeantwortungBibliothekspersonal = new Button();
 		setBeantwortungCaption();
 		bBeantwortungBibliothekspersonal.setIcon(VaadinIcons.BOOK);
-		bBeantwortungBibliothekspersonal.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBeantwortungBibliothekspersonal.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBeantwortungBibliothekspersonal.addClickListener(createClickListener());
 
 		bKorrektur = new Button();
 		bKorrektur.setCaption("Korrektur");
 		bKorrektur.setIcon(VaadinIcons.EDIT);
-		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bKorrektur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bKorrektur.addClickListener(createClickListener());
-		
+
 		bTagesuebersicht = new Button();
 		bTagesuebersicht.setCaption("Tagesübersicht");
 		bTagesuebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
-		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bTagesuebersicht.addClickListener(createClickListener());
 
-
-		GridLayout grid = new GridLayout(3, 3);
-		grid.addStyleName("gridlayout");
+		GridLayout grid = new GridLayout(6, 5);
 		grid.setSizeFull();
+		grid.setSpacing(true);
 		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 2, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1);
-		grid.addComponent(bIntensivFrage, 1, 1);
-		grid.addComponent(bTagesuebersicht, 2, 1);
-		grid.addComponent(bBeantwortungBibliothekspersonal, 0, 2);
-		grid.addComponent(sIntensivFrageSlider, 1, 2);
-		grid.addComponent(bKorrektur, 2, 2);
-		
+		grid.addComponent(lText, 1, 0, 4, 0);
+		grid.addComponent(new Label(), 5, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
+		grid.addComponent(bIntensivFrage, 2, 1, 3, 1);
+		grid.addComponent(sIntensivFrageSlider, 2, 2, 3, 2);
+		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
+		grid.addComponent(bBeantwortungBibliothekspersonal, 0, 3, 2, 4);
+		grid.addComponent(bKorrektur, 4, 3, 5, 4);
+		grid.addComponent(new Label(), 3, 3, 3, 4);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -153,23 +155,28 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 
 				// Button grösser machen
 				if (row != 0) {
-					if(row == 2 && col == 1) {
-						//Slider nicht verändern
+					if (row == 2 && col == 2 || row == 2 && col == 3) {
+						// Slider nicht verändern
 						c.setWidth("80%");
-					}else {
+					} else {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
 				}
 			}
 		}
-		
-		grid.setColumnExpandRatio(0, 0.33f);
-		grid.setColumnExpandRatio(1, 0.33f);
-		grid.setColumnExpandRatio(2, 0.33f);
+
+		grid.setColumnExpandRatio(0, 0.1666f);
+		grid.setColumnExpandRatio(1, 0.1666f);
+		grid.setColumnExpandRatio(2, 0.1666f);
+		grid.setColumnExpandRatio(3, 0.1666f);
+		grid.setColumnExpandRatio(4, 0.1666f);
+		grid.setColumnExpandRatio(5, 0.1666f);
 		grid.setRowExpandRatio(0, 0.1f);
-		grid.setRowExpandRatio(1, 0.45f);
-		grid.setRowExpandRatio(2, 0.45f);
+		grid.setRowExpandRatio(1, 0.225f);
+		grid.setRowExpandRatio(2, 0.225f);
+		grid.setRowExpandRatio(3, 0.225f);
+		grid.setRowExpandRatio(4, 0.225f);
 
 		mainLayout.addComponent(grid);
 
@@ -177,14 +184,16 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 
 	private void setBeantwortungCaption() {
 		int beantwortungzaehler = 0;
-		for (BeantwortungBibliothekspersonal beantwortung : benutzungsstatistik.getBeantwortungBibliothekspersonalListe()) {
+		for (BeantwortungBibliothekspersonal beantwortung : benutzungsstatistik
+				.getBeantwortungBibliothekspersonalListe()) {
 			if (Integer.parseInt(stundenFormat.format(beantwortung.getTimestamp().getTime())) == uhrzeit) {
 				beantwortungzaehler++;
 			}
 		}
-		bBeantwortungBibliothekspersonal.setCaption("Beant. Bibliothekspersonal, "+uhrzeit +" Uhr: "+beantwortungzaehler);
+		bBeantwortungBibliothekspersonal
+				.setCaption("Beantwortung Bibliothekspersonal, " + uhrzeit + " Uhr: " + beantwortungzaehler);
 	}
-	
+
 	private void setBenutzerCaption() {
 		int benutzerzaehler = 0;
 		for (Benutzerkontakt benutzer : benutzungsstatistik.getBenutzerkontaktListe()) {
@@ -192,9 +201,9 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				benutzerzaehler++;
 			}
 		}
-		bBenutzerkontakt.setCaption("Benutzerkontakt, "+uhrzeit +" Uhr: "+benutzerzaehler);
+		bBenutzerkontakt.setCaption("Benutzerkontakt, " + uhrzeit + " Uhr: " + benutzerzaehler);
 	}
-	
+
 	private void setIntensivCaption() {
 		int intensivzaehler = 0;
 		for (Intensivfrage intensiv : benutzungsstatistik.getIntensivfrageListe()) {
@@ -202,9 +211,8 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				intensivzaehler++;
 			}
 		}
-		bIntensivFrage.setCaption("Intensivfrage, "+uhrzeit +" Uhr: "+intensivzaehler);
+		bIntensivFrage.setCaption("Intensivfrage, " + uhrzeit + " Uhr: " + intensivzaehler);
 	}
-	
 
 	@SuppressWarnings("serial")
 	public ClickListener createClickListener() {
@@ -220,44 +228,47 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
-					
+
 					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bIntensivFrage) {
 					int zaehler = 0;
 					int slider = sIntensivFrageSlider.getValue().intValue();
-					for(int i = 1; i<=slider; i+=5) {
+					for (int i = 1; i <= slider; i += 5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						zaehler++;
 					}
-					Notification.show("+ "+zaehler +" Intensivfrage", Type.TRAY_NOTIFICATION);
-					
+					Notification.show("+ " + zaehler + " Intensivfrage", Type.TRAY_NOTIFICATION);
+
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
-					
+
 					setIntensivCaption();
+					sIntensivFrageSlider.setValue(5.0);
 					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bBeantwortungBibliothekspersonal) {
-					benutzungsstatistik.addBeantwortungBibliothekspersonal(
-							new BeantwortungBibliothekspersonal(new Timestamp(new Date().getTime()), benutzungsstatistik));
-					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);					
+					benutzungsstatistik.addBeantwortungBibliothekspersonal(new BeantwortungBibliothekspersonal(
+							new Timestamp(new Date().getTime()), benutzungsstatistik));
+					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Beantwortung Bibliothekspersonal", Type.TRAY_NOTIFICATION);
-					
+
 					setBeantwortungCaption();
 				}
 
 				if (e.getSource() == bKorrektur) {
-					getUI().getNavigator().navigateTo(KorrekturViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator()
+							.navigateTo(KorrekturViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(
+							TagesübersichtBenutzungViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
 				}
 
 			}

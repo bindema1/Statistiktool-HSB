@@ -141,8 +141,6 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			// Sucht die Belegung für ein gewähltes Datum und für ein bestimmten Standort
 			if (stockwerkEnum == StockwerkEnum.LL) {
 				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_LL);
-			} else if (stockwerkEnum == StockwerkEnum.WÄDI) {
-				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WÄDENSWIL);
 			} else {
 				belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
 			}
