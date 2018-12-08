@@ -85,6 +85,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	private UhrzeitEnum ausgewählteUhrzeit;
 	private boolean korrektur;
 	private boolean räumeVorhanden;
+	private boolean layoutBereitsAufgesetzt = false;
 	private Belegung belegung;
 	private StockwerkEnum stockwerkEnum;
 	private Date date;
@@ -203,7 +204,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		tTotalPersonen.addValueChangeListener(event -> {
 			// Wenn das Textfeld sich verändert, soll die Eingabe gespeichert werden, dies
 			// passiert bei Klick auf einen Button oder beim Eingeben einer Zahl
-			if(Integer.parseInt(event.getValue()) != 0) {
+			if (Integer.parseInt(event.getValue()) != 0 && layoutBereitsAufgesetzt == true) {
 				speichereEingaben();
 			}
 		});
@@ -214,7 +215,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		tTotalRäume.addValueChangeListener(event -> {
 			// Wenn das Textfeld sich verändert, soll die Eingabe gespeichert werden, dies
 			// passiert bei Klick auf einen Button oder beim Eingeben einer Zahl
-			if(Integer.parseInt(event.getValue()) != 0) {
+			if (Integer.parseInt(event.getValue()) != 0 && layoutBereitsAufgesetzt == true) {
 				speichereEingaben();
 			}
 		});
@@ -307,12 +308,14 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				break;
 			case "Bitte wählen ↓":
 				setButtonEnabled(false);
+				layoutBereitsAufgesetzt = false;
 				break;
 			}
 
 			if (ausgewählteUhrzeit != null) {
 				// Das GridLayout mit Zahlen füllen
 				layoutMitZahlenFüllen();
+				layoutBereitsAufgesetzt = true;
 
 				// Tabelle füllen
 				fülleTabelleUhrzeiten(tabelleUhrzeiten);
@@ -344,7 +347,8 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		// Tabelle für die Übersicht ganz oben
 		tabelleUhrzeiten = new Grid<TagesübersichtBelegungBean>();
 		tabelleUhrzeitenAufsetzen(tabelleUhrzeiten);
-		if (korrektur == false) {
+		// Tabelle Füllen immer, wenn die Uhrzeit nicht auf "Bitte Wählen" steht
+		if (ausgewählteUhrzeit != null) {
 			fülleTabelleUhrzeiten(tabelleUhrzeiten);
 		}
 
@@ -416,6 +420,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 		// Füllt die Tabelle mit Zahlen
 		layoutMitZahlenFüllen();
+		layoutBereitsAufgesetzt = true;
 
 		grid.setColumnExpandRatio(0, 0.125f);
 		grid.setColumnExpandRatio(1, 0.125f);
@@ -691,8 +696,14 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	 */
 	private void layoutMitZahlenFüllen() {
 
-//		tTotalPersonen.setValue("0");
-//		tTotalRäume.setValue("0");
+		// Falls eine neue Uhrzeit gewählt wird, soll es standartmässig auf 0. Ansonsten
+		// wird es überschrieben
+		tTotalPersonen.setValue("0");
+		tTotalRäume.setValue("0");
+
+		// Das Layout ist erst aufgesetzt, nachdem alle Zahlen in allen Textfeldern
+		// gesetzt wurde
+		layoutBereitsAufgesetzt = false;
 
 		// Prüft alle Stockwerke und setzt das jeweilige Layout dafür
 		if (stockwerkEnum == StockwerkEnum.EG) {
@@ -804,6 +815,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				}
 			}
 
+			layoutBereitsAufgesetzt = true;
 		}
 	}
 
@@ -822,7 +834,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			if (pruefeMaximalKapazitaeten(0, 0) == true) {
 
 				if (anzahlPersonen == 0) {
-					Notification.show("Sie haben eine Zählung mit 0 gespeichert", Type.WARNING_MESSAGE);
+					Notification.show("Sie haben eine Zählung mit 0 Personen gespeichert", Type.WARNING_MESSAGE);
 				}
 
 				boolean eintragVorhanden = false;

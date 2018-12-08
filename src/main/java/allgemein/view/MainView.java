@@ -150,6 +150,7 @@ public class MainView extends UI {
 	 * 
 	 * @param to
 	 */
+	@SuppressWarnings({ "unused", "static-access" })
 	private void sendEmail(String to) {
         try {
             // all values as variables to clarify its usage
