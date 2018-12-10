@@ -49,7 +49,7 @@ import benutzungsstatistik.view.WintikurierViewBB;
  * @author Marvin Bindemann
  */
 public class LoginPage extends VerticalLayout implements View {
-
+	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "";
 	private AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
@@ -247,20 +247,36 @@ public class LoginPage extends VerticalLayout implements View {
 
 	/**
 	 * Prüft ob das Passwort des eingeloggten Users älter als ein halbes Jahr ist
+	 * Sendet eine Email an die Bibliothek Winterthur oder Wädenswil
 	 */
 	protected void pruefePasswortDatum(Angestellter angestellter) {
+		// Holt das Datum des Passworts sowie das heutige Datum
 		Date passwortDatum = angestellter.getPasswort_datum();
 		Date heutigesDatum = new Date();
 
 		// Wenn das alte Passwort älter ist als ein halbes Jahr
 		long differenz = heutigesDatum.getTime() - passwortDatum.getTime();
+		// Der Long wert wird gerechnet, sodass er als Ergebnis die Zeit in Tagen
+		// anzeigt
 		long diffenzInTagen = differenz / (24 * 60 * 60 * 1000);
 
+		// Wenn das Passwort älter als 180 Tage ist
 		if (diffenzInTagen >= 180) {
-			String to = "m.bindemann@yahoo.de"; //ausleihe.winterthur.hsb@zhaw.ch || waedenswil.hsb@zhaw.ch
+			List<String> to = new ArrayList<>();
+			if (angestellter.getName().contains("Wädenswil")) {
+				// Email an Wädenswil
+				to.add("waedenswil.hsb@zhaw.ch");
+			} else {
+				// Email an Winterthur
+				to.add("ausleihe.winterthur.hsb@zhaw.ch");
+			}
+
+			// Nachricht des Textes
 			String subject = "Abgelaufenes Passwort";
 			String text = "Das Passwort des Users " + angestellter.getName()
 					+ " ist abgelaufen. Bitte durch den Administrator erneuern";
+
+			// Mail wird versendet
 			MainView.sendEmail(to, subject, text);
 		}
 

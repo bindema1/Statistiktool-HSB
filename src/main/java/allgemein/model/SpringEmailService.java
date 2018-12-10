@@ -75,7 +75,7 @@ public class SpringEmailService {
     public static void send(String from, Collection<String> recipients, String subject, String text,
                             List<InputStream> attachments, List<String> fileNames, List<String> mimeTypes)
             throws MessagingException, IOException {
-
+    	
         // check for null references
         Objects.requireNonNull(from);
         Objects.requireNonNull(recipients);

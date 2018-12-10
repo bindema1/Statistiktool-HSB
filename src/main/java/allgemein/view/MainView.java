@@ -1,6 +1,9 @@
 package allgemein.view;
 
-import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -50,8 +53,8 @@ import testdaten.TestDaten;
 public class MainView extends UI {
 
 	@Autowired
-    private static SpringEmailService springEmailService;
-    
+	private static SpringEmailService springEmailService;
+
 	private static final long serialVersionUID = 1L;
 
 	protected void init(VaadinRequest request) {
@@ -81,7 +84,18 @@ public class MainView extends UI {
 			}
 		});
 
-		router("");
+//		router("");
+
+		ScheduledExecutorService execService = Executors.newScheduledThreadPool(1);
+		execService.scheduleAtFixedRate(() -> {
+			//Task welcher gemacht werden soll
+			System.out.println("Running repetitive task at: " + new java.util.Date());
+			
+			//TODO Email 1 Stunde nach leerer Belegung
+			
+			//TODO Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
+			
+		}, 0, 5, TimeUnit.MINUTES);
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
@@ -145,25 +159,25 @@ public class MainView extends UI {
 			getNavigator().navigateTo(LoginPage.NAME);
 		}
 	}
-	
+
 	/**
 	 * Sendet eine Email an die Bibliothek Winterthur oder Wädenswil
 	 * 
 	 * @param to ausleihe.winterthur.hsb@zhaw.ch || waedenswil.hsb@zhaw.ch
 	 */
 	@SuppressWarnings({ "static-access" })
-	public static void sendEmail(String to, String subject, String text) {
-        try {
-            String from = "sender@test.com";
+	public static void sendEmail(List<String> to, String subject, String text) {
+		try {
+			String from = "statistiktoolhsb@gmail.com";
 
-            springEmailService.send(from, to, subject, text, null, null, null);
+			springEmailService.send(from, to, subject, text);
 
-            Notification.show("Email gesendet");
+			Notification.show("Email gesendet");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Notification.show("Error sending the email", Notification.Type.ERROR_MESSAGE);
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			Notification.show("Error sending the email", Notification.Type.ERROR_MESSAGE);
+		}
+	}
 
 }
