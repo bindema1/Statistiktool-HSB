@@ -100,7 +100,6 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
-//		bZurueck.setEnabled(false);
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
 

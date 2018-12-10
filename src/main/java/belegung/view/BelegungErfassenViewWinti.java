@@ -372,9 +372,9 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 		GridLayout grid = new GridLayout(8, 13);
 		if (korrektur == true) {
-			grid.addStyleName("gridlayout" + " backgroundKorrektur");
+			grid.addStyleName("backgroundKorrektur");
 		} else {
-			grid.addStyleName("gridlayout" + " backgroundErfassung");
+			grid.addStyleName("backgroundErfassung");
 		}
 		grid.setSizeFull();
 		grid.addComponent(bZurueck, 0, 0);
@@ -443,18 +443,12 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 					}
 				} else {
 
-					// Alles andere
-					c.setHeight("90%");
-					c.setWidth("80%");
-
 					// Tabelle
 					if (row >= 1 && row <= 3) {
-						c.setHeight("86%");
 						c.setWidth("95%");
-					}
-
-					// Bild mit Etagen
-					if (row >= 8) {
+						c.setHeight("78%");
+					} else if (row >= 8) {
+						// Bild mit Etagen
 						if (col == 0 || col == 1) {
 							c.setHeight("100%");
 							c.setWidth("80%");
@@ -462,6 +456,10 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 							c.setHeight("90%");
 							c.setWidth("100%");
 						}
+					} else {
+						// Alles andere
+						c.setHeight("90%");
+						c.setWidth("80%");
 					}
 				}
 			}
@@ -568,7 +566,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 		beanListe.add(t);
 
-		tabelleUhrzeiten.setWidth("90%");
 		tabelleUhrzeiten.setHeightByRows(beanListe.size());
 		tabelleUhrzeiten.setItems(beanListe);
 	}

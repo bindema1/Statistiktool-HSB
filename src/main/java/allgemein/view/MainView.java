@@ -50,7 +50,7 @@ import testdaten.TestDaten;
 public class MainView extends UI {
 
 	@Autowired
-    private SpringEmailService springEmailService;
+    private static SpringEmailService springEmailService;
     
 	private static final long serialVersionUID = 1L;
 
@@ -147,25 +147,18 @@ public class MainView extends UI {
 	}
 	
 	/**
+	 * Sendet eine Email an die Bibliothek Winterthur oder Wädenswil
 	 * 
-	 * @param to
+	 * @param to ausleihe.winterthur.hsb@zhaw.ch || waedenswil.hsb@zhaw.ch
 	 */
-	@SuppressWarnings({ "unused", "static-access" })
-	private void sendEmail(String to) {
+	@SuppressWarnings({ "static-access" })
+	public static void sendEmail(String to, String subject, String text) {
         try {
-            // all values as variables to clarify its usage
-            InputStream inputStream = getClass().getResourceAsStream("/file.pdf");
             String from = "sender@test.com";
-            String subject = "Your PDF";
-            String text = "Here there is your <b>PDF</b> file!";
-            String fileName = "file.pdf";
-            String mimeType = "application/pdf";
 
-            springEmailService.send(from, to, subject, text, inputStream, fileName, mimeType);
+            springEmailService.send(from, to, subject, text, null, null, null);
 
-            inputStream.close();
-
-            Notification.show("Email sent");
+            Notification.show("Email gesendet");
 
         } catch (Exception e) {
             e.printStackTrace();

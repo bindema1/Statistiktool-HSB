@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.vaadin.haijian.Exporter;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
@@ -37,6 +38,7 @@ import administrator.bean.ExportBenutzungsstatistikBean;
 import administrator.bean.ExportWintikurierMonatBean;
 import administrator.bean.ExportWintikurierTagBean;
 import allgemein.model.StandortEnum;
+import allgemein.view.StartseiteView;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
@@ -61,6 +63,7 @@ public class ExportViewWaedi extends Composite implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Export-Waedi";
 	private AbsoluteLayout mainLayout;
+	private Button bZurueck;
 	private Button bExportBenutzung;
 	private Button bExportInternerkurierTag;
 	private Button bExportInternerkurierMonat;
@@ -85,6 +88,8 @@ public class ExportViewWaedi extends Composite implements View {
 	 */
 	private AbsoluteLayout buildMainLayout() {
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Hintergrundfarbe auf Grün
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -121,6 +126,11 @@ public class ExportViewWaedi extends Composite implements View {
 	 */
 	private void initComponents() {
 
+		bZurueck = new Button();
+		bZurueck.setCaption("Zurück");
+		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
+		bZurueck.addClickListener(createClickListener());
+		
 		Label lText = new Label();
 		lText.setValue("Daten exportieren - Wädenswil");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
@@ -218,7 +228,8 @@ public class ExportViewWaedi extends Composite implements View {
 
 		// Layout
 		AbsoluteLayout overallLayout = new AbsoluteLayout();
-		overallLayout.addComponent(lText, "top:10%; left:3%");
+		overallLayout.addComponent(bZurueck, "top:10%; left:3%");
+		overallLayout.addComponent(lText, "top:10%; left:20%");
 
 		// Datum
 		HorizontalLayout datumLayout = new HorizontalLayout();
@@ -670,6 +681,10 @@ public class ExportViewWaedi extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 
+				if (e.getSource() == bZurueck) {
+					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
 				if (e.getSource() == bExportBenutzung) {
 					exportBenutzungsstatistik();
 				}

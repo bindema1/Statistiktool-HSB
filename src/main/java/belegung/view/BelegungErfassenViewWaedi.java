@@ -284,7 +284,8 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 		grid.addComponent(bValidieren, 6, 0, 7, 0);
 
 		// Tabelle der Uhrzeit
-		grid.addComponent(tabelleUhrzeiten, 0, 1, 7, 3);
+		grid.addComponent(tabelleUhrzeiten, 0, 1, 7, 2);
+		grid.addComponent(new Label(), 0, 3, 7, 3);
 
 		// Uhrzeiten Links
 		grid.addComponent(bTagesübersicht, 0, 4, 1, 4);
@@ -324,14 +325,14 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 					}
 				} else {
 
-					// Alles andere
-					c.setHeight("90%");
-					c.setWidth("80%");
-
 					// Tabelle
 					if (row >= 1 && row <= 3) {
-						c.setHeight("86%");
+						c.setHeight("60%");
 						c.setWidth("95%");
+					}else {
+						// Alles andere
+						c.setHeight("90%");
+						c.setWidth("80%");
 					}
 				}
 			}
@@ -396,7 +397,6 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 
 		beanListe.add(t);
 
-		tabelleUhrzeiten.setWidth("90%");
 		tabelleUhrzeiten.setHeightByRows(beanListe.size());
 		tabelleUhrzeiten.setItems(beanListe);
 	}

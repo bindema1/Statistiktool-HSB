@@ -64,6 +64,11 @@ public class ExterneGruppeViewBB extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		if (korrektur == true) {
+			mainLayout.addStyleName("backgroundKorrektur");
+		} else {
+			mainLayout.addStyleName("backgroundErfassung");
+		}
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -193,6 +198,11 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		fülleGruppenTabelle();
 
 		GridLayout grid = new GridLayout(5, 7);
+		if (korrektur == true) {
+			grid.addStyleName("backgroundKorrektur");
+		} else {
+			grid.addStyleName("backgroundErfassung");
+		}
 		grid.setSizeFull();
 		grid.setSpacing(true);
 		grid.addComponent(bZurueck, 0, 0);
@@ -222,8 +232,8 @@ public class ExterneGruppeViewBB extends Composite implements View {
 						}
 					}
 				} else if (row >= 3) {
-					c.setHeight("90%");
-					c.setWidth("90%");
+					c.setHeight("88%");
+					c.setWidth("88%");
 				} else {
 					c.setHeight("80%");
 					c.setWidth("80%");

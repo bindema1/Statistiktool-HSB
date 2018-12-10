@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
@@ -21,6 +22,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
+import allgemein.view.StartseiteView;
 
 /**
  * View um Passwörter zu ändern als Administrator
@@ -32,6 +34,7 @@ public class PasswortView extends Composite implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Passwort";
 	private AbsoluteLayout mainLayout;
+	private Button bZurueck;
 	private Button bSpeichern;
 	private AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
 	private Angestellter angestellter;
@@ -47,6 +50,8 @@ public class PasswortView extends Composite implements View {
 	 */
 	private AbsoluteLayout buildMainLayout() {
 		mainLayout = new AbsoluteLayout();
+		//Setzt die Hintergrundfarbe auf Grün
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -75,6 +80,11 @@ public class PasswortView extends Composite implements View {
 	 */
 	private void initComponents() {
 
+		bZurueck = new Button();
+		bZurueck.setCaption("Zurück");
+		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
+		bZurueck.addClickListener(createClickListener());
+		
 		Label lText = new Label();
 		lText.setValue("Passwörter ändern");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
@@ -103,6 +113,7 @@ public class PasswortView extends Composite implements View {
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
+		layout.addComponent(bZurueck);
 		layout.addComponent(lText);
 		layout.addComponent(dropdown);
 		layout.addComponent(passwortDatum);
@@ -118,6 +129,11 @@ public class PasswortView extends Composite implements View {
 		return new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent e) {
+				
+				if (e.getSource() == bZurueck) {
+					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
 				if (e.getSource() == bSpeichern) {
 					//Wenn beide Passwörter den selben Wert haben
 					if (passwort1.getValue().equals(passwort2.getValue())) {

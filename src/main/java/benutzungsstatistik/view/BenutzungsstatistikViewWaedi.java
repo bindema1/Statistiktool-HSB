@@ -15,6 +15,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -158,11 +159,10 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 
 		GridLayout grid = new GridLayout(3, 10);
 		grid.setSizeFull();
-		grid.addComponent(bZurueck, 0, 0);
+		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0);
 		grid.addComponent(lText, 1, 0, 2, 0);
 		grid.addComponent(bBenutzerkontakt, 0, 1, 0, 3);
-		grid.addComponent(bIntensivFrage, 1, 1, 1, 2);
-		grid.addComponent(sIntensivFrageSlider, 1, 3, 1, 3);
+		grid.addComponent(createSliderGridLayout(), 1, 1, 1, 3);
 		grid.addComponent(bTagesuebersicht, 2, 1, 2, 3);
 		grid.addComponent(bEmailkontakt, 0, 4, 0, 6);
 		grid.addComponent(bTelefonkontakt, 1, 4, 1, 6);
@@ -171,6 +171,20 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 //		grid.addComponent(bRechercheBeratung, 1, 7, 1, 9);
 		grid.addComponent(new Label(), 1, 7, 1, 9);
 		grid.addComponent(new Label(), 2, 7, 2, 9);
+
+		grid.setColumnExpandRatio(0, 0.33f);
+		grid.setColumnExpandRatio(1, 0.33f);
+		grid.setColumnExpandRatio(2, 0.33f);
+		grid.setRowExpandRatio(0, 0.1f);
+		grid.setRowExpandRatio(1, 0.1f);
+		grid.setRowExpandRatio(2, 0.1f);
+		grid.setRowExpandRatio(3, 0.1f);
+		grid.setRowExpandRatio(4, 0.1f);
+		grid.setRowExpandRatio(5, 0.1f);
+		grid.setRowExpandRatio(6, 0.1f);
+		grid.setRowExpandRatio(7, 0.1f);
+		grid.setRowExpandRatio(8, 0.1f);
+		grid.setRowExpandRatio(9, 0.1f);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -186,15 +200,42 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
+				} else {
+					c.setWidth("80%");
 				}
 			}
 		}
 
-		grid.setColumnExpandRatio(0, 0.33f);
-		grid.setColumnExpandRatio(1, 0.33f);
-		grid.setColumnExpandRatio(2, 0.33f);
-
 		mainLayout.addComponent(grid);
+	}
+
+	/**
+	 * Erstellt das GridLayout für den Slider
+	 * 
+	 * @return GridLayout
+	 */
+	private GridLayout createSliderGridLayout() {
+		GridLayout sliderLayout = new GridLayout(1, 2);
+		sliderLayout.setSizeFull();
+		sliderLayout.addComponent(bIntensivFrage, 0, 0);
+		sliderLayout.addComponent(sIntensivFrageSlider, 0, 1);
+		for (int col = 0; col < sliderLayout.getColumns(); col++) {
+			for (int row = 0; row < sliderLayout.getRows(); row++) {
+				Component c = sliderLayout.getComponent(col, row);
+
+				// Button grösser machen
+				c.setWidth("100%");
+
+				if (row == 0) {
+					c.setHeight("100%");
+					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
+				} else {
+					c.setHeight("48%");
+					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
+				}
+			}
+		}
+		return sliderLayout;
 	}
 
 	private void setTelefonCaption() {

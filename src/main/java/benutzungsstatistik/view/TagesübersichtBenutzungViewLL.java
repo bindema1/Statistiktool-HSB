@@ -139,7 +139,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
 					}
 				} else {
-					c.setHeight("90%");
+//					c.setHeight("87%");
 					c.setWidth("90%");
 				}
 			}
@@ -189,7 +189,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 		}
 
 		tabelleUhrzeiten.setItems(tagesübersichtListe);
-		tabelleUhrzeiten.setWidth("450px");
+		tabelleUhrzeiten.setWidth("90%");
 		tabelleUhrzeiten.setHeightByRows(tagesübersichtListe.size());
 	}
 

@@ -321,7 +321,6 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			beanListe.add(t);
 		}
 
-		tabelleUhrzeiten.setWidth("90%");
 		tabelleUhrzeiten.setHeightByRows(beanListe.size());
 		tabelleUhrzeiten.setItems(beanListe);
 	}

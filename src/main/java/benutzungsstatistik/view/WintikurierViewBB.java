@@ -68,6 +68,11 @@ public class WintikurierViewBB extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		if (korrektur == true) {
+			mainLayout.addStyleName("backgroundKorrektur");
+		} else {
+			mainLayout.addStyleName("backgroundErfassung");
+		}
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -84,7 +89,7 @@ public class WintikurierViewBB extends Composite implements View {
 	}
 
 	public WintikurierViewBB() {
-		
+
 	}
 
 	private void initData() {
@@ -100,15 +105,17 @@ public class WintikurierViewBB extends Composite implements View {
 		bZurueck.addClickListener(createClickListener());
 
 		lText = new Label();
-		if(korrektur == true) {
+		if (korrektur == true) {
 			lText.setValue("Wintikurier vom ");
-		}else {
-			lText.setValue("Wintikurier vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
+		} else {
+			lText.setValue(
+					"Wintikurier vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
 		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-		
+
 		datefield = new DateField();
-		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
+				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
@@ -161,7 +168,7 @@ public class WintikurierViewBB extends Composite implements View {
 		bLinguistikMinus.addClickListener(createClickListener());
 
 		bTechnik = new Button();
-		bTechnik.setCaption("  +1 Technik  ");
+		bTechnik.setCaption("+1 Technik");
 		bTechnik.addStyleName(ValoTheme.BUTTON_LARGE);
 		bTechnik.addClickListener(createClickListener());
 
@@ -188,37 +195,33 @@ public class WintikurierViewBB extends Composite implements View {
 		bWirtschaftMinus.addStyleName(ValoTheme.BUTTON_LARGE + " " + ValoTheme.BUTTON_DANGER);
 		bWirtschaftMinus.addClickListener(createClickListener());
 
-		GridLayout grid = new GridLayout(8, 7);
-		grid.addStyleName("gridlayout");
+		GridLayout grid = new GridLayout(4, 7);
 		grid.setWidth("100%");
 		grid.setHeight("90%");
 		grid.addComponent(bZurueck, 0, 0);
-		if(korrektur == true) {
+		if (korrektur == true) {
+			grid.addComponent(lText, 1, 0, 2, 0);
+			grid.addComponent(datefield, 3, 0);
+		} else {
 			grid.addComponent(lText, 1, 0, 3, 0);
-			grid.addComponent(datefield, 4, 0, 7, 0);
-		}else {
-			grid.addComponent(lText, 1, 0, 7, 0);
 		}
-		grid.addComponent(bGesundheit, 0, 1, 1, 4);
-		grid.addComponent(bLinguistik, 2, 1, 3, 4);
-		grid.addComponent(bTechnik, 4, 1, 5, 4);
-		grid.addComponent(bWirtschaft, 6, 1, 7, 4);
-		grid.addComponent(lGesundheitTotal, 0, 5, 1, 5);
-		grid.addComponent(lLinguistikTotal, 2, 5, 3, 5);
-		grid.addComponent(lTechnikTotal, 4, 5, 5, 5);
-		grid.addComponent(lWirtschaftTotal, 6, 5, 7, 5);
-		grid.addComponent(bGesundheitMinus, 0, 6, 1, 6);
-		grid.addComponent(bLinguistikMinus, 2, 6, 3, 6);
-		grid.addComponent(bTechnikMinus, 4, 6, 5, 6);
-		grid.addComponent(bWirtschaftMinus, 6, 6, 7, 6);
-		grid.setColumnExpandRatio(0, 0.125f);
-		grid.setColumnExpandRatio(1, 0.125f);
-		grid.setColumnExpandRatio(2, 0.125f);
-		grid.setColumnExpandRatio(3, 0.125f);
-		grid.setColumnExpandRatio(4, 0.125f);
-		grid.setColumnExpandRatio(5, 0.125f);
-		grid.setColumnExpandRatio(6, 0.125f);
-		grid.setColumnExpandRatio(7, 0.125f);
+		grid.addComponent(bGesundheit, 0, 1, 0, 4);
+		grid.addComponent(bLinguistik, 1, 1, 1, 4);
+		grid.addComponent(bTechnik, 2, 1, 2, 4);
+		grid.addComponent(bWirtschaft, 3, 1, 3, 4);
+		grid.addComponent(lGesundheitTotal, 0, 5, 0, 5);
+		grid.addComponent(lLinguistikTotal, 1, 5, 1, 5);
+		grid.addComponent(lTechnikTotal, 2, 5, 2, 5);
+		grid.addComponent(lWirtschaftTotal, 3, 5, 3, 5);
+		grid.addComponent(bGesundheitMinus, 0, 6, 0, 6);
+		grid.addComponent(bLinguistikMinus, 1, 6, 1, 6);
+		grid.addComponent(bTechnikMinus, 2, 6, 2, 6);
+		grid.addComponent(bWirtschaftMinus, 3, 6, 3, 6);
+
+		grid.setColumnExpandRatio(0, 0.25f);
+		grid.setColumnExpandRatio(1, 0.25f);
+		grid.setColumnExpandRatio(2, 0.25f);
+		grid.setColumnExpandRatio(3, 0.25f);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -228,17 +231,18 @@ public class WintikurierViewBB extends Composite implements View {
 
 				// Button grösser machen
 				if (row == 0) {
-					if(korrektur == true) {
-						if (col == 1 || col == 2 || col == 3) {
-							grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
-						}
+					if (col == 0) {
+						// Zurück Button
+						c.setWidth("50%");
+					} else {
+						c.setWidth("80%");
 					}
 				} else if (row == 5) {
 					// Zeile 5 sind label, dort darf die Grösse nicht verändert werden, da das
 					// Alignment sonst nicht mehr funktioniert
 				} else if (row >= 1 && row <= 4) {
-					c.setHeight("100%");
-					c.setWidth("90%");
+					c.setHeight("90%");
+					c.setWidth("80%");
 				} else {
 					c.setHeight("80%");
 					c.setWidth("80%");
@@ -250,17 +254,17 @@ public class WintikurierViewBB extends Composite implements View {
 		mainLayout.addComponent(grid);
 
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    String korrekturString = args[1];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    this.wintikurier = benutzungsstatistik.getWintikurier();
-	    this.korrektur = Boolean.parseBoolean(korrekturString);
-	    
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		String korrekturString = args[1];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		this.wintikurier = benutzungsstatistik.getWintikurier();
+		this.korrektur = Boolean.parseBoolean(korrekturString);
+
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -269,10 +273,11 @@ public class WintikurierViewBB extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					if(korrektur == true) {
-						getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
-					}else {
-						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewBB.NAME);
+					if (korrektur == true) {
+						getUI().getNavigator().navigateTo(
+								KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					} else {
+						Page.getCurrent().setUriFragment("!" + BenutzungsstatistikViewBB.NAME);
 					}
 				}
 

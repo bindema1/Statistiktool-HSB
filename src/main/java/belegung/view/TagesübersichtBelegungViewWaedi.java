@@ -45,7 +45,7 @@ import belegung.model.UhrzeitEnum;
 public class TagesübersichtBelegungViewWaedi extends Composite implements View {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "Belegung-Winterthur-Übersicht";
+	public static final String NAME = "Belegung-Wädenswil-Übersicht";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bErfassung;
@@ -142,7 +142,8 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 		grid.addComponent(datefield, 2, 0);
 		grid.addComponent(bErfassung, 3, 0);
 		grid.addComponent(bKorrektur, 4, 0);
-		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 6);
+		grid.addComponent(tabelleUhrzeiten, 0, 1, 4, 2);
+		grid.addComponent(new Label(), 0, 3, 4, 6);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -156,7 +157,7 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 					}
 				} else if (row >= 1 && row <= 6) {
 					// Tabelle
-					c.setHeight("96%");
+//					c.setHeight("60%");
 					c.setWidth("95%");
 				}
 			}
@@ -217,7 +218,6 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 			beanListe.add(t);
 		}
 
-		tabelleUhrzeiten.setWidth("90%");
 		tabelleUhrzeiten.setHeightByRows(beanListe.size());
 		tabelleUhrzeiten.setItems(beanListe);
 	}

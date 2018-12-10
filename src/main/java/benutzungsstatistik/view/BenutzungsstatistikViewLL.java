@@ -15,6 +15,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -137,12 +138,10 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		GridLayout grid = new GridLayout(6, 5);
 		grid.setSizeFull();
 		grid.setSpacing(true);
-		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 4, 0);
-		grid.addComponent(new Label(), 5, 0);
+		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0, 1, 0);
+		grid.addComponent(lText, 2, 0, 5, 0);
 		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
-		grid.addComponent(bIntensivFrage, 2, 1, 3, 1);
-		grid.addComponent(sIntensivFrageSlider, 2, 2, 3, 2);
+		grid.addComponent(createSliderGridLayout(), 2, 1, 3, 2);
 		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
 		grid.addComponent(bBeantwortungBibliothekspersonal, 0, 3, 2, 4);
 		grid.addComponent(bKorrektur, 4, 3, 5, 4);
@@ -162,6 +161,14 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
+					if (row == 3 || row == 4) {
+						if (col == 0 || col == 1 || col == 2) {
+							//bBeantwortungBibliothekspersonal
+							c.setWidth("86%");
+						}
+					} 
+				}else {
+					c.setWidth("80%");
 				}
 			}
 		}
@@ -180,6 +187,35 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 
 		mainLayout.addComponent(grid);
 
+	}
+	
+	/**
+	 * Erstellt das GridLayout für den Slider
+	 * 
+	 * @return GridLayout
+	 */
+	private GridLayout createSliderGridLayout() {
+		GridLayout sliderLayout = new GridLayout(1, 3);
+		sliderLayout.setSizeFull();
+		sliderLayout.addComponent(bIntensivFrage, 0, 0, 0, 1);
+		sliderLayout.addComponent(sIntensivFrageSlider, 0, 2);
+		for (int col = 0; col < sliderLayout.getColumns(); col++) {
+			for (int row = 0; row < sliderLayout.getRows(); row++) {
+				Component c = sliderLayout.getComponent(col, row);
+				
+				// Button grösser machen
+				c.setWidth("100%");
+
+				if (row == 0 || row == 1) {
+					c.setHeight("100%");
+					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
+				}else {
+					c.setHeight("40%");
+					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
+				}
+			}
+		}
+		return sliderLayout;
 	}
 
 	private void setBeantwortungCaption() {

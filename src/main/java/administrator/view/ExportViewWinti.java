@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.vaadin.haijian.Exporter;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
@@ -38,6 +39,7 @@ import administrator.bean.ExportExterneGruppeBean;
 import administrator.bean.ExportWintikurierMonatBean;
 import administrator.bean.ExportWintikurierTagBean;
 import allgemein.model.StandortEnum;
+import allgemein.view.StartseiteView;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
 import belegung.model.Belegung;
@@ -69,6 +71,7 @@ public class ExportViewWinti extends Composite implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "Export-Winti";
 	private AbsoluteLayout mainLayout;
+	private Button bZurueck;
 	private Button bExportBenutzungBB;
 	private Button bExportBenutzungLL;
 	private Button bExportWintikurierTag;
@@ -98,6 +101,8 @@ public class ExportViewWinti extends Composite implements View {
 	 */
 	private AbsoluteLayout buildMainLayout() {
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Hintergrundfarbe auf Grün
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -134,6 +139,11 @@ public class ExportViewWinti extends Composite implements View {
 	 */
 	private void initComponents() {
 
+		bZurueck = new Button();
+		bZurueck.setCaption("Zurück");
+		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
+		bZurueck.addClickListener(createClickListener());
+		
 		Label lText = new Label();
 		lText.setValue("Daten exportieren - Winterthur");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
@@ -266,7 +276,8 @@ public class ExportViewWinti extends Composite implements View {
 
 		// Layout
 		AbsoluteLayout overallLayout = new AbsoluteLayout();
-		overallLayout.addComponent(lText, "top:10%; left:3%");
+		overallLayout.addComponent(bZurueck, "top:10%; left:3%");
+		overallLayout.addComponent(lText, "top:10%; left:20%");
 
 		// Datum
 		HorizontalLayout datumLayout = new HorizontalLayout();
@@ -701,7 +712,8 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (SektorA sektorA : stockwerk.getSektorAListe()) {
 								if (uhrzeitEnum == sektorA.getUhrzeit()) {
-									int auslastung = sektorA.getAnzahlPersonen() * 100 / kapazität.getHunderProzentSektorA();
+									int auslastung = sektorA.getAnzahlPersonen() * 100
+											/ kapazität.getHunderProzentSektorA();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Sektor A", sektorA.getAnzahlPersonen(), auslastung + "%"));
@@ -712,7 +724,8 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (SektorB sektorB : stockwerk.getSektorBListe()) {
 								if (uhrzeitEnum == sektorB.getUhrzeit()) {
-									int auslastung = sektorB.getAnzahlPersonen() * 100 / kapazität.getHunderProzentSektorB();
+									int auslastung = sektorB.getAnzahlPersonen() * 100
+											/ kapazität.getHunderProzentSektorB();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Sektor B", sektorB.getAnzahlPersonen(), auslastung + "%"));
@@ -740,7 +753,8 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
-									int auslastung = carrels.getAnzahlPersonen() * 100 / kapazität.getHunderProzentCarrels();
+									int auslastung = carrels.getAnzahlPersonen() * 100
+											/ kapazität.getHunderProzentCarrels();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Carrels - Räume", carrels.getAnzahlRäume(),
@@ -857,9 +871,9 @@ public class ExportViewWinti extends Composite implements View {
 
 							// Zählt die Maximale Kapazität für das Stockwerk zusammen
 							Kapazität kapazität = stockwerk.getKapzität();
-							int maxKapazität = kapazität.getHunderProzentArbeitsplätze() + kapazität.getHunderProzentSektorA()
-									+ kapazität.getHunderProzentSektorB() + kapazität.getHunderProzentGruppenräume()
-									+ kapazität.getHunderProzentCarrels();
+							int maxKapazität = kapazität.getHunderProzentArbeitsplätze()
+									+ kapazität.getHunderProzentSektorA() + kapazität.getHunderProzentSektorB()
+									+ kapazität.getHunderProzentGruppenräume() + kapazität.getHunderProzentCarrels();
 							maxAlleKapazitäten += maxKapazität;
 
 							// Zählt alle Personen zusammen für Arbeitsplätze
@@ -997,6 +1011,10 @@ public class ExportViewWinti extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 
+				if (e.getSource() == bZurueck) {
+					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
 				if (e.getSource() == bExportBenutzungBB) {
 					exportBenutzungsstatistikBB();
 				}

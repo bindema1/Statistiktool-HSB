@@ -20,6 +20,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -64,6 +65,11 @@ public class InternerkurierViewWaedi extends Composite implements View {
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		if (korrektur == true) {
+			mainLayout.addStyleName("backgroundKorrektur");
+		} else {
+			mainLayout.addStyleName("backgroundErfassung");
+		}
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -170,15 +176,14 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		bGSMinus.addClickListener(createClickListener());
 
 		GridLayout grid = new GridLayout(6, 7);
-		grid.addStyleName("gridlayout");
 		grid.setWidth("100%");
 		grid.setHeight("90%");
-		grid.addComponent(bZurueck, 0, 0);
+		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0, 1, 0);
 		if(korrektur == true) {
-			grid.addComponent(lText, 1, 0, 3, 0);
+			grid.addComponent(lText, 2, 0, 3, 0);
 			grid.addComponent(datefield, 4, 0, 5, 0);
 		}else {
-			grid.addComponent(lText, 1, 0, 5, 0);
+			grid.addComponent(lText, 2, 0, 5, 0);
 		}
 		grid.addComponent(bReidbach, 0, 1, 1, 4);
 		grid.addComponent(bRA, 2, 1, 3, 4);
@@ -189,6 +194,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		grid.addComponent(bReidbachMinus, 0, 6, 1, 6);
 		grid.addComponent(bRAMinus, 2, 6, 3, 6);
 		grid.addComponent(bGSMinus, 4, 6, 5, 6);
+		
 		grid.setColumnExpandRatio(0, 0.166f);
 		grid.setColumnExpandRatio(1, 0.166f);
 		grid.setColumnExpandRatio(2, 0.166f);
@@ -204,17 +210,13 @@ public class InternerkurierViewWaedi extends Composite implements View {
 
 				// Button grösser machen
 				if (row == 0) {
-					if(korrektur == true) {
-						if (col == 1 || col == 2 || col == 3) {
-							grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
-						}
-					}
+					c.setWidth("80%");
 				} else if (row == 5) {
 					// Zeile 5 sind label, dort darf die Grösse nicht verändert werden, da das
 					// Alignment sonst nicht mehr funktioniert
 				} else if (row >= 1 && row <= 4) {
-					c.setHeight("100%");
-					c.setWidth("90%");
+					c.setHeight("90%");
+					c.setWidth("80%");
 				} else {
 					c.setHeight("80%");
 					c.setWidth("80%");

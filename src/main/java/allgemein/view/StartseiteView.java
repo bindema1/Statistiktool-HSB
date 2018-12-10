@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -63,6 +64,8 @@ public class StartseiteView extends Composite implements View {
 	 */
 	private AbsoluteLayout buildMainLayout() {
 		mainLayout = new AbsoluteLayout();
+		//Setzt die Hintergrundfarbe auf Grün
+		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 
@@ -150,7 +153,7 @@ public class StartseiteView extends Composite implements View {
 			grid = new GridLayout(2, 3);
 		}
 		grid.setSizeFull();
-		grid.addComponent(bLogout, 0, 0);
+		grid.addComponent(new HorizontalLayout(bLogout), 0, 0);
 		grid.addComponent(lText, 1, 0);
 		if (user.equals("Admin Winterthur")) {
 			grid.addComponent(new Label(), 2, 0);
@@ -160,6 +163,10 @@ public class StartseiteView extends Composite implements View {
 			grid.addComponent(bExportWinti, 0, 2);
 			grid.addComponent(bPasswort, 1, 2);
 			grid.addComponent(new Label(), 2, 2);
+			
+			grid.setColumnExpandRatio(0, 0.33f);
+			grid.setColumnExpandRatio(1, 0.33f);
+			grid.setColumnExpandRatio(2, 0.33f);
 		} else if (user.equals("Mitarbeitende Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
 			grid.addComponent(bBelegungWinti, 1, 1);
@@ -190,6 +197,8 @@ public class StartseiteView extends Composite implements View {
 
 				if (row != 0) {
 					c.setHeight("70%");
+					c.setWidth("70%");
+				}else {
 					c.setWidth("70%");
 				}
 			}

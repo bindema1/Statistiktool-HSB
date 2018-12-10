@@ -1,6 +1,7 @@
 package allgemein.view;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.vaadin.navigator.View;
@@ -86,6 +87,10 @@ public class LoginPage extends VerticalLayout implements View {
 				if (angestellter != null) {
 					// Wenn der Angestellte in der Datenbank existiert und das Passwort Richtig ist
 					if (angestellter.getPasswort().equals(md5.convertMD5(password.getValue()))) {
+
+						// Prüft ob das Passwort älter als ein halbes Jahr ist
+						pruefePasswortDatum(angestellter);
+
 						// Speichert den User in der Session
 						VaadinSession.getCurrent().setAttribute("user", username.getValue());
 						// Fügt alle Views hinzu
@@ -237,6 +242,27 @@ public class LoginPage extends VerticalLayout implements View {
 		content.setMargin(true);
 		panel.setContent(content);
 		setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
+
+	}
+
+	/**
+	 * Prüft ob das Passwort des eingeloggten Users älter als ein halbes Jahr ist
+	 */
+	protected void pruefePasswortDatum(Angestellter angestellter) {
+		Date passwortDatum = angestellter.getPasswort_datum();
+		Date heutigesDatum = new Date();
+
+		// Wenn das alte Passwort älter ist als ein halbes Jahr
+		long differenz = heutigesDatum.getTime() - passwortDatum.getTime();
+		long diffenzInTagen = differenz / (24 * 60 * 60 * 1000);
+
+		if (diffenzInTagen >= 180) {
+			String to = "m.bindemann@yahoo.de"; //ausleihe.winterthur.hsb@zhaw.ch || waedenswil.hsb@zhaw.ch
+			String subject = "Abgelaufenes Passwort";
+			String text = "Das Passwort des Users " + angestellter.getName()
+					+ " ist abgelaufen. Bitte durch den Administrator erneuern";
+			MainView.sendEmail(to, subject, text);
+		}
 
 	}
 
