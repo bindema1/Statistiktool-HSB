@@ -25,6 +25,7 @@ import administrator.view.PasswortView;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
+import allgemein.model.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWaedi;
@@ -277,7 +278,7 @@ public class LoginPage extends VerticalLayout implements View {
 					+ " ist abgelaufen. Bitte durch den Administrator erneuern";
 
 			// Mail wird versendet
-			MainView.sendEmail(to, subject, text);
+			ScheduledExecutorEmailService.sendEmail(to, subject, text);
 		}
 
 	}

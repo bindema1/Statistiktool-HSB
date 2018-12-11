@@ -1,29 +1,27 @@
 package allgemein.view;
 
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.BootstrapFragmentResponse;
+import com.vaadin.server.BootstrapListener;
+import com.vaadin.server.BootstrapPageResponse;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
+import com.vaadin.server.SessionInitEvent;
+import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
-import allgemein.model.SpringEmailService;
+import allgemein.model.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWaedi;
@@ -51,9 +49,6 @@ import testdaten.TestDaten;
 @SuppressWarnings("deprecation")
 @Theme("mytheme")
 public class MainView extends UI {
-
-	@Autowired
-	private static SpringEmailService springEmailService;
 
 	private static final long serialVersionUID = 1L;
 
@@ -86,22 +81,40 @@ public class MainView extends UI {
 
 //		router("");
 
-		ScheduledExecutorService execService = Executors.newScheduledThreadPool(1);
-		execService.scheduleAtFixedRate(() -> {
-			//Task welcher gemacht werden soll
-			System.out.println("Running repetitive task at: " + new java.util.Date());
-			
-			//TODO Email 1 Stunde nach leerer Belegung
-			
-			//TODO Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
-			
-		}, 0, 5, TimeUnit.MINUTES);
+		// Ein Task, welcher im Hintergrund läuft und leere Belegungen sowie den
+		// Kassenbeleg prüft
+		ScheduledExecutorEmailService.sendeMailWegenLeererBelegungOderWegenKassenbeleg();
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = MainView.class, productionMode = false)
 	public static class MyServlet extends VaadinServlet {
 		private static final long serialVersionUID = 5334673737128772893L;
+
+		@Override
+		protected void servletInitialized() throws ServletException {
+			super.servletInitialized();
+			getService().addSessionInitListener(new SessionInitListener() {
+
+				@Override
+				public void sessionInit(SessionInitEvent event) {
+					event.getSession().addBootstrapListener(new BootstrapListener() {
+
+						@Override
+						public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+
+						}
+
+						@Override
+						public void modifyBootstrapPage(BootstrapPageResponse response) {
+							response.getDocument().head().prependElement("meta").attr("name", "viewport").attr(
+									"content",
+									"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+						}
+					});
+				}
+			});
+		}
 	}
 
 	private void router(String route) {
@@ -157,26 +170,6 @@ public class MainView extends UI {
 			getUI().getSession().setAttribute("route", route);
 			// Falls es keinen User gibt, wird es automatisch zur LoginPage geleitet
 			getNavigator().navigateTo(LoginPage.NAME);
-		}
-	}
-
-	/**
-	 * Sendet eine Email an die Bibliothek Winterthur oder Wädenswil
-	 * 
-	 * @param to ausleihe.winterthur.hsb@zhaw.ch || waedenswil.hsb@zhaw.ch
-	 */
-	@SuppressWarnings({ "static-access" })
-	public static void sendEmail(List<String> to, String subject, String text) {
-		try {
-			String from = "statistiktoolhsb@gmail.com";
-
-			springEmailService.send(from, to, subject, text);
-
-			Notification.show("Email gesendet");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			Notification.show("Error sending the email", Notification.Type.ERROR_MESSAGE);
 		}
 	}
 
