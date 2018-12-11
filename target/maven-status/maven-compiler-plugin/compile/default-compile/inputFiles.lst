@@ -9,6 +9,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\KorrekturViewBB.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\db\BelegungsDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\db\KapazitätDatenbank.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\view\TagesübersichtBelegungViewWaedi.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBenutzungsstatistikBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Kapazität.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\TagesübersichtBenutzungViewBB.java
@@ -44,6 +45,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\ExterneGruppeViewBB.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\Telefonkontakt.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\bean\WintikurierBean.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\view\BelegungErfassenViewWaedi.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\model\MD5.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\BenutzungsstatistikViewWaedi.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\Wintikurier.java
