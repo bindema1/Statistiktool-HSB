@@ -55,7 +55,7 @@ public class ScheduledExecutorEmailService {
 		ZoneId currentZone = ZoneId.of("Europe/Berlin");
 		ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
 		ZonedDateTime zonedNext5;
-		zonedNext5 = zonedNow.withHour(17).withMinute(46).withSecond(0);
+		zonedNext5 = zonedNow.withHour(0).withMinute(0).withSecond(0);
 		if (zonedNow.compareTo(zonedNext5) > 0)
 			zonedNext5 = zonedNext5.plusDays(1);
 		Duration duration = Duration.between(zonedNow, zonedNext5);

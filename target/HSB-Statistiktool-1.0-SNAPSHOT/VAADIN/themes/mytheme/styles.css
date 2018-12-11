@@ -15062,17 +15062,14 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .backgroundKorrektur {
 	background-color: #ff6b6b;
-	touch-action: manipulation;
 }
 
 .mytheme .backgroundTages {
 	background-color: #99c8ff;
-	touch-action: manipulation;
 }
 
 .mytheme .backgroundErfassung {
 	background-color: #82e5a3;
-	touch-action: manipulation;
 }
 
 .mytheme .layout-with-border {

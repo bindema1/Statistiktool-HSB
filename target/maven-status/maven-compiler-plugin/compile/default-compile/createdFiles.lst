@@ -6,6 +6,7 @@ benutzungsstatistik\view\BenutzungsstatistikViewBB$1.class
 belegung\model\StockwerkEnum.class
 benutzungsstatistik\bean\TagesübersichtBenutzungBean.class
 benutzungsstatistik\view\BenutzungsstatistikViewBB.class
+allgemein\model\ScheduledExecutorEmailService.class
 allgemein\view\LoginPage$1.class
 benutzungsstatistik\model\Intensivfrage.class
 benutzungsstatistik\model\Wintikurier.class
@@ -33,6 +34,7 @@ belegung\view\TagesübersichtBelegungViewWinti$2.class
 benutzungsstatistik\bean\ExterneGruppeBean.class
 benutzungsstatistik\view\KorrekturViewBB.class
 allgemein\view\MainView$MyServlet.class
+allgemein\view\MainView$MyServlet$1.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL$1.class
 allgemein\db\AngestellterDatenbank.class
 belegung\view\TagesübersichtBelegungViewWinti$1.class
@@ -49,6 +51,7 @@ benutzungsstatistik\view\KorrekturViewLL.class
 allgemein\view\LoginPage$1$1.class
 belegung\view\BelegungErfassenViewWaedi$1.class
 benutzungsstatistik\db\ExterneGruppeDatenbank.class
+allgemein\view\MainView$MyServlet$1$1.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL.class
 belegung\model\SektorA.class
 administrator\view\PasswortView$1.class
