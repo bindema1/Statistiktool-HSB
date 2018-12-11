@@ -25,7 +25,7 @@ import administrator.view.PasswortView;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
 import allgemein.model.MD5;
-import allgemein.model.ScheduledExecutorEmailService;
+import allgemein.service.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWaedi;

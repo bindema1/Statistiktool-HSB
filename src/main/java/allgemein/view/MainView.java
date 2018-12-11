@@ -21,7 +21,8 @@ import com.vaadin.ui.UI;
 import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
-import allgemein.model.ScheduledExecutorEmailService;
+import allgemein.db.AngestellterDatenbank;
+import allgemein.service.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWaedi;
@@ -56,8 +57,8 @@ public class MainView extends UI {
 
 		// Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein
 		// SQL-Skript
-		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-		if (benutzungsstatistikDB.selectAllBenutzungsstatistiken().size() == 0) {
+		AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
+		if (angestellterDB.selectAllAngestellte().size() == 0) {
 			new TestDaten();
 		}
 

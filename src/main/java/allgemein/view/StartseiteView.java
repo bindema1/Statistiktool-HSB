@@ -79,7 +79,6 @@ public class StartseiteView extends Composite implements View {
 	 * @return AbsoluteLayout
 	 */
 	public AbsoluteLayout init() {
-		// common part: create layout
 		AbsoluteLayout absolutLayout = buildMainLayout();
 		initComponents();
 

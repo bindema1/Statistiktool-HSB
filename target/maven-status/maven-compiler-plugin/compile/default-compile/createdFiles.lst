@@ -6,7 +6,6 @@ benutzungsstatistik\view\BenutzungsstatistikViewBB$1.class
 belegung\model\StockwerkEnum.class
 benutzungsstatistik\bean\TagesübersichtBenutzungBean.class
 benutzungsstatistik\view\BenutzungsstatistikViewBB.class
-allgemein\model\ScheduledExecutorEmailService.class
 allgemein\view\LoginPage$1.class
 benutzungsstatistik\model\Intensivfrage.class
 benutzungsstatistik\model\Wintikurier.class
@@ -21,6 +20,7 @@ belegung\view\BelegungErfassenViewWaedi.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewLL.class
 belegung\model\Arbeitsplätze.class
 benutzungsstatistik\model\ExterneGruppe.class
+allgemein\service\ScheduledExecutorEmailService.class
 administrator\bean\ExportBenutzungsstatistikBean.class
 allgemein\view\MainView.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewWaedi$1.class
@@ -55,9 +55,9 @@ allgemein\view\MainView$MyServlet$1$1.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL.class
 belegung\model\SektorA.class
 administrator\view\PasswortView$1.class
-allgemein\model\SpringEmailService.class
 benutzungsstatistik\db\BenutzerkontaktDatenbank.class
 benutzungsstatistik\view\KorrekturViewLL$1.class
+allgemein\service\SpringEmailService.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewLL$1.class
 benutzungsstatistik\view\KorrekturViewWaedi$1.class
 allgemein\model\Angestellter.class

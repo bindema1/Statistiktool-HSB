@@ -192,8 +192,8 @@ public class BelegungsDatenbank {
 
 		Belegung belegung = null;
 
-		for (Belegung b : belegungenListe) {
-			belegung = b;
+		if (belegungenListe.size() == 1) {
+			belegung = belegungenListe.get(0);
 		}
 
 		// Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
@@ -213,13 +213,13 @@ public class BelegungsDatenbank {
 			} else if (standort == StandortEnum.WÄDENSWIL) {
 				belegung.addStockwerk(new Stockwerk(StockwerkEnum.WÄDI, false, false, false, false,
 						new KapazitätDatenbank().selectKapazitätForStockwerk(StockwerkEnum.WÄDI)));
-			} 
+			}
 
 			insertBelegung(belegung);
 			System.out.println("Belegung gespeichert " + belegung.getBelegungs_ID());
 		}
 
 		return belegung;
-	}	
+	}
 
 }
