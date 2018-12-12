@@ -736,16 +736,16 @@ public class ExportViewWinti extends Composite implements View {
 							// den Eintrag einer Liste hinzu
 							for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
 								if (uhrzeitEnum == gruppenräume.getUhrzeit()) {
-									int auslastung = gruppenräume.getAnzahlPersonen() * 100
-											/ kapazität.getHunderProzentGruppenräume();
+									int auslastungPersonen = gruppenräume.getAnzahlPersonen() * 100 / kapazität.getHunderProzentGruppenräumePersonen();
+									int auslastungRaum = gruppenräume.getAnzahlRäume() * 100 / kapazität.getHunderProzentGruppenräume();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Gruppenräume - Räume", gruppenräume.getAnzahlRäume(),
-											auslastung + "%"));
+											auslastungRaum + "%"));
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Gruppenräume - Personen", gruppenräume.getAnzahlPersonen(),
-											auslastung + "%"));
+											auslastungPersonen + "%"));
 								}
 							}
 
@@ -753,16 +753,16 @@ public class ExportViewWinti extends Composite implements View {
 							// Eintrag einer Liste hinzu
 							for (Carrels carrels : stockwerk.getCarrelsListe()) {
 								if (uhrzeitEnum == carrels.getUhrzeit()) {
-									int auslastung = carrels.getAnzahlPersonen() * 100
-											/ kapazität.getHunderProzentCarrels();
+									int auslastungPersonen = carrels.getAnzahlPersonen() * 100 / kapazität.getHunderProzentCarrelsPersonen();
+									int auslastungRaum = carrels.getAnzahlRäume() * 100 / kapazität.getHunderProzentCarrels();
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Carrels - Räume", carrels.getAnzahlRäume(),
-											auslastung + "%"));
+											auslastungRaum + "%"));
 									beanListe.add(new ExportBelegungKomplettBean(getKWForDate(datum),
 											getWochentagForDate(date), sdf.format(datum), uhrzeit, bereich,
 											stockwerkName, "Carrels - Personen", carrels.getAnzahlPersonen(),
-											auslastung + "%"));
+											auslastungPersonen + "%"));
 								}
 							}
 

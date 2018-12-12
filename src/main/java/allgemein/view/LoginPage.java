@@ -24,7 +24,6 @@ import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
-import allgemein.model.MD5;
 import allgemein.service.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
@@ -54,7 +53,7 @@ public class LoginPage extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "";
 	private AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
-	private MD5 md5 = new MD5();
+//	private MD5 md5 = new MD5();
 	private NativeSelect<String> username;
 
 	public LoginPage() {
@@ -87,7 +86,7 @@ public class LoginPage extends VerticalLayout implements View {
 
 				if (angestellter != null) {
 					// Wenn der Angestellte in der Datenbank existiert und das Passwort Richtig ist
-					if (angestellter.getPasswort().equals(md5.convertMD5(password.getValue()))) {
+					if (angestellter.getPasswort().equals(password.getValue())) {
 
 						// Prüft ob das Passwort älter als ein halbes Jahr ist
 						pruefePasswortDatum(angestellter);

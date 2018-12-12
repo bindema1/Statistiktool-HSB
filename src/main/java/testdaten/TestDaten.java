@@ -9,7 +9,6 @@ import com.vaadin.external.org.slf4j.LoggerFactory;
 
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
-import allgemein.model.MD5;
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -46,9 +45,9 @@ public class TestDaten {
 	AngestellterDatenbank angestelltenDB = new AngestellterDatenbank();
 
 	public TestDaten() {
-		
+
 		try {
-			if(angestelltenDB.selectAllAngestellte().size() == 0) {
+			if (angestelltenDB.selectAllAngestellte().size() == 0) {
 				logger.info("Testdaten werden eingelesen");
 				initAllgemein();
 				initBenutzungsstatistik();
@@ -62,17 +61,21 @@ public class TestDaten {
 	}
 
 	private void initAllgemein() throws ParseException {
-		
+
 		Date date = sdf2.parse("01.12.2018");
 
-		MD5 md5 = new MD5();
-		
-		Angestellter angestellter1 = new Angestellter("Mitarbeitende Winterthur", md5.convertMD5("123"), date, false, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeitende Winterthur", md5.convertMD5("123"), date, false,
+//		MD5 md5 = new MD5();
+
+		Angestellter angestellter1 = new Angestellter("Mitarbeitende Winterthur", "123", date, false,
+				StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter2 = new Angestellter("Studentische Mitarbeitende Winterthur", "123", date, false,
 				StandortEnum.WINTERTHUR_LL);
-		Angestellter angestellter3 = new Angestellter("Admin Winterthur", md5.convertMD5("123"), date, true, StandortEnum.WINTERTHUR_BB);
-		Angestellter angestellter4 = new Angestellter("Mitarbeitende Wädenswil", md5.convertMD5("123"), date, false, StandortEnum.WÄDENSWIL);
-		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", md5.convertMD5("123"), date, true, StandortEnum.WÄDENSWIL);
+		Angestellter angestellter3 = new Angestellter("Admin Winterthur", "123", date, true,
+				StandortEnum.WINTERTHUR_BB);
+		Angestellter angestellter4 = new Angestellter("Mitarbeitende Wädenswil", "123", date, false,
+				StandortEnum.WÄDENSWIL);
+		Angestellter angestellter5 = new Angestellter("Admin Wädenswil", "123", date, true,
+				StandortEnum.WÄDENSWIL);
 		angestelltenDB.insertAngestellter(angestellter1);
 		angestelltenDB.insertAngestellter(angestellter2);
 		angestelltenDB.insertAngestellter(angestellter3);
@@ -83,10 +86,11 @@ public class TestDaten {
 	private void initBenutzungsstatistik() throws ParseException {
 
 		BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-		
+
 		date = sdf2.parse("01.12.2018");
 
-		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB, new Wintikurier(6, 2, 9, 5));
+		Benutzungsstatistik benutzungsstatistik1 = new Benutzungsstatistik(date, 8, true, StandortEnum.WINTERTHUR_BB,
+				new Wintikurier(6, 2, 9, 5));
 		Benutzungsstatistik benutzungsstatistikLL = new Benutzungsstatistik(date, StandortEnum.WINTERTHUR_LL);
 
 //		Timestamp timestamp = new Timestamp(date.getTime());
@@ -204,15 +208,24 @@ public class TestDaten {
 		benutzungsstatistik1.addEmailkontakt(emailkontakt8);
 		benutzungsstatistik1.addEmailkontakt(emailkontakt9);
 
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal1 = new BeantwortungBibliothekspersonal(timestamp8, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal2 = new BeantwortungBibliothekspersonal(timestamp9, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal3 = new BeantwortungBibliothekspersonal(timestamp11, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal4 = new BeantwortungBibliothekspersonal(timestamp11, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal5 = new BeantwortungBibliothekspersonal(timestamp13, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal6 = new BeantwortungBibliothekspersonal(timestamp13, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal7 = new BeantwortungBibliothekspersonal(timestamp14, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal8 = new BeantwortungBibliothekspersonal(timestamp15, benutzungsstatistik1);
-		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal9 = new BeantwortungBibliothekspersonal(timestamp17, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal1 = new BeantwortungBibliothekspersonal(
+				timestamp8, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal2 = new BeantwortungBibliothekspersonal(
+				timestamp9, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal3 = new BeantwortungBibliothekspersonal(
+				timestamp11, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal4 = new BeantwortungBibliothekspersonal(
+				timestamp11, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal5 = new BeantwortungBibliothekspersonal(
+				timestamp13, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal6 = new BeantwortungBibliothekspersonal(
+				timestamp13, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal7 = new BeantwortungBibliothekspersonal(
+				timestamp14, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal8 = new BeantwortungBibliothekspersonal(
+				timestamp15, benutzungsstatistik1);
+		BeantwortungBibliothekspersonal beantwortungBibliothekspersonal9 = new BeantwortungBibliothekspersonal(
+				timestamp17, benutzungsstatistik1);
 		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal1);
 		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal2);
 		benutzungsstatistikLL.addBeantwortungBibliothekspersonal(beantwortungBibliothekspersonal3);
@@ -230,15 +243,14 @@ public class TestDaten {
 		benutzungsstatistik1.addExterneGruppe(externeGruppe2);
 		benutzungsstatistik1.addExterneGruppe(externeGruppe3);
 
-		
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistik1);
 		benutzungsstatistikDB.insertBenutzungsstatistik(benutzungsstatistikLL);
 	}
 
 	private void initBelegung() throws ParseException {
 
-	    BelegungsDatenbank belegungDB = new BelegungsDatenbank();
-		
+		BelegungsDatenbank belegungDB = new BelegungsDatenbank();
+
 		Date date = sdf2.parse("01.12.2018 12:00:00");
 
 		Belegung belegungBB = new Belegung(date, StandortEnum.WINTERTHUR_BB);
@@ -250,7 +262,7 @@ public class TestDaten {
 		Kapazität kapazität2ZG = new Kapazität(StockwerkEnum.ZG2, 160, 0, 0, 0, 0, 0, 0, 190, 0, 0, 0, 0, 0, 0);
 		Kapazität kapazitätLL = new Kapazität(StockwerkEnum.LL, 0, 120, 135, 12, 12, 8, 24, 0, 160, 150, 12, 25, 8, 45);
 		Kapazität kapazitätW = new Kapazität(StockwerkEnum.WÄDI, 91, 0, 0, 0, 0, 0, 0, 130, 0, 0, 0, 0, 0, 0);
-		
+
 		Stockwerk stockwerkEG = new Stockwerk(StockwerkEnum.EG, false, false, true, false, kapazitätEG);
 		Stockwerk stockwerk1ZG = new Stockwerk(StockwerkEnum.ZG1, false, false, false, false, kapazität1ZG);
 		Stockwerk stockwerk2ZG = new Stockwerk(StockwerkEnum.ZG2, false, false, false, false, kapazität2ZG);
@@ -312,18 +324,18 @@ public class TestDaten {
 		Carrels carrelsLL4 = new Carrels(12, 4, UhrzeitEnum.FÜNFZEHN, stockwerkLL);
 		Carrels carrelsLL5 = new Carrels(8, 4, UhrzeitEnum.SIEBZEHN, stockwerkLL);
 		Carrels carrelsLL6 = new Carrels(2, 1, UhrzeitEnum.NEUNZEHN, stockwerkLL);
-		
+
 		// Daten Wädenswil
 		Arbeitsplätze arbeitsplatzW1 = new Arbeitsplätze(39, UhrzeitEnum.ELF, stockwerkW);
 		Arbeitsplätze arbeitsplatzW2 = new Arbeitsplätze(61, UhrzeitEnum.FÜNFZEHN, stockwerkW);
-		
-		//Daten in die Objekte füllen
+
+		// Daten in die Objekte füllen
 		belegungBB.addStockwerk(stockwerkEG);
 		belegungBB.addStockwerk(stockwerk1ZG);
 		belegungBB.addStockwerk(stockwerk2ZG);
 		belegungLL.addStockwerk(stockwerkLL);
 		belegungW.addStockwerk(stockwerkW);
-		
+
 		stockwerkEG.addArbeitsplätze(arbeitsplatzEG1);
 		stockwerkEG.addArbeitsplätze(arbeitsplatzEG2);
 		stockwerkEG.addArbeitsplätze(arbeitsplatzEG3);
@@ -336,21 +348,21 @@ public class TestDaten {
 		stockwerkEG.addGruppenräume(gruppenräumeEG4);
 		stockwerkEG.addGruppenräume(gruppenräumeEG5);
 		stockwerkEG.addGruppenräume(gruppenräumeEG6);
-		
+
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG1);
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG2);
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG3);
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG4);
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG5);
 		stockwerk1ZG.addArbeitsplätze(arbeitsplatz1ZG6);
-		
+
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG1);
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG2);
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG3);
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG4);
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG5);
 		stockwerk2ZG.addArbeitsplätze(arbeitsplatz2ZG6);
-		
+
 		stockwerkLL.addSektorA(sektorA1);
 		stockwerkLL.addSektorA(sektorA2);
 		stockwerkLL.addSektorA(sektorA3);
@@ -375,15 +387,15 @@ public class TestDaten {
 		stockwerkLL.addCarrels(carrelsLL4);
 		stockwerkLL.addCarrels(carrelsLL5);
 		stockwerkLL.addCarrels(carrelsLL6);
-		
+
 		stockwerkW.addArbeitsplätze(arbeitsplatzW1);
 		stockwerkW.addArbeitsplätze(arbeitsplatzW2);
-		
+
 		belegungDB.insertBelegung(belegungBB);
 		belegungDB.insertBelegung(belegungLL);
 		belegungDB.insertBelegung(belegungW);
-		
-		//Ausgabe von allen Daten
+
+		// Ausgabe von allen Daten
 //		for(Belegung belegung : belegungDB.selectAllBelegungen()) {
 //			System.out.println(belegung.getBelegungs_ID());
 //			for(Stockwerk stockwerk : belegung.getStockwerkListe()) {
