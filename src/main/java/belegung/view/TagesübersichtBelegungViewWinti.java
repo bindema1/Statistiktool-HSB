@@ -168,16 +168,16 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-cut.png"));
+			image = new Image(null, new ClassResource("/belegung/EG-alle.png"));
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1.ZG-cut.png"));
+			image = new Image(null, new ClassResource("/belegung/1ZG-alle.png"));
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2.ZG-cut.png"));
+			image = new Image(null, new ClassResource("/belegung/2ZG-alle.png"));
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-cut.png"));
+			image = new Image(null, new ClassResource("/belegung/LL-alle.png"));
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		}
 

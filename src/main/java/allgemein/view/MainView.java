@@ -27,7 +27,6 @@ import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import belegung.view.TagesübersichtBelegungViewWaedi;
 import belegung.view.TagesübersichtBelegungViewWinti;
-import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
@@ -97,9 +96,13 @@ public class MainView extends UI {
 			super.servletInitialized();
 			getService().addSessionInitListener(new SessionInitListener() {
 
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void sessionInit(SessionInitEvent event) {
 					event.getSession().addBootstrapListener(new BootstrapListener() {
+
+						private static final long serialVersionUID = 1L;
 
 						@Override
 						public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
@@ -108,6 +111,8 @@ public class MainView extends UI {
 
 						@Override
 						public void modifyBootstrapPage(BootstrapPageResponse response) {
+							// Das wird benutzt, damit man auf dem iPad bzw. auf mobilen Geräten nicht
+							// zoomen kann
 							response.getDocument().head().prependElement("meta").attr("name", "viewport").attr(
 									"content",
 									"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
@@ -148,21 +153,21 @@ public class MainView extends UI {
 
 			// Wenn der User eine bestimmte URL eingegeben hat, wird es hier auf die
 			// richtige URL weitergeleitet
-			if (route.equals("!" + PasswortView.NAME)) {
+			if (route.contains("!" + PasswortView.NAME)) {
 				getNavigator().navigateTo(PasswortView.NAME);
-			} else if (route.equals("!" + ExportViewWinti.NAME)) {
+			} else if (route.contains("!" + ExportViewWinti.NAME)) {
 				getNavigator().navigateTo(ExportViewWinti.NAME);
-			} else if (route.equals("!" + ExportViewWaedi.NAME)) {
+			} else if (route.contains("!" + ExportViewWaedi.NAME)) {
 				getNavigator().navigateTo(ExportViewWaedi.NAME);
-			} else if (route.equals("!" + BenutzungsstatistikViewBB.NAME)) {
+			} else if (route.contains("!" + BenutzungsstatistikViewBB.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
-			} else if (route.equals("!" + BenutzungsstatistikViewLL.NAME)) {
+			} else if (route.contains("!" + BenutzungsstatistikViewLL.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
-			} else if (route.equals("!" + BenutzungsstatistikViewWaedi.NAME)) {
+			} else if (route.contains("!" + BenutzungsstatistikViewWaedi.NAME)) {
 				getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
-			} else if (route.equals("!" + BelegungErfassenViewWinti.NAME)) {
+			} else if (route.contains("!" + BelegungErfassenViewWinti.NAME)) {
 				getNavigator().navigateTo(BelegungErfassenViewWinti.NAME);
-			} else if (route.equals("!" + BelegungErfassenViewWaedi.NAME)) {
+			} else if (route.contains("!" + BelegungErfassenViewWaedi.NAME)) {
 				getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME);
 			} else {
 				getNavigator().navigateTo(StartseiteView.NAME);

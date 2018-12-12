@@ -616,7 +616,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	private Component createAbsoluteLayoutForImage() {
 
 		// Erstellt alle Button, um auf dem Bild zu klicken
-		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
+		AbsoluteLayout absoluteLayout = new AbsoluteLayout();		
 		bArbeitsplätze = new Button();
 		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bArbeitsplätze.addClickListener(createClickListener());
@@ -640,48 +640,62 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		// Setzt das Bild für das jeweilige Stockwerk
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-lang2.png"));
+			// Wählt das richtige Bild
+			if (erfassungsSchritt == 0) {
+				image = new Image(null, new ClassResource("/belegung/EG-Arbeitsplätze-cut.png"));
+			} else {
+				image = new Image(null, new ClassResource("/belegung/EG-Gruppenräume-cut.png"));
+			}
 			absoluteLayout.addComponent(image);
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bArbeitsplätze, "top: 40px; left: 50px;");
-			bArbeitsplätze.setWidth("650px");
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 10px; left: 10px;");
+			bArbeitsplätze.setWidth("730px");
 			bArbeitsplätze.setHeight("45px");
-			absoluteLayout.addComponent(bGruppenräume, "top: 90px; left: 75px;");
-			bGruppenräume.setHeight("100px");
+			absoluteLayout.addComponent(bGruppenräume, "top: 60px; left: 42px;");
+			bGruppenräume.setHeight("90px");
 			bGruppenräume.setWidth("90px");
 
 		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1.ZG-lang2.png"));
+			image = new Image(null, new ClassResource("/belegung/1ZG-Arbeitsplätze-cut.png"));
 			absoluteLayout.addComponent(image);
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 10px; left: 0px;");
 			bArbeitsplätze.setHeight("200px");
-			bArbeitsplätze.setWidth("650px");
+			bArbeitsplätze.setWidth("750px");
 
 		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2.ZG-lang2.png"));
+			image = new Image(null, new ClassResource("/belegung/2ZG-Arbeitsplätze-cut.png"));
 			absoluteLayout.addComponent(image);
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bArbeitsplätze, "top: 20px; left: 50px;");
-			bArbeitsplätze.setHeight("200px");
-			bArbeitsplätze.setWidth("650px");
+			absoluteLayout.addComponent(bArbeitsplätze, "top: 10px; left: 0px;");
+			bArbeitsplätze.setHeight("210px");
+			bArbeitsplätze.setWidth("750px");
 
 		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-lang2.png"));
+			// Wählt das richtige Bild
+			if (erfassungsSchritt == 1) {
+				image = new Image(null, new ClassResource("/belegung/LL-Gruppenräume-cut.png"));
+			}else if (erfassungsSchritt == 2) {
+				image = new Image(null, new ClassResource("/belegung/LL-Carrels-cut.png"));
+			}else if (erfassungsSchritt == 3) {
+				image = new Image(null, new ClassResource("/belegung/LL-SektorA-cut.png"));
+			}else if (erfassungsSchritt == 4) {
+				image = new Image(null, new ClassResource("/belegung/LL-SektorB-cut.png"));
+			}
 			absoluteLayout.addComponent(image);
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
-			absoluteLayout.addComponent(bSektorA, "top: 30px; left: 50px;");
-			bSektorA.setHeight("140px");
-			bSektorA.setWidth("310px");
-			absoluteLayout.addComponent(bSektorB, "top: 30px; left: 380px;");
-			bSektorB.setHeight("140px");
+			absoluteLayout.addComponent(bSektorA, "top: 10px; left: 30px;");
+			bSektorA.setHeight("150px");
+			bSektorA.setWidth("320px");
+			absoluteLayout.addComponent(bSektorB, "top: 10px; left: 370px;");
+			bSektorB.setHeight("150px");
 			bSektorB.setWidth("380px");
-			absoluteLayout.addComponent(bGruppenräume, "top: 115px; left: 235px;");
-			bGruppenräume.setHeight("60px");
-			bGruppenräume.setWidth("270px");
-			absoluteLayout.addComponent(bCarrels, "top: 80px; left: 565px;");
+			absoluteLayout.addComponent(bGruppenräume, "top: 95px; left: 230px;");
+			bGruppenräume.setHeight("65px");
+			bGruppenräume.setWidth("265px");
+			absoluteLayout.addComponent(bCarrels, "top: 55px; left: 565px;");
 			bCarrels.setHeight("50px");
-			bCarrels.setWidth("125px");
+			bCarrels.setWidth("123px");
 		}
 
 		return absoluteLayout;
