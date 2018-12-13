@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -128,7 +130,7 @@ public class KorrekturViewBB extends Composite implements View {
 		bBenutzerkontakt.setCaption("Kontakt");
 		bBenutzerkontakt.setEnabled(false);
 		bBenutzerkontakt.setIcon(VaadinIcons.QUESTION_CIRCLE_O);
-		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bBenutzerkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzerkontakt.addClickListener(createClickListener());
 
 		lBenutzerkontakt = new Label();
@@ -145,7 +147,7 @@ public class KorrekturViewBB extends Composite implements View {
 		bIntensivFrage.setCaption("Intensivfrage");
 		bIntensivFrage.setEnabled(false);
 		bIntensivFrage.setIcon(VaadinIcons.HOURGLASS);
-		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bIntensivFrage.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bIntensivFrage.addClickListener(createClickListener());
 
 		lIntensivFrage = new Label();
@@ -162,7 +164,7 @@ public class KorrekturViewBB extends Composite implements View {
 		bEmailkontakt.setCaption("Email");
 		bEmailkontakt.setEnabled(false);
 		bEmailkontakt.setIcon(VaadinIcons.ENVELOPE_OPEN_O);
-		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bEmailkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bEmailkontakt.addClickListener(createClickListener());
 
 		lEmailkontakt = new Label();
@@ -179,7 +181,7 @@ public class KorrekturViewBB extends Composite implements View {
 		bTelefonkontakt.setCaption("Telefon");
 		bTelefonkontakt.setEnabled(false);
 		bTelefonkontakt.setIcon(VaadinIcons.PHONE);
-		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP +" iconBenutzungHuge");
+		bTelefonkontakt.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bTelefonkontakt.addClickListener(createClickListener());
 
 		lTelefonkontakt = new Label();
@@ -211,8 +213,8 @@ public class KorrekturViewBB extends Composite implements View {
 			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
 		});
 
-		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14",
-				"14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
+		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13",
+				"13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
 		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 		uhrzeitListSelect.setSelectedItem(data.get(0));
 		uhrzeitListSelect.setEmptySelectionAllowed(false);
@@ -337,6 +339,11 @@ public class KorrekturViewBB extends Composite implements View {
 		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
 				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -421,9 +428,9 @@ public class KorrekturViewBB extends Composite implements View {
 				} else if (row == 6) {
 					grid.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				} else {
-					if(row == 7 && col == 0) {
-						//Kassenbeleg
-					}else {
+					if (row == 7 && col == 0) {
+						// Kassenbeleg
+					} else {
 						c.setHeight("80%");
 						c.setWidth("80%");
 					}
@@ -434,14 +441,14 @@ public class KorrekturViewBB extends Composite implements View {
 		mainLayout.addComponent(grid);
 
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+
+		setCompositionRoot(init());
 	}
 
 	public ClickListener createClickListener() {
@@ -652,11 +659,13 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bKorrekturWintikurier) {
-					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
 				}
 
 				if (e.getSource() == bKorrekturGruppen) {
-					getUI().getNavigator().navigateTo(ExterneGruppeViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
+					getUI().getNavigator().navigateTo(ExterneGruppeViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + true);
 				}
 
 			}

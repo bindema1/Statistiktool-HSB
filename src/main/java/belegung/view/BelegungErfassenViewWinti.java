@@ -2,6 +2,7 @@ package belegung.view;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -326,6 +328,11 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		datefield.setValue(
 				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -616,7 +623,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	private Component createAbsoluteLayoutForImage() {
 
 		// Erstellt alle Button, um auf dem Bild zu klicken
-		AbsoluteLayout absoluteLayout = new AbsoluteLayout();		
+		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
 		bArbeitsplätze = new Button();
 		bArbeitsplätze.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		bArbeitsplätze.addClickListener(createClickListener());
@@ -675,11 +682,11 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			// Wählt das richtige Bild
 			if (erfassungsSchritt == 1) {
 				image = new Image(null, new ClassResource("/belegung/LL-Gruppenräume-cut.png"));
-			}else if (erfassungsSchritt == 2) {
+			} else if (erfassungsSchritt == 2) {
 				image = new Image(null, new ClassResource("/belegung/LL-Carrels-cut.png"));
-			}else if (erfassungsSchritt == 3) {
+			} else if (erfassungsSchritt == 3) {
 				image = new Image(null, new ClassResource("/belegung/LL-SektorA-cut.png"));
-			}else if (erfassungsSchritt == 4) {
+			} else if (erfassungsSchritt == 4) {
 				image = new Image(null, new ClassResource("/belegung/LL-SektorB-cut.png"));
 			}
 			absoluteLayout.addComponent(image);
@@ -1184,8 +1191,15 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			this.date = new Date(Long.parseLong(datumString));
 		}
 
+		this.erfassungsSchritt = Integer.parseInt(erfassungsSchrittString);
+
 		if (stockwerkString.equals("LL")) {
 			this.stockwerkEnum = StockwerkEnum.LL;
+			// Falls man beim Erfassungsschritt 0 mitgibt, es aber auf Stockwerk
+			// Lernlandschaft ist, setze es zu 1
+			if (erfassungsSchritt == 0) {
+				erfassungsSchritt = 1;
+			}
 		} else if (stockwerkString.equals("EG")) {
 			this.stockwerkEnum = StockwerkEnum.EG;
 		} else if (stockwerkString.equals("ZG1")) {
@@ -1201,7 +1215,6 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		}
 
 		this.korrektur = Boolean.parseBoolean(korrekturString);
-		this.erfassungsSchritt = Integer.parseInt(erfassungsSchrittString);
 
 		if (erfassungsSchritt == 0 || erfassungsSchritt == 3 || erfassungsSchritt == 4) {
 			räumeVorhanden = false;
@@ -1377,7 +1390,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 
 				if (e.getSource() == bTagesübersicht) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
-							+ stockwerkEnum.toString());
+							+ stockwerkEnum.toString() + '/' + false);
 				}
 
 				if (e.getSource() == bKorrektur) {

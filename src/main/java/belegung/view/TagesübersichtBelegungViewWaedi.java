@@ -1,6 +1,7 @@
 package belegung.view;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -27,6 +30,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
+import allgemein.view.StartseiteView;
 import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -55,6 +59,7 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 	private Date date;
 	private BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 	private GridLayout grid;
+	private boolean vonStartseite;
 
 	/**
 	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
@@ -119,6 +124,11 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 		datefield.setValue(
 				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -244,16 +254,20 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 		String datumString = args[0];
 		// Stockwerk der Belegung
 		String stockwerk = args[1];
+		// Ob der Zugriff direkt aus der Startseite oder von der Belegung kommt
+		String vonStartseiteString = args[2];
 
 		this.date = new Date(Long.parseLong(datumString));
 
 		if (stockwerk.equals("WÄDI")) {
 			this.stockwerkEnum = StockwerkEnum.WÄDI;
-		} 
+		}
 
 		if (stockwerkEnum == StockwerkEnum.WÄDI) {
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WÄDENSWIL);
-		} 
+		}
+
+		this.vonStartseite = Boolean.parseBoolean(vonStartseiteString);
 
 		setCompositionRoot(init());
 	}
@@ -264,8 +278,12 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME + '/' + " " + '/'
-							+ StockwerkEnum.WÄDI.toString() + '/' + false + '/' + " ");
+					if (vonStartseite == true) {
+						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
+					} else {
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME + '/' + " " + '/'
+								+ StockwerkEnum.WÄDI.toString() + '/' + false + '/' + " ");
+					}
 				}
 
 				if (e.getSource() == bErfassung) {

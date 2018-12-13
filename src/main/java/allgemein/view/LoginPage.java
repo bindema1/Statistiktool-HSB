@@ -65,11 +65,14 @@ public class LoginPage extends VerticalLayout implements View {
 		FormLayout content = new FormLayout();
 		// Dropdown aller Angestellten
 		List<String> data = new ArrayList<>();
+		data.add("Bitte wählen ↓");
 		for (Angestellter a : angestellterDB.selectAllAngestellte()) {
 			data.add(a.getName());
 		}
 		username = new NativeSelect<>("User", data);
 		username.setWidth(100.0f, Unit.PERCENTAGE);
+		username.setSelectedItem(data.get(0));
+		username.setEmptySelectionAllowed(false);
 		content.addComponent(username);
 		PasswordField password = new PasswordField("Passwort");
 		password.setValue("123");

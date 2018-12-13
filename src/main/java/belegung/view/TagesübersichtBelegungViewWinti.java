@@ -1,6 +1,7 @@
 package belegung.view;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -31,6 +34,7 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
+import allgemein.view.StartseiteView;
 import belegung.bean.TagesübersichtBelegungBean;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -68,6 +72,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 	private BelegungsDatenbank belegungDB = new BelegungsDatenbank();
 	private Image image;
 	private GridLayout grid;
+	private boolean vonStartseite;
 
 	/**
 	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
@@ -132,6 +137,11 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		datefield.setValue(
 				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -168,16 +178,16 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 
 		image = null;
 		if (stockwerkEnum == StockwerkEnum.EG) {
-			image = new Image(null, new ClassResource("/belegung/EG-alle.png"));
+			image = new Image(null, new ClassResource("/belegung/EG-alle-cut.png"));
 			bEG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG1) {
-			image = new Image(null, new ClassResource("/belegung/1ZG-alle.png"));
+			image = new Image(null, new ClassResource("/belegung/1ZG-alle-cut.png"));
 			b1ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.ZG2) {
-			image = new Image(null, new ClassResource("/belegung/2ZG-alle.png"));
+			image = new Image(null, new ClassResource("/belegung/2ZG-alle-cut.png"));
 			b2ZG.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		} else if (stockwerkEnum == StockwerkEnum.LL) {
-			image = new Image(null, new ClassResource("/belegung/LL-alle.png"));
+			image = new Image(null, new ClassResource("/belegung/LL-alle-cut.png"));
 			bLL.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		}
 
@@ -195,7 +205,9 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		grid.addComponent(b1ZG, 0, 9);
 		grid.addComponent(bEG, 0, 10);
 		grid.addComponent(new Label(), 0, 11);
-		grid.addComponent(image, 1, 7, 4, 11);
+		AbsoluteLayout absoluteLayout = new AbsoluteLayout();
+		absoluteLayout.addComponent(image);
+		grid.addComponent(absoluteLayout, 1, 7, 4, 11);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -371,6 +383,8 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		String datumString = args[0];
 		// Stockwerk der Belegung
 		String stockwerk = args[1];
+		// Ob der Zugriff direkt aus der Startseite oder von der Belegung kommt
+		String vonStartseiteString = args[2];
 
 		this.date = new Date(Long.parseLong(datumString));
 
@@ -390,6 +404,8 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			this.belegung = belegungDB.selectBelegungForDateAndStandort(date, StandortEnum.WINTERTHUR_BB);
 		}
 
+		this.vonStartseite = Boolean.parseBoolean(vonStartseiteString);
+
 		setCompositionRoot(init());
 	}
 
@@ -399,38 +415,42 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
-							+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
+					if (vonStartseite == true) {
+						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
+					} else {
+						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
+								+ stockwerkEnum.toString() + '/' + false + '/' + 0 + '/' + " ");
+					}
 				}
 
 				if (e.getSource() == bErfassung) {
 					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
-							+ StockwerkEnum.EG.toString() + '/' + false + '/' + 0 + '/' + " ");
+							+ stockwerkEnum.toString() + '/' + false + '/' + 0 + '/' + " ");
 				}
 
 				if (e.getSource() == bKorrektur) {
 					getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + date.getTime() + '/'
-							+ StockwerkEnum.EG.toString() + '/' + true + '/' + 0 + '/' + " ");
+							+ stockwerkEnum.toString() + '/' + true + '/' + 0 + '/' + " ");
 				}
 
 				if (e.getSource() == bLL) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
-							+ StockwerkEnum.LL.toString());
+							+ StockwerkEnum.LL.toString() + '/' + vonStartseite);
 				}
 
 				if (e.getSource() == b2ZG) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
-							+ StockwerkEnum.ZG2.toString());
+							+ StockwerkEnum.ZG2.toString() + '/' + vonStartseite);
 				}
 
 				if (e.getSource() == b1ZG) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
-							+ StockwerkEnum.ZG1.toString());
+							+ StockwerkEnum.ZG1.toString() + '/' + vonStartseite);
 				}
 
 				if (e.getSource() == bEG) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/' + date.getTime() + '/'
-							+ StockwerkEnum.EG.toString());
+							+ StockwerkEnum.EG.toString() + '/' + vonStartseite);
 				}
 
 			}

@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -14,6 +15,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -254,6 +256,11 @@ public class KorrekturViewLL extends Composite implements View {
 		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
 				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 

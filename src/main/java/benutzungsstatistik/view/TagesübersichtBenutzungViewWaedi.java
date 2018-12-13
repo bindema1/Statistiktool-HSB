@@ -12,6 +12,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,6 +29,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
+import allgemein.view.StartseiteView;
 import benutzungsstatistik.bean.TagesübersichtBenutzungBean;
 import benutzungsstatistik.bean.WintikurierBean;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
@@ -50,6 +53,7 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
 	private Button bKorrektur;
+	private boolean vonStartseite;
 	private Benutzungsstatistik benutzungsstatistik;
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
@@ -121,6 +125,11 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 		DateField datefield = new DateField();
 		datefield.setValue(LocalDate.now());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -164,15 +173,15 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 		List<WintikurierBean> internerkurierBeanListe = new ArrayList<>();
 
 		WintikurierBean wb1 = new WintikurierBean();
-		wb1.setDepartment("Kampus Reidbach");
+		wb1.setDepartment("Campus Reidbach");
 		wb1.setAnzahl(benutzungsstatistik.getInternerkurier().getAnzahl_Reidbach());
 		internerkurierBeanListe.add(wb1);
 		WintikurierBean wb2 = new WintikurierBean();
-		wb2.setDepartment("Kampus GS");
+		wb2.setDepartment("Campus GS");
 		wb2.setAnzahl(benutzungsstatistik.getInternerkurier().getAnzahl_GS());
 		internerkurierBeanListe.add(wb2);
 		WintikurierBean wb3 = new WintikurierBean();
-		wb3.setDepartment("Kampus RA");
+		wb3.setDepartment("Campus RA");
 		wb3.setAnzahl(benutzungsstatistik.getInternerkurier().getAnzahl_RA());
 		internerkurierBeanListe.add(wb3);
 
@@ -235,7 +244,12 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
 		String id = args[0];
+		// Ob der Zugriff direkt aus der Startseite oder von der Belegung kommt
+		String vonStartseiteString = args[1];
+
 		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		this.vonStartseite = Boolean.parseBoolean(vonStartseiteString);
+
 		setCompositionRoot(init());
 	}
 
@@ -245,7 +259,11 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
+					if (vonStartseite == true) {
+						Page.getCurrent().setUriFragment("!" + StartseiteView.NAME);
+					} else {
+						getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
+					}
 				}
 
 				if (e.getSource() == bKorrektur) {

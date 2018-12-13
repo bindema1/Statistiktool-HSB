@@ -2,6 +2,7 @@ package belegung.view;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -243,6 +245,11 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 		datefield.setValue(
 				Instant.ofEpochMilli(belegung.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if(!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			//Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -635,7 +642,7 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 
 				if (e.getSource() == bTagesübersicht) {
 					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWaedi.NAME + '/' + date.getTime() + '/'
-							+ stockwerkEnum.toString());
+							+ stockwerkEnum.toString() + '/' + false);
 				}
 
 				if (e.getSource() == bKorrektur) {

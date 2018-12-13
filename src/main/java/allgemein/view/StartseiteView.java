@@ -1,5 +1,7 @@
 package allgemein.view;
 
+import java.util.Date;
+
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
@@ -18,14 +20,18 @@ import com.vaadin.ui.themes.ValoTheme;
 import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
+import allgemein.model.StandortEnum;
 import belegung.model.StockwerkEnum;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
+import belegung.view.TagesübersichtBelegungViewWaedi;
 import belegung.view.TagesübersichtBelegungViewWinti;
+import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
 import benutzungsstatistik.view.ExterneGruppeViewBB;
+import benutzungsstatistik.view.InternerkurierViewWaedi;
 import benutzungsstatistik.view.KorrekturViewBB;
 import benutzungsstatistik.view.KorrekturViewLL;
 import benutzungsstatistik.view.KorrekturViewWaedi;
@@ -33,7 +39,6 @@ import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
-import benutzungsstatistik.view.InternerkurierViewWaedi;
 
 /**
  * StartseiteView setzt für den jeweiligen User das Layout zusammen, sodass der
@@ -47,15 +52,21 @@ public class StartseiteView extends Composite implements View {
 	public static final String NAME = "Startseite";
 	private AbsoluteLayout mainLayout;
 	private Button bBenutzungsstatistikBB;
+	private Button bBenutzungsstatistikBBUebersicht;
 	private Button bBenutzungsstatistikLL;
+	private Button bBenutzungsstatistikLLUebersicht;
 	private Button bBenutzungsstatistikWaedi;
+	private Button bBenutzungsstatistikWaediUebersicht;
 	private Button bBelegungWinti;
+	private Button bBelegungWintiUebersicht;
 	private Button bBelegungWaedi;
+	private Button bBelegungWaediUebersicht;
 	private Button bExportWinti;
 	private Button bExportWaedi;
 	private Button bPasswort;
 	private Button bLogout;
 	private String user;
+	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
 	/**
 	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
@@ -64,7 +75,7 @@ public class StartseiteView extends Composite implements View {
 	 */
 	private AbsoluteLayout buildMainLayout() {
 		mainLayout = new AbsoluteLayout();
-		//Setzt die Hintergrundfarbe auf Grün
+		// Setzt die Hintergrundfarbe auf Grün
 		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
@@ -103,25 +114,50 @@ public class StartseiteView extends Composite implements View {
 		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikBB.addClickListener(createClickListener());
 
+		bBenutzungsstatistikBBUebersicht = new Button();
+		bBenutzungsstatistikBBUebersicht.setCaption("Benutzung-Tagesübersicht");
+		bBenutzungsstatistikBBUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikBBUebersicht.addClickListener(createClickListener());
+
 		bBenutzungsstatistikLL = new Button();
 		bBenutzungsstatistikLL.setCaption("Benutzungsstatistik LL");
 		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikLL.addClickListener(createClickListener());
+
+		bBenutzungsstatistikLLUebersicht = new Button();
+		bBenutzungsstatistikLLUebersicht.setCaption("Benutzung-Tagesübersicht");
+		bBenutzungsstatistikLLUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikLLUebersicht.addClickListener(createClickListener());
 
 		bBenutzungsstatistikWaedi = new Button();
 		bBenutzungsstatistikWaedi.setCaption("Benutzungsstatistik Wädi");
 		bBenutzungsstatistikWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBenutzungsstatistikWaedi.addClickListener(createClickListener());
 
+		bBenutzungsstatistikWaediUebersicht = new Button();
+		bBenutzungsstatistikWaediUebersicht.setCaption("Benutzung-Tagesübersicht");
+		bBenutzungsstatistikWaediUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikWaediUebersicht.addClickListener(createClickListener());
+
 		bBelegungWinti = new Button();
 		bBelegungWinti.setCaption("Belegung Winti");
 		bBelegungWinti.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBelegungWinti.addClickListener(createClickListener());
 
+		bBelegungWintiUebersicht = new Button();
+		bBelegungWintiUebersicht.setCaption("Belegung-Tagesübersicht");
+		bBelegungWintiUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWintiUebersicht.addClickListener(createClickListener());
+
 		bBelegungWaedi = new Button();
 		bBelegungWaedi.setCaption("Belegung Wädi");
 		bBelegungWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
 		bBelegungWaedi.addClickListener(createClickListener());
+
+		bBelegungWaediUebersicht = new Button();
+		bBelegungWaediUebersicht.setCaption("Belegung-Tagesübersicht");
+		bBelegungWaediUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWaediUebersicht.addClickListener(createClickListener());
 
 		bExportWinti = new Button();
 		bExportWinti.setCaption("Export Winti");
@@ -162,20 +198,20 @@ public class StartseiteView extends Composite implements View {
 			grid.addComponent(bExportWinti, 0, 2);
 			grid.addComponent(bPasswort, 1, 2);
 			grid.addComponent(new Label(), 2, 2);
-			
+
 			grid.setColumnExpandRatio(0, 0.33f);
 			grid.setColumnExpandRatio(1, 0.33f);
 			grid.setColumnExpandRatio(2, 0.33f);
 		} else if (user.equals("Mitarbeitende Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikBB, 0, 1);
 			grid.addComponent(bBelegungWinti, 1, 1);
-			grid.addComponent(new Label(), 0, 2);
-			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(bBenutzungsstatistikBBUebersicht, 0, 2);
+			grid.addComponent(bBelegungWintiUebersicht, 1, 2);
 		} else if (user.equals("Studentische Mitarbeitende Winterthur")) {
 			grid.addComponent(bBenutzungsstatistikLL, 0, 1);
 			grid.addComponent(bBelegungWinti, 1, 1);
-			grid.addComponent(new Label(), 0, 2);
-			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(bBenutzungsstatistikLLUebersicht, 0, 2);
+			grid.addComponent(bBelegungWintiUebersicht, 1, 2);
 		} else if (user.equals("Admin Wädenswil")) {
 			grid.addComponent(bBenutzungsstatistikWaedi, 0, 1);
 			grid.addComponent(bBelegungWaedi, 1, 1);
@@ -184,11 +220,11 @@ public class StartseiteView extends Composite implements View {
 		} else if (user.equals("Mitarbeitende Wädenswil")) {
 			grid.addComponent(bBenutzungsstatistikWaedi, 0, 1);
 			grid.addComponent(bBelegungWaedi, 1, 1);
-			grid.addComponent(new Label(), 0, 2);
-			grid.addComponent(new Label(), 1, 2);
+			grid.addComponent(bBenutzungsstatistikWaediUebersicht, 0, 2);
+			grid.addComponent(bBelegungWaediUebersicht, 1, 2);
 		}
 
-		//Geht durch alle Zeilen und Columns und setzt die Button grösser
+		// Geht durch alle Zeilen und Columns und setzt die Button grösser
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
 				Component c = grid.getComponent(col, row);
@@ -197,7 +233,7 @@ public class StartseiteView extends Composite implements View {
 				if (row != 0) {
 					c.setHeight("70%");
 					c.setWidth("70%");
-				}else {
+				} else {
 					c.setWidth("70%");
 				}
 			}
@@ -205,7 +241,7 @@ public class StartseiteView extends Composite implements View {
 		grid.setRowExpandRatio(0, 0.1f);
 		grid.setRowExpandRatio(1, 0.45f);
 		grid.setRowExpandRatio(2, 0.45f);
-		
+
 		if (user.equals("Admin Winterthur")) {
 			// Admin Winterthur hat ein grösseres Layout als alle anderen User
 			grid.setColumnExpandRatio(0, 0.333f);
@@ -236,9 +272,31 @@ public class StartseiteView extends Composite implements View {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
 				}
 
+				if (e.getSource() == bBenutzungsstatistikBBUebersicht) {
+					getUI().getNavigator()
+							.navigateTo(TagesübersichtBenutzungViewBB.NAME + '/' + benutzungsstatistikDB
+									.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB)
+									.getBenutzungsstatistik_ID() + '/' + true);
+				}
+
+				if (e.getSource() == bBenutzungsstatistikLLUebersicht) {
+					getUI().getNavigator()
+							.navigateTo(TagesübersichtBenutzungViewLL.NAME + '/' + benutzungsstatistikDB
+									.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL)
+									.getBenutzungsstatistik_ID() + '/' + true);
+				}
+
+				if (e.getSource() == bBenutzungsstatistikWaediUebersicht) {
+					getUI().getNavigator()
+							.navigateTo(TagesübersichtBenutzungViewWaedi.NAME + '/' + benutzungsstatistikDB
+									.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WÄDENSWIL)
+									.getBenutzungsstatistik_ID() + '/' + true);
+				}
+
 				if (e.getSource() == bBelegungWinti) {
 					if (user.equals("Studentische Mitarbeitende Winterthur")) {
-						//Studentische Mitarbeiter werden automatisch zur Belegung der Lernlandschaft geleitet
+						// Studentische Mitarbeiter werden automatisch zur Belegung der Lernlandschaft
+						// geleitet
 						getUI().getNavigator().navigateTo(BelegungErfassenViewWinti.NAME + '/' + " " + '/'
 								+ StockwerkEnum.LL.toString() + '/' + false + '/' + 1 + '/' + " ");
 					} else {
@@ -250,6 +308,23 @@ public class StartseiteView extends Composite implements View {
 				if (e.getSource() == bBelegungWaedi) {
 					getUI().getNavigator().navigateTo(BelegungErfassenViewWaedi.NAME + '/' + " " + '/'
 							+ StockwerkEnum.WÄDI.toString() + '/' + false + '/' + " ");
+				}
+
+				if (e.getSource() == bBelegungWintiUebersicht) {
+					if (user.equals("Studentische Mitarbeitende Winterthur")) {
+						// Studentische Mitarbeiter werden automatisch zur Tagesübersichts-Belegung der
+						// Lernlandschaft geleitet
+						getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/'
+								+ new Date().getTime() + '/' + StockwerkEnum.LL.toString() + '/' + true);
+					} else {
+						getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWinti.NAME + '/'
+								+ new Date().getTime() + '/' + StockwerkEnum.EG.toString() + '/' + true);
+					}
+				}
+
+				if (e.getSource() == bBelegungWaediUebersicht) {
+					getUI().getNavigator().navigateTo(TagesübersichtBelegungViewWaedi.NAME + '/' + new Date().getTime()
+							+ '/' + StockwerkEnum.WÄDI.toString() + '/' + true);
 				}
 
 				if (e.getSource() == bExportWinti) {
@@ -265,7 +340,7 @@ public class StartseiteView extends Composite implements View {
 				}
 
 				if (e.getSource() == bLogout) {
-					//Wenn der User sich ausloggt, werden alle Views gelöscht
+					// Wenn der User sich ausloggt, werden alle Views gelöscht
 					getUI().getNavigator().removeView(StartseiteView.NAME);
 					getUI().getNavigator().removeView(PasswortView.NAME);
 					getUI().getNavigator().removeView(ExportViewWinti.NAME);

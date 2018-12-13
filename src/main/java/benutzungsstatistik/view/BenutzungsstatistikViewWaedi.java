@@ -312,13 +312,10 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 					}
 					Notification.show("+ " + zaehler + " Intensivfrage", Type.TRAY_NOTIFICATION);
 
-					benutzungsstatistik.addBenutzerkontakt(
-							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					setIntensivCaption();
 					sIntensivFrageSlider.setValue(5.0);
-					setBenutzerCaption();
 				}
 
 //				if (e.getSource() == bRechercheBeratung) {
@@ -360,7 +357,7 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 
 				if (e.getSource() == bTagesuebersicht) {
 					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewWaedi.NAME + '/'
-							+ benutzungsstatistik.getBenutzungsstatistik_ID());
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 			}

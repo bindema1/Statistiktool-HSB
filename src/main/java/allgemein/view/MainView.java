@@ -25,20 +25,9 @@ import allgemein.db.AngestellterDatenbank;
 import allgemein.service.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
-import belegung.view.TagesübersichtBelegungViewWaedi;
-import belegung.view.TagesübersichtBelegungViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
-import benutzungsstatistik.view.ExterneGruppeViewBB;
-import benutzungsstatistik.view.InternerkurierViewWaedi;
-import benutzungsstatistik.view.KorrekturViewBB;
-import benutzungsstatistik.view.KorrekturViewLL;
-import benutzungsstatistik.view.KorrekturViewWaedi;
-import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
-import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
-import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
-import benutzungsstatistik.view.WintikurierViewBB;
 import testdaten.TestDaten;
 
 /**
@@ -79,7 +68,7 @@ public class MainView extends UI {
 			}
 		});
 
-//		router("");
+		router("");
 
 		// Ein Task, welcher im Hintergrund läuft und leere Belegungen sowie den
 		// Kassenbeleg prüft
@@ -125,31 +114,29 @@ public class MainView extends UI {
 
 	private void router(String route) {
 
-		System.out.println("ROUTE: " + route);
-
 		// Wenn der User existiert
-		if (getSession().getAttribute("user") != null) {
+		if (getUI().getSession().getAttribute("user") != null) {
 			// Alle Views hinzufügen
-			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
-			getNavigator().addView(PasswortView.NAME, PasswortView.class);
-			getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
-			getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);
-			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
-			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
-			getNavigator().addView(BelegungErfassenViewWaedi.NAME, BelegungErfassenViewWaedi.class);
-			getNavigator().addView(TagesübersichtBelegungViewWaedi.NAME, TagesübersichtBelegungViewWaedi.class);
-			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
-			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
-			getNavigator().addView(BenutzungsstatistikViewWaedi.NAME, BenutzungsstatistikViewWaedi.class);
-			getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
-			getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
-			getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
-			getNavigator().addView(KorrekturViewWaedi.NAME, KorrekturViewWaedi.class);
-			getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
-			getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
-			getNavigator().addView(TagesübersichtBenutzungViewWaedi.NAME, TagesübersichtBenutzungViewWaedi.class);
-			getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
-			getNavigator().addView(InternerkurierViewWaedi.NAME, InternerkurierViewWaedi.class);
+//			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
+//			getNavigator().addView(PasswortView.NAME, PasswortView.class);
+//			getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
+//			getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);
+//			getNavigator().addView(BelegungErfassenViewWinti.NAME, BelegungErfassenViewWinti.class);
+//			getNavigator().addView(TagesübersichtBelegungViewWinti.NAME, TagesübersichtBelegungViewWinti.class);
+//			getNavigator().addView(BelegungErfassenViewWaedi.NAME, BelegungErfassenViewWaedi.class);
+//			getNavigator().addView(TagesübersichtBelegungViewWaedi.NAME, TagesübersichtBelegungViewWaedi.class);
+//			getNavigator().addView(BenutzungsstatistikViewBB.NAME, BenutzungsstatistikViewBB.class);
+//			getNavigator().addView(BenutzungsstatistikViewLL.NAME, BenutzungsstatistikViewLL.class);
+//			getNavigator().addView(BenutzungsstatistikViewWaedi.NAME, BenutzungsstatistikViewWaedi.class);
+//			getNavigator().addView(ExterneGruppeViewBB.NAME, ExterneGruppeViewBB.class);
+//			getNavigator().addView(KorrekturViewBB.NAME, KorrekturViewBB.class);
+//			getNavigator().addView(KorrekturViewLL.NAME, KorrekturViewLL.class);
+//			getNavigator().addView(KorrekturViewWaedi.NAME, KorrekturViewWaedi.class);
+//			getNavigator().addView(TagesübersichtBenutzungViewBB.NAME, TagesübersichtBenutzungViewBB.class);
+//			getNavigator().addView(TagesübersichtBenutzungViewLL.NAME, TagesübersichtBenutzungViewLL.class);
+//			getNavigator().addView(TagesübersichtBenutzungViewWaedi.NAME, TagesübersichtBenutzungViewWaedi.class);
+//			getNavigator().addView(WintikurierViewBB.NAME, WintikurierViewBB.class);
+//			getNavigator().addView(InternerkurierViewWaedi.NAME, InternerkurierViewWaedi.class);
 
 			// Wenn der User eine bestimmte URL eingegeben hat, wird es hier auf die
 			// richtige URL weitergeleitet

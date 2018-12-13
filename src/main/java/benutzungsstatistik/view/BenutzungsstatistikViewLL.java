@@ -163,11 +163,11 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 					}
 					if (row == 3 || row == 4) {
 						if (col == 0 || col == 1 || col == 2) {
-							//bBeantwortungBibliothekspersonal
+							// bBeantwortungBibliothekspersonal
 							c.setWidth("86%");
 						}
-					} 
-				}else {
+					}
+				} else {
 					c.setWidth("80%");
 				}
 			}
@@ -188,7 +188,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		mainLayout.addComponent(grid);
 
 	}
-	
+
 	/**
 	 * Erstellt das GridLayout für den Slider
 	 * 
@@ -202,14 +202,14 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		for (int col = 0; col < sliderLayout.getColumns(); col++) {
 			for (int row = 0; row < sliderLayout.getRows(); row++) {
 				Component c = sliderLayout.getComponent(col, row);
-				
+
 				// Button grösser machen
 				c.setWidth("100%");
 
 				if (row == 0 || row == 1) {
 					c.setHeight("100%");
 					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
-				}else {
+				} else {
 					c.setHeight("40%");
 					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				}
@@ -227,7 +227,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 			}
 		}
 		bBeantwortungBibliothekspersonal
-				.setCaption("Beantwortung Bibliothekspersonal, " + uhrzeit + " Uhr: " + beantwortungzaehler);
+				.setCaption("Verweis an Bibliothekspersonal, " + uhrzeit + " Uhr: " + beantwortungzaehler);
 	}
 
 	private void setBenutzerCaption() {
@@ -303,8 +303,8 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					getUI().getNavigator().navigateTo(
-							TagesübersichtBenutzungViewLL.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewLL.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 			}

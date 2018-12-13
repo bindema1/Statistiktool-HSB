@@ -252,20 +252,19 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 	private GridLayout createSliderGridLayout() {
 		GridLayout sliderLayout = new GridLayout(1, 2);
 		sliderLayout.setSizeFull();
-		sliderLayout.addStyleName("layout-with-border");
 		sliderLayout.addComponent(bIntensivFrage, 0, 0);
 		sliderLayout.addComponent(sIntensivFrageSlider, 0, 1);
 		for (int col = 0; col < sliderLayout.getColumns(); col++) {
 			for (int row = 0; row < sliderLayout.getRows(); row++) {
 				Component c = sliderLayout.getComponent(col, row);
-				
+
 				// Button grösser machen
 				c.setWidth("100%");
 
 				if (row == 0) {
 					c.setHeight("100%");
 					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
-				}else {
+				} else {
 					c.setHeight("48%");
 					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				}
@@ -348,13 +347,10 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 					}
 					Notification.show("+ " + zaehler + " Intensivfrage", Type.TRAY_NOTIFICATION);
 
-					benutzungsstatistik.addBenutzerkontakt(
-							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 					setIntensivCaption();
 					sIntensivFrageSlider.setValue(5.0);
-					setBenutzerCaption();
 				}
 
 				if (e.getSource() == bRechercheBeratung) {
@@ -400,8 +396,8 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bTagesuebersicht) {
-					getUI().getNavigator().navigateTo(
-							TagesübersichtBenutzungViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					getUI().getNavigator().navigateTo(TagesübersichtBenutzungViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + false);
 				}
 
 			}

@@ -2,6 +2,7 @@ package benutzungsstatistik.view;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -11,6 +12,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -86,7 +88,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 	}
 
 	public InternerkurierViewWaedi() {
-		
+
 	}
 
 	private void initData() {
@@ -102,16 +104,23 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		bZurueck.addClickListener(createClickListener());
 
 		lText = new Label();
-		if(korrektur == true) {
+		if (korrektur == true) {
 			lText.setValue("Interner Kurier vom ");
-		}else {
-			lText.setValue("Interner Kurier vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
+		} else {
+			lText.setValue(
+					"Interner Kurier vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
 		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
-		
+
 		datefield = new DateField();
-		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
+				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -134,7 +143,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		lPlatzhalter.setValue("");
 
 		bReidbach = new Button();
-		bReidbach.setCaption("+1 Kampus Reidbach");
+		bReidbach.setCaption("+1 Campus Reidbach");
 		bReidbach.addStyleName(ValoTheme.BUTTON_LARGE);
 		bReidbach.addClickListener(createClickListener());
 
@@ -148,7 +157,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		bReidbachMinus.addClickListener(createClickListener());
 
 		bRA = new Button();
-		bRA.setCaption("  +1 Kampus RA  ");
+		bRA.setCaption("  +1 Campus RA  ");
 		bRA.addStyleName(ValoTheme.BUTTON_LARGE);
 		bRA.addClickListener(createClickListener());
 
@@ -162,7 +171,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		bRAMinus.addClickListener(createClickListener());
 
 		bGS = new Button();
-		bGS.setCaption("  +1 Kampus GS  ");
+		bGS.setCaption("  +1 Campus GS  ");
 		bGS.addStyleName(ValoTheme.BUTTON_LARGE);
 		bGS.addClickListener(createClickListener());
 
@@ -179,10 +188,10 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		grid.setWidth("100%");
 		grid.setHeight("90%");
 		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0, 1, 0);
-		if(korrektur == true) {
+		if (korrektur == true) {
 			grid.addComponent(lText, 2, 0, 3, 0);
 			grid.addComponent(datefield, 4, 0, 5, 0);
-		}else {
+		} else {
 			grid.addComponent(lText, 2, 0, 5, 0);
 		}
 		grid.addComponent(bReidbach, 0, 1, 1, 4);
@@ -194,7 +203,7 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		grid.addComponent(bReidbachMinus, 0, 6, 1, 6);
 		grid.addComponent(bRAMinus, 2, 6, 3, 6);
 		grid.addComponent(bGSMinus, 4, 6, 5, 6);
-		
+
 		grid.setColumnExpandRatio(0, 0.166f);
 		grid.setColumnExpandRatio(1, 0.166f);
 		grid.setColumnExpandRatio(2, 0.166f);
@@ -228,17 +237,17 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		mainLayout.addComponent(grid);
 
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    String korrekturString = args[1];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
-	    this.internerkurier = benutzungsstatistik.getInternerkurier();
-	    this.korrektur = Boolean.parseBoolean(korrekturString);
-	    
-	    setCompositionRoot(init());
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		String korrekturString = args[1];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		this.internerkurier = benutzungsstatistik.getInternerkurier();
+		this.korrektur = Boolean.parseBoolean(korrekturString);
+
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -247,10 +256,11 @@ public class InternerkurierViewWaedi extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					if(korrektur == true) {
-						getUI().getNavigator().navigateTo(KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
-					}else {
-						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewWaedi.NAME);
+					if (korrektur == true) {
+						getUI().getNavigator().navigateTo(
+								KorrekturViewWaedi.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					} else {
+						Page.getCurrent().setUriFragment("!" + BenutzungsstatistikViewWaedi.NAME);
 					}
 				}
 

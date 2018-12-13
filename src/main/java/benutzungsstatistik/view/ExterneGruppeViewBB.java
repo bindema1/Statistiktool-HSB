@@ -2,6 +2,7 @@ package benutzungsstatistik.view;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
@@ -102,16 +104,23 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
-		if(korrektur == true) {
+		if (korrektur == true) {
 			lText.setValue("Externe Gruppen erfassen vom ");
-		}else {
-			lText.setValue("Externe Gruppen erfassen vom " + new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
+		} else {
+			lText.setValue("Externe Gruppen erfassen vom "
+					+ new SimpleDateFormat("dd.MM.yyyy").format(benutzungsstatistik.getDatum()));
 		}
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		DateField datefield = new DateField();
-		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+		datefield.setValue(Instant.ofEpochMilli(benutzungsstatistik.getDatum().getTime()).atZone(ZoneId.systemDefault())
+				.toLocalDate());
 		datefield.setDateFormat("dd.MM.yyyy");
+		if (!VaadinSession.getCurrent().getAttribute("user").toString().contains("Admin")) {
+			// Nicht-Administratoren dürfen nur eine Woche in der Zeit zurück
+			datefield.setRangeStart(LocalDate.now().minusDays(7));
+			datefield.setRangeEnd(LocalDate.now());
+		}
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
@@ -206,10 +215,10 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		grid.setSizeFull();
 		grid.setSpacing(true);
 		grid.addComponent(bZurueck, 0, 0);
-		if(korrektur == true) {
+		if (korrektur == true) {
 			grid.addComponent(lText, 1, 0, 2, 0);
 			grid.addComponent(datefield, 3, 0, 4, 0);
-		}else {
+		} else {
 			grid.addComponent(lText, 1, 0, 4, 0);
 		}
 		grid.addComponent(tName, 0, 1, 2, 1);
@@ -226,7 +235,7 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 				// Button grösser machen
 				if (row == 0) {
-					if(korrektur == true) {
+					if (korrektur == true) {
 						if (col == 1 || col == 2 || col == 3) {
 							grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
 						}
@@ -260,16 +269,16 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 		tabelle.setItems(externeGruppeBeanListe);
 	}
-	
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-	    String args[] = event.getParameters().split("/");
-	    String id = args[0];
-	    String korrekturString = args[1];
-	    this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
+		String args[] = event.getParameters().split("/");
+		String id = args[0];
+		String korrekturString = args[1];
+		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
 		this.korrektur = Boolean.parseBoolean(korrekturString);
-	    
-	    setCompositionRoot(init());
+
+		setCompositionRoot(init());
 	}
 
 	@SuppressWarnings("serial")
@@ -278,10 +287,11 @@ public class ExterneGruppeViewBB extends Composite implements View {
 			@Override
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
-					if(korrektur == true) {
-						getUI().getNavigator().navigateTo(KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
-					}else {
-						Page.getCurrent().setUriFragment("!"+BenutzungsstatistikViewBB.NAME);
+					if (korrektur == true) {
+						getUI().getNavigator().navigateTo(
+								KorrekturViewBB.NAME + '/' + benutzungsstatistik.getBenutzungsstatistik_ID());
+					} else {
+						Page.getCurrent().setUriFragment("!" + BenutzungsstatistikViewBB.NAME);
 					}
 				}
 
@@ -290,12 +300,13 @@ public class ExterneGruppeViewBB extends Composite implements View {
 					try {
 						String name = tName.getValue();
 						int personenzahl = Integer.parseInt(tPersonenzahl.getValue());
-						
+
 						Calendar cal = Calendar.getInstance();
-				        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 						String erfasstUm = sdf.format(cal.getTime());
 
-						benutzungsstatistik.addExterneGruppe(new ExterneGruppe(name, personenzahl, erfasstUm, benutzungsstatistik));
+						benutzungsstatistik.addExterneGruppe(
+								new ExterneGruppe(name, personenzahl, erfasstUm, benutzungsstatistik));
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 						ExterneGruppeBean egb = new ExterneGruppeBean();
