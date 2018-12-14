@@ -172,8 +172,12 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 		tTotalPersonen.addValueChangeListener(event -> {
 			// Wenn das Textfeld sich verändert, soll die Eingabe gespeichert werden, dies
 			// passiert bei Klick auf einen Button oder beim Eingeben einer Zahl
-			if(Integer.parseInt(event.getValue()) != 0) {
-				speichereEingaben();
+			try {
+				int anzahl = Integer.parseInt(event.getValue());
+				speichereEingaben(anzahl);
+			} catch (Exception e) {
+				// Falls die Eingabe keine Zahl ist
+				Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
 			}
 		});
 
@@ -448,9 +452,8 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 	 * Speichert den Wert in der Datenbank, wenn er kleiner als die Maximale
 	 * Kapazität ist
 	 */
-	private void speichereEingaben() {
+	private void speichereEingaben(int anzahlPersonen) {
 		try {
-			int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
 
 			if (pruefeMaximalKapazitaeten(0, 0) == true) {
 
@@ -503,7 +506,14 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 	private boolean pruefeMaximalKapazitaeten(int personen, int räume) {
 
 		try {
-			int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
+			int anzahlPersonen;
+			// Falls die Textbox leer ist
+			if (tTotalPersonen.getValue().isEmpty()) {
+				anzahlPersonen = 0;
+			} else {
+				// Wenn nicht, nehme den Wert
+				anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
+			}
 			anzahlPersonen += personen;
 
 			if (stockwerkEnum == StockwerkEnum.WÄDI) {
@@ -665,7 +675,14 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 			 */
 			private void erhöheOderVermindereTextfieldNachNummer(TextField textfield, int personen, int räume) {
 				try {
-					int anzahl = Integer.parseInt(textfield.getValue());
+					int anzahl;
+					// Falls die Textbox leer ist
+					if (textfield.getValue().isEmpty()) {
+						anzahl = 0;
+					} else {
+						// Wenn nicht, nehme den Wert
+						anzahl = Integer.parseInt(textfield.getValue());
+					}
 					anzahl = anzahl + personen + räume;
 
 					if (pruefeMaximalKapazitaeten(personen, räume) == true) {

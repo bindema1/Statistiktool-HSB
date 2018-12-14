@@ -285,7 +285,7 @@ public class ExportViewWaedi extends Composite implements View {
 //						sdf.format(datum), "", "Rechercheberatung", benutzungsstatistik.getAnzahl_Rechercheberatung()));
 
 				// Geht durch alle Uhrzeiten eines Tages
-				for (int i = 8; i <= 19; i++) {
+				for (int i = 8; i <= 17; i++) {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
 
 					// Setze die Uhrzeit für den Export

@@ -18,10 +18,12 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Slider;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
@@ -46,6 +48,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 	public static final String NAME = "Benutzung-BB";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
+	private Button bRefresh;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
 	private Slider sIntensivFrageSlider;
@@ -102,6 +105,11 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
+		
+		bRefresh = new Button();
+		bRefresh.setCaption("Refresh");
+		bRefresh.setIcon(VaadinIcons.REFRESH);
+		bRefresh.addClickListener(createClickListener());
 
 		lText = new Label();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -191,21 +199,32 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 			}
 		});
 
-		GridLayout grid = new GridLayout(6, 7);
+		VerticalLayout overallLayout = new VerticalLayout();
+		overallLayout.setSpacing(true);
+		overallLayout.setSizeFull();
+		HorizontalLayout headerLayout = new HorizontalLayout();
+		headerLayout.addComponent(bZurueck);
+		headerLayout.addComponent(bRefresh);
+		headerLayout.addComponent(lText);
+		headerLayout.addComponent(lKassenbeleg);
+		headerLayout.addComponent(kassenbeleg);
+		
+		GridLayout grid = new GridLayout(6, 6);
 		grid.setSizeFull();
-		grid.addComponent(bZurueck, 0, 0);
-		grid.addComponent(lText, 1, 0, 3, 0);
-		grid.addComponent(lKassenbeleg, 4, 0);
-		grid.addComponent(kassenbeleg, 5, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
-		grid.addComponent(createSliderGridLayout(), 2, 1, 3, 2);
-		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
-		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
-		grid.addComponent(bTelefonkontakt, 2, 3, 3, 4);
-		grid.addComponent(bRechercheBeratung, 4, 3, 5, 4);
-		grid.addComponent(bExterneGruppe, 0, 5, 1, 6);
-		grid.addComponent(bWintikurier, 2, 5, 3, 6);
-		grid.addComponent(bKorrektur, 4, 5, 5, 6);
+//		grid.addComponent(bZurueck, 0, 0);
+//		grid.addComponent(bRefresh, 1, 0);
+//		grid.addComponent(lText, 2, 0, 3, 0);
+//		grid.addComponent(lKassenbeleg, 4, 0);
+//		grid.addComponent(kassenbeleg, 5, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 0, 1, 1);
+		grid.addComponent(createSliderGridLayout(), 2, 0, 3, 1);
+		grid.addComponent(bTagesuebersicht, 4, 0, 5, 1);
+		grid.addComponent(bEmailkontakt, 0, 2, 1, 3);
+		grid.addComponent(bTelefonkontakt, 2, 2, 3, 3);
+		grid.addComponent(bRechercheBeratung, 4, 2, 5, 3);
+		grid.addComponent(bExterneGruppe, 0, 4, 1, 5);
+		grid.addComponent(bWintikurier, 2, 4, 3, 5);
+		grid.addComponent(bKorrektur, 4, 4, 5, 5);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -232,15 +251,19 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		grid.setColumnExpandRatio(3, 0.1666f);
 		grid.setColumnExpandRatio(4, 0.1666f);
 		grid.setColumnExpandRatio(5, 0.1666f);
-		grid.setRowExpandRatio(0, 0.15f);
-		grid.setRowExpandRatio(1, 0.15f);
-		grid.setRowExpandRatio(2, 0.15f);
-		grid.setRowExpandRatio(3, 0.15f);
-		grid.setRowExpandRatio(4, 0.15f);
-		grid.setRowExpandRatio(5, 0.15f);
-		grid.setRowExpandRatio(6, 0.15f);
+		grid.setRowExpandRatio(0, 0.1666f);
+		grid.setRowExpandRatio(1, 0.1666f);
+		grid.setRowExpandRatio(2, 0.1666f);
+		grid.setRowExpandRatio(3, 0.1666f);
+		grid.setRowExpandRatio(4, 0.1666f);
+		grid.setRowExpandRatio(5, 0.1666f);
+//		grid.setRowExpandRatio(6, 0.15f);
 
-		mainLayout.addComponent(grid);
+		overallLayout.addComponent(headerLayout);
+		overallLayout.addComponent(grid);
+		overallLayout.setExpandRatio(headerLayout, 0.15f);
+		overallLayout.setExpandRatio(grid, 0.85f);
+		mainLayout.addComponent(overallLayout);
 
 	}
 
@@ -265,7 +288,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 					c.setHeight("100%");
 					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
 				} else {
-					c.setHeight("48%");
+					c.setHeight("30%");
 					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				}
 			}
@@ -325,6 +348,10 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
+				if (e.getSource() == bRefresh) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {

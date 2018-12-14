@@ -206,8 +206,14 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		tTotalPersonen.addValueChangeListener(event -> {
 			// Wenn das Textfeld sich verändert, soll die Eingabe gespeichert werden, dies
 			// passiert bei Klick auf einen Button oder beim Eingeben einer Zahl
-			if (Integer.parseInt(event.getValue()) != 0 && layoutBereitsAufgesetzt == true) {
-				speichereEingaben();
+			if (layoutBereitsAufgesetzt == true) {
+				try {
+					int anzahl = Integer.parseInt(event.getValue());
+					speichereEingaben(true, anzahl);
+				} catch (Exception e) {
+					// Falls die Eingabe keine Zahl ist
+					Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
+				}
 			}
 		});
 
@@ -217,8 +223,14 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 		tTotalRäume.addValueChangeListener(event -> {
 			// Wenn das Textfeld sich verändert, soll die Eingabe gespeichert werden, dies
 			// passiert bei Klick auf einen Button oder beim Eingeben einer Zahl
-			if (Integer.parseInt(event.getValue()) != 0 && layoutBereitsAufgesetzt == true) {
-				speichereEingaben();
+			if (layoutBereitsAufgesetzt == true) {
+				try {
+					int anzahl = Integer.parseInt(event.getValue());
+					speichereEingaben(false, anzahl);
+				} catch (Exception e) {
+					// Falls die Eingabe keine Zahl ist
+					Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
+				}
 			}
 		});
 
@@ -841,24 +853,27 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	 * Speichert den Wert in der Datenbank, wenn er kleiner als die Maximale
 	 * Kapazität ist
 	 */
-	private void speichereEingaben() {
-		try {
-			int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
-			int anzahlRäume = 0;
+	private void speichereEingaben(boolean personen, int anzahl) {
+
+		int anzahlPersonen = 0;
+		int anzahlRäume = 0;
+
+		if (personen == true) {
+			anzahlPersonen = anzahl;
+		} else {
 			if (räumeVorhanden == true) {
-				anzahlRäume = Integer.parseInt(tTotalRäume.getValue());
+				anzahlRäume = anzahl;
 			}
+		}
 
-			if (pruefeMaximalKapazitaeten(0, 0) == true) {
+		if (pruefeMaximalKapazitaeten(0, 0) == true) {
 
-				if (anzahlPersonen == 0) {
-					Notification.show("Sie haben eine Zählung mit 0 Personen gespeichert", Type.WARNING_MESSAGE);
-				}
+			boolean eintragVorhanden = false;
 
-				boolean eintragVorhanden = false;
-
-				if (stockwerkEnum == StockwerkEnum.EG) {
-					if (erfassungsSchritt == 0) {
+			if (stockwerkEnum == StockwerkEnum.EG) {
+				if (erfassungsSchritt == 0) {
+					// Wenn der Request vom Personen Textfield kommt
+					if (personen == true) {
 						for (Stockwerk s : belegung.getStockwerkListe()) {
 							if (s.getName() == stockwerkEnum) {
 
@@ -877,30 +892,37 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 								}
 							}
 						}
-					} else {
-						for (Stockwerk s : belegung.getStockwerkListe()) {
-							if (s.getName() == stockwerkEnum) {
+					}
+				} else {
+					for (Stockwerk s : belegung.getStockwerkListe()) {
+						if (s.getName() == stockwerkEnum) {
 
-								// Bei einem zweiten Aufruf müssen die Gruppenräume geupdatet werden
-								for (Gruppenräume g : s.getGruppenräumeListe()) {
-									if (g.getUhrzeit() == ausgewählteUhrzeit) {
-										eintragVorhanden = true;
+							// Bei einem zweiten Aufruf müssen die Gruppenräume geupdatet werden
+							for (Gruppenräume g : s.getGruppenräumeListe()) {
+								if (g.getUhrzeit() == ausgewählteUhrzeit) {
+									eintragVorhanden = true;
+									// Wenn der Request vom Personen Textfield kommt
+									if (personen == true) {
 										g.setAnzahlPersonen(anzahlPersonen);
+									} else {
 										g.setAnzahlRäume(anzahlRäume);
 									}
 								}
+							}
 
-								// Falls es keine Gruppenräume für die ausgewählte Uhrzeit gibt
-								if (eintragVorhanden == false) {
-									Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
-											ausgewählteUhrzeit, s);
-									s.addGruppenräume(gruppenräume);
-								}
+							// Falls es keine Gruppenräume für die ausgewählte Uhrzeit gibt
+							if (eintragVorhanden == false) {
+								Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
+										ausgewählteUhrzeit, s);
+								s.addGruppenräume(gruppenräume);
 							}
 						}
 					}
+				}
 
-				} else if (stockwerkEnum == StockwerkEnum.ZG1) {
+			} else if (stockwerkEnum == StockwerkEnum.ZG1) {
+				// Wenn der Request vom Personen Textfield kommt
+				if (personen == true) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
 							// Bei einem zweiten Aufruf muss der Arbeitsplatz geupdatet werden
@@ -918,7 +940,10 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 							}
 						}
 					}
-				} else if (stockwerkEnum == StockwerkEnum.ZG2) {
+				}
+			} else if (stockwerkEnum == StockwerkEnum.ZG2) {
+				// Wenn der Request vom Personen Textfield kommt
+				if (personen == true) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
 							// Bei einem zweiten Aufruf muss der Arbeitsplatz geupdatet werden
@@ -936,47 +961,58 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 							}
 						}
 					}
-				} else if (stockwerkEnum == StockwerkEnum.LL) {
-					if (erfassungsSchritt == 1) {
-						for (Stockwerk s : belegung.getStockwerkListe()) {
-							if (s.getName() == stockwerkEnum) {
-								// Bei einem zweiten Aufruf müssen die Gruppenräume geupdatet werden
-								for (Gruppenräume g : s.getGruppenräumeListe()) {
-									if (g.getUhrzeit() == ausgewählteUhrzeit) {
-										eintragVorhanden = true;
+				}
+			} else if (stockwerkEnum == StockwerkEnum.LL) {
+				if (erfassungsSchritt == 1) {
+					for (Stockwerk s : belegung.getStockwerkListe()) {
+						if (s.getName() == stockwerkEnum) {
+							// Bei einem zweiten Aufruf müssen die Gruppenräume geupdatet werden
+							for (Gruppenräume g : s.getGruppenräumeListe()) {
+								if (g.getUhrzeit() == ausgewählteUhrzeit) {
+									eintragVorhanden = true;
+									// Wenn der Request vom Personen Textfield kommt
+									if (personen == true) {
 										g.setAnzahlPersonen(anzahlPersonen);
+									} else {
 										g.setAnzahlRäume(anzahlRäume);
 									}
 								}
+							}
 
-								// Falls es keine Gruppenräume für die ausgewählte Uhrzeit gibt
-								if (eintragVorhanden == false) {
-									Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
-											ausgewählteUhrzeit, s);
-									s.addGruppenräume(gruppenräume);
-								}
+							// Falls es keine Gruppenräume für die ausgewählte Uhrzeit gibt
+							if (eintragVorhanden == false) {
+								Gruppenräume gruppenräume = new Gruppenräume(anzahlPersonen, anzahlRäume,
+										ausgewählteUhrzeit, s);
+								s.addGruppenräume(gruppenräume);
 							}
 						}
-					} else if (erfassungsSchritt == 2) {
-						for (Stockwerk s : belegung.getStockwerkListe()) {
-							if (s.getName() == stockwerkEnum) {
-								// Bei einem zweiten Aufruf müssen die Carrels geupdatet werden
-								for (Carrels g : s.getCarrelsListe()) {
-									if (g.getUhrzeit() == ausgewählteUhrzeit) {
-										eintragVorhanden = true;
+					}
+				} else if (erfassungsSchritt == 2) {
+					for (Stockwerk s : belegung.getStockwerkListe()) {
+						if (s.getName() == stockwerkEnum) {
+							// Bei einem zweiten Aufruf müssen die Carrels geupdatet werden
+							for (Carrels g : s.getCarrelsListe()) {
+								if (g.getUhrzeit() == ausgewählteUhrzeit) {
+									eintragVorhanden = true;
+									// Wenn der Request vom Personen Textfield kommt
+									if (personen == true) {
 										g.setAnzahlPersonen(anzahlPersonen);
+									} else {
 										g.setAnzahlRäume(anzahlRäume);
 									}
 								}
+							}
 
-								// Falls es keine Carrels für die ausgewählte Uhrzeit gibt
-								if (eintragVorhanden == false) {
-									Carrels carrels = new Carrels(anzahlPersonen, anzahlRäume, ausgewählteUhrzeit, s);
-									s.addCarrels(carrels);
-								}
+							// Falls es keine Carrels für die ausgewählte Uhrzeit gibt
+							if (eintragVorhanden == false) {
+								Carrels carrels = new Carrels(anzahlPersonen, anzahlRäume, ausgewählteUhrzeit, s);
+								s.addCarrels(carrels);
 							}
 						}
-					} else if (erfassungsSchritt == 3) {
+					}
+				} else if (erfassungsSchritt == 3) {
+					// Wenn der Request vom Personen Textfield kommt
+					if (personen == true) {
 						for (Stockwerk s : belegung.getStockwerkListe()) {
 							if (s.getName() == stockwerkEnum) {
 								// Bei einem zweiten Aufruf muss der SektorA geupdatet werden
@@ -994,7 +1030,10 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 								}
 							}
 						}
-					} else if (erfassungsSchritt == 4) {
+					}
+				} else if (erfassungsSchritt == 4) {
+					// Wenn der Request vom Personen Textfield kommt
+					if (personen == true) {
 						for (Stockwerk s : belegung.getStockwerkListe()) {
 							if (s.getName() == stockwerkEnum) {
 								// Bei einem zweiten Aufruf muss der SektorB geupdatet werden
@@ -1014,17 +1053,15 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 						}
 					}
 				}
-
-				// Update der Belegung
-				belegungDB.updateBelegung(belegung);
-				fülleTabelleUhrzeiten(tabelleUhrzeiten);
-
-				Notification.show("Zählung gespeichert", Type.TRAY_NOTIFICATION);
 			}
-		} catch (NumberFormatException e1) {
-			// Not an integer
-			Notification.show("Die Eingabe muss eine Zahl sein", Type.WARNING_MESSAGE);
+
+			// Update der Belegung
+			belegungDB.updateBelegung(belegung);
+			fülleTabelleUhrzeiten(tabelleUhrzeiten);
+
+			Notification.show("Zählung gespeichert", Type.TRAY_NOTIFICATION);
 		}
+
 	}
 
 	/**
@@ -1038,11 +1075,24 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 	private boolean pruefeMaximalKapazitaeten(int personen, int räume) {
 
 		try {
-			int anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
+			int anzahlPersonen;
+			// Falls die Textbox leer ist
+			if (tTotalPersonen.getValue().isEmpty()) {
+				anzahlPersonen = 0;
+			} else {
+				// Wenn nicht, nehme den Wert
+				anzahlPersonen = Integer.parseInt(tTotalPersonen.getValue());
+			}
 			anzahlPersonen += personen;
 			int anzahlRäume = 0;
 			if (räumeVorhanden == true) {
-				anzahlRäume = Integer.parseInt(tTotalRäume.getValue());
+				// Falls die Textbox leer ist
+				if (tTotalRäume.getValue().isEmpty()) {
+					anzahlRäume = 0;
+				} else {
+					// Wenn nicht, nehme den Wert
+					anzahlRäume = Integer.parseInt(tTotalRäume.getValue());
+				}
 				anzahlRäume += räume;
 			}
 
@@ -1531,7 +1581,14 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			 */
 			private void erhöheOderVermindereTextfieldNachNummer(TextField textfield, int personen, int räume) {
 				try {
-					int anzahl = Integer.parseInt(textfield.getValue());
+					int anzahl;
+					// Falls die Textbox leer ist
+					if (textfield.getValue().isEmpty()) {
+						anzahl = 0;
+					} else {
+						// Wenn nicht, nehme den Wert
+						anzahl = Integer.parseInt(textfield.getValue());
+					}
 					anzahl = anzahl + personen + räume;
 
 					if (pruefeMaximalKapazitaeten(personen, räume) == true) {

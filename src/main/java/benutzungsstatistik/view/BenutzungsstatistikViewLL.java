@@ -43,6 +43,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 	public static final String NAME = "Benutzung-LL";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
+	private Button bRefresh;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
 	private Slider sIntensivFrageSlider;
@@ -93,6 +94,11 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
+		
+		bRefresh = new Button();
+		bRefresh.setCaption("Refresh");
+		bRefresh.setIcon(VaadinIcons.REFRESH);
+		bRefresh.addClickListener(createClickListener());
 
 		lText = new Label();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -138,7 +144,8 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		GridLayout grid = new GridLayout(6, 5);
 		grid.setSizeFull();
 		grid.setSpacing(true);
-		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0, 1, 0);
+		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0);
+		grid.addComponent(bRefresh, 1, 0);
 		grid.addComponent(lText, 2, 0, 5, 0);
 		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
 		grid.addComponent(createSliderGridLayout(), 2, 1, 3, 2);
@@ -210,7 +217,7 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 					c.setHeight("100%");
 					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
 				} else {
-					c.setHeight("40%");
+					c.setHeight("30%");
 					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				}
 			}
@@ -257,6 +264,10 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
+				if (e.getSource() == bRefresh) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {

@@ -194,7 +194,7 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 
 		List<TagesübersichtBenutzungBean> tagesübersichtListe = new ArrayList<>();
 
-		for (int i = 8; i <= 19; i++) {
+		for (int i = 8; i <= 17; i++) {
 			TagesübersichtBenutzungBean tb = new TagesübersichtBenutzungBean();
 			int plus = i + 1;
 			tb.setUhrzeit(i + "-" + plus);

@@ -117,7 +117,7 @@ public class MainView extends UI {
 		// Wenn der User existiert
 		if (getUI().getSession().getAttribute("user") != null) {
 			// Alle Views hinzufügen
-//			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
+			getNavigator().addView(StartseiteView.NAME, StartseiteView.class);
 //			getNavigator().addView(PasswortView.NAME, PasswortView.class);
 //			getNavigator().addView(ExportViewWinti.NAME, ExportViewWinti.class);
 //			getNavigator().addView(ExportViewWaedi.NAME, ExportViewWaedi.class);

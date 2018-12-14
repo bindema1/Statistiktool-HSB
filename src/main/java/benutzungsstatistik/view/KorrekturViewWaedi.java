@@ -189,7 +189,7 @@ public class KorrekturViewWaedi extends Composite implements View {
 		bTelefonkontaktMinus.addClickListener(createClickListener());
 
 		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13",
-				"13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
+				"13-14", "14-15", "15-16", "16-17", "17-18" });
 		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 		uhrzeitListSelect.setSelectedItem(data.get(0));
 		uhrzeitListSelect.setEmptySelectionAllowed(false);
@@ -237,12 +237,6 @@ public class KorrekturViewWaedi extends Composite implements View {
 					break;
 				case "17-18":
 					ausgewählteUhrzeit = 17;
-					break;
-				case "18-19":
-					ausgewählteUhrzeit = 18;
-					break;
-				case "19-20":
-					ausgewählteUhrzeit = 19;
 					break;
 				}
 

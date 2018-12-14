@@ -2,6 +2,7 @@ package allgemein.view;
 
 import java.util.Date;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
@@ -111,67 +112,80 @@ public class StartseiteView extends Composite implements View {
 
 		bBenutzungsstatistikBB = new Button();
 		bBenutzungsstatistikBB.setCaption("Benutzungsstatistik BB");
-		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikBB.setIcon(VaadinIcons.POINTER);
+		bBenutzungsstatistikBB.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikBB.addClickListener(createClickListener());
 
 		bBenutzungsstatistikBBUebersicht = new Button();
 		bBenutzungsstatistikBBUebersicht.setCaption("Benutzung-Tagesübersicht");
-		bBenutzungsstatistikBBUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikBBUebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
+		bBenutzungsstatistikBBUebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikBBUebersicht.addClickListener(createClickListener());
 
 		bBenutzungsstatistikLL = new Button();
 		bBenutzungsstatistikLL.setCaption("Benutzungsstatistik LL");
-		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikLL.setIcon(VaadinIcons.POINTER);
+		bBenutzungsstatistikLL.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikLL.addClickListener(createClickListener());
 
 		bBenutzungsstatistikLLUebersicht = new Button();
 		bBenutzungsstatistikLLUebersicht.setCaption("Benutzung-Tagesübersicht");
-		bBenutzungsstatistikLLUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikLLUebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
+		bBenutzungsstatistikLLUebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikLLUebersicht.addClickListener(createClickListener());
 
 		bBenutzungsstatistikWaedi = new Button();
 		bBenutzungsstatistikWaedi.setCaption("Benutzungsstatistik Wädi");
-		bBenutzungsstatistikWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikWaedi.setIcon(VaadinIcons.POINTER);
+		bBenutzungsstatistikWaedi.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikWaedi.addClickListener(createClickListener());
 
 		bBenutzungsstatistikWaediUebersicht = new Button();
 		bBenutzungsstatistikWaediUebersicht.setCaption("Benutzung-Tagesübersicht");
-		bBenutzungsstatistikWaediUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBenutzungsstatistikWaediUebersicht.setIcon(VaadinIcons.CLIPBOARD_TEXT);
+		bBenutzungsstatistikWaediUebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBenutzungsstatistikWaediUebersicht.addClickListener(createClickListener());
 
 		bBelegungWinti = new Button();
 		bBelegungWinti.setCaption("Belegung Winti");
-		bBelegungWinti.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWinti.setIcon(VaadinIcons.USER_CLOCK);
+		bBelegungWinti.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBelegungWinti.addClickListener(createClickListener());
 
 		bBelegungWintiUebersicht = new Button();
 		bBelegungWintiUebersicht.setCaption("Belegung-Tagesübersicht");
-		bBelegungWintiUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWintiUebersicht.setIcon(VaadinIcons.CLIPBOARD_USER);
+		bBelegungWintiUebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBelegungWintiUebersicht.addClickListener(createClickListener());
 
 		bBelegungWaedi = new Button();
 		bBelegungWaedi.setCaption("Belegung Wädi");
-		bBelegungWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWaedi.setIcon(VaadinIcons.USER_CLOCK);
+		bBelegungWaedi.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBelegungWaedi.addClickListener(createClickListener());
 
 		bBelegungWaediUebersicht = new Button();
 		bBelegungWaediUebersicht.setCaption("Belegung-Tagesübersicht");
-		bBelegungWaediUebersicht.addStyleName(ValoTheme.BUTTON_LARGE);
+		bBelegungWaediUebersicht.setIcon(VaadinIcons.CLIPBOARD_USER);
+		bBelegungWaediUebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bBelegungWaediUebersicht.addClickListener(createClickListener());
 
 		bExportWinti = new Button();
 		bExportWinti.setCaption("Export Winti");
-		bExportWinti.addStyleName(ValoTheme.BUTTON_LARGE);
+		bExportWinti.setIcon(VaadinIcons.DOWNLOAD);
+		bExportWinti.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bExportWinti.addClickListener(createClickListener());
 
 		bExportWaedi = new Button();
 		bExportWaedi.setCaption("Export Wädi");
-		bExportWaedi.addStyleName(ValoTheme.BUTTON_LARGE);
+		bExportWaedi.setIcon(VaadinIcons.DOWNLOAD);
+		bExportWaedi.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bExportWaedi.addClickListener(createClickListener());
 
 		bPasswort = new Button();
 		bPasswort.setCaption("Passwörter ändern");
-		bPasswort.addStyleName(ValoTheme.BUTTON_LARGE);
+		bPasswort.setIcon(VaadinIcons.PASSWORD);
+		bPasswort.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bPasswort.addClickListener(createClickListener());
 
 		bLogout = new Button("Logout");

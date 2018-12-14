@@ -44,6 +44,7 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 	public static final String NAME = "Benutzung-Waedi";
 	private AbsoluteLayout mainLayout;
 	private Button bZurueck;
+	private Button bRefresh;
 	private Button bBenutzerkontakt;
 	private Button bIntensivFrage;
 	private Slider sIntensivFrageSlider;
@@ -97,6 +98,11 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
+		
+		bRefresh = new Button();
+		bRefresh.setCaption("Refresh");
+		bRefresh.setIcon(VaadinIcons.REFRESH);
+		bRefresh.addClickListener(createClickListener());
 
 		lText = new Label();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -157,24 +163,28 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 		bTagesuebersicht.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP + " iconBenutzungHuge");
 		bTagesuebersicht.addClickListener(createClickListener());
 
-		GridLayout grid = new GridLayout(3, 10);
+		GridLayout grid = new GridLayout(6, 10);
 		grid.setSizeFull();
 		grid.addComponent(new HorizontalLayout(bZurueck), 0, 0);
-		grid.addComponent(lText, 1, 0, 2, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 1, 0, 3);
-		grid.addComponent(createSliderGridLayout(), 1, 1, 1, 3);
-		grid.addComponent(bTagesuebersicht, 2, 1, 2, 3);
-		grid.addComponent(bEmailkontakt, 0, 4, 0, 6);
-		grid.addComponent(bTelefonkontakt, 1, 4, 1, 6);
-		grid.addComponent(bKorrektur, 2, 4, 2, 6);
-		grid.addComponent(bInternerkurier, 0, 7, 0, 9);
+		grid.addComponent(bRefresh, 1, 0);
+		grid.addComponent(lText, 2, 0, 5, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 3);
+		grid.addComponent(createSliderGridLayout(), 2, 1, 3, 3);
+		grid.addComponent(bTagesuebersicht, 4, 1, 5, 3);
+		grid.addComponent(bEmailkontakt, 0, 4, 1, 6);
+		grid.addComponent(bTelefonkontakt, 2, 4, 3, 6);
+		grid.addComponent(bKorrektur, 4, 4, 5, 6);
+		grid.addComponent(bInternerkurier, 0, 7, 1, 9);
 //		grid.addComponent(bRechercheBeratung, 1, 7, 1, 9);
-		grid.addComponent(new Label(), 1, 7, 1, 9);
-		grid.addComponent(new Label(), 2, 7, 2, 9);
+		grid.addComponent(new Label(), 2, 7, 3, 9);
+		grid.addComponent(new Label(), 4, 7, 5, 9);
 
-		grid.setColumnExpandRatio(0, 0.33f);
-		grid.setColumnExpandRatio(1, 0.33f);
-		grid.setColumnExpandRatio(2, 0.33f);
+		grid.setColumnExpandRatio(0, 0.1666f);
+		grid.setColumnExpandRatio(1, 0.1666f);
+		grid.setColumnExpandRatio(2, 0.1666f);
+		grid.setColumnExpandRatio(3, 0.1666f);
+		grid.setColumnExpandRatio(4, 0.1666f);
+		grid.setColumnExpandRatio(5, 0.1666f);
 		grid.setRowExpandRatio(0, 0.1f);
 		grid.setRowExpandRatio(1, 0.1f);
 		grid.setRowExpandRatio(2, 0.1f);
@@ -230,7 +240,7 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 					c.setHeight("100%");
 					sliderLayout.setComponentAlignment(c, Alignment.TOP_CENTER);
 				} else {
-					c.setHeight("48%");
+					c.setHeight("30%");
 					sliderLayout.setComponentAlignment(c, Alignment.BOTTOM_CENTER);
 				}
 			}
@@ -290,6 +300,10 @@ public class BenutzungsstatistikViewWaedi extends Composite implements View {
 			public void buttonClick(ClickEvent e) {
 				if (e.getSource() == bZurueck) {
 					getUI().getNavigator().navigateTo(StartseiteView.NAME);
+				}
+				
+				if (e.getSource() == bRefresh) {
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewWaedi.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
