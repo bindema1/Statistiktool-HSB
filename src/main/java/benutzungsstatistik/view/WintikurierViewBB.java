@@ -62,14 +62,18 @@ public class WintikurierViewBB extends Composite implements View {
 	private Label lPlatzhalter;
 	private DateField datefield;
 	private boolean korrektur;
-//	private WintikurierDatenbank wintikurierDB = new WintikurierDatenbank();
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 	private Wintikurier wintikurier;
 	private Benutzungsstatistik benutzungsstatistik;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Hintergrundfarbe
 		if (korrektur == true) {
 			mainLayout.addStyleName("backgroundKorrektur");
 		} else {
@@ -81,10 +85,15 @@ public class WintikurierViewBB extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -94,11 +103,9 @@ public class WintikurierViewBB extends Composite implements View {
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -130,9 +137,11 @@ public class WintikurierViewBB extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			// Holt die Statistik für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 			wintikurier = benutzungsstatistik.getWintikurier();
+			// Setzt alle Werte neu
 			lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
 			lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
 			lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
@@ -265,7 +274,9 @@ public class WintikurierViewBB extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
+		// Korrektur false oder true
 		String korrekturString = args[1];
 		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
 		this.wintikurier = benutzungsstatistik.getWintikurier();
@@ -289,72 +300,120 @@ public class WintikurierViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bGesundheit) {
-					wintikurier.increaseAnzahl_Gesundheit();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getWintikurier().increaseAnzahl_Gesundheit();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Gesundheit +1", Type.TRAY_NOTIFICATION);
-					lGesundheitTotal.setValue("" + wintikurier.getAnzahl_Gesundheit());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bGesundheitMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (wintikurier.getAnzahl_Gesundheit() != 0) {
-						wintikurier.decreaseAnzahl_Gesundheit();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getWintikurier().decreaseAnzahl_Gesundheit();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Gesundheit -1", Type.TRAY_NOTIFICATION);
-						lGesundheitTotal.setValue("" + wintikurier.getAnzahl_Gesundheit());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}
 				}
 
 				if (e.getSource() == bLinguistik) {
-					wintikurier.increaseAnzahl_Linguistik();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getWintikurier().increaseAnzahl_Linguistik();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Linguistik +1", Type.TRAY_NOTIFICATION);
-					lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bLinguistikMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (wintikurier.getAnzahl_Linguistik() != 0) {
-						wintikurier.decreaseAnzahl_Linguistik();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getWintikurier().decreaseAnzahl_Linguistik();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Linguistik -1", Type.TRAY_NOTIFICATION);
-						lLinguistikTotal.setValue("" + wintikurier.getAnzahl_Linguistik());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}
 				}
 
 				if (e.getSource() == bTechnik) {
-					wintikurier.increaseAnzahl_Technik();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getWintikurier().increaseAnzahl_Technik();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Technik +1", Type.TRAY_NOTIFICATION);
-					lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bTechnikMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (wintikurier.getAnzahl_Technik() != 0) {
-						wintikurier.decreaseAnzahl_Technik();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getWintikurier().decreaseAnzahl_Technik();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Technik -1", Type.TRAY_NOTIFICATION);
-						lTechnikTotal.setValue("" + wintikurier.getAnzahl_Technik());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}
 				}
 
 				if (e.getSource() == bWirtschaft) {
-					wintikurier.increaseAnzahl_Wirtschaft();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getWintikurier().increaseAnzahl_Wirtschaft();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Wirtschaft +1", Type.TRAY_NOTIFICATION);
-					lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bWirtschaftMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (wintikurier.getAnzahl_Wirtschaft() != 0) {
-						wintikurier.decreaseAnzahl_Wirtschaft();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getWintikurier().decreaseAnzahl_Wirtschaft();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Wirtschaft -1", Type.TRAY_NOTIFICATION);
-						lWirtschaftTotal.setValue("" + wintikurier.getAnzahl_Wirtschaft());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(WintikurierViewBB.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}

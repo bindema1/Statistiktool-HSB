@@ -101,10 +101,12 @@
 			<artifactId>switch</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<!-- Dependecy für Confirm-Dialog <dependency> <groupId>org.vaadin.addon</groupId> 
-			<artifactId>confirmdialog</artifactId> <version>3.2.0</version> </dependency> 
-			<dependency> <groupId>com.vaadin</groupId> <artifactId>vaadin-confirm-dialog-flow</artifactId> 
-			<version>1.0.1</version> </dependency> -->
+		<!-- Dependecy für Confirm-Dialog -->
+		<dependency>
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>confirmdialog</artifactId>
+			<version>3.2.0</version>
+		</dependency>
 
 		<!-- Dependency für den Javax-Fehler auf dem Server -->
 		<dependency>

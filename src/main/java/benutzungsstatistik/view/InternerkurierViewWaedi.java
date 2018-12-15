@@ -64,9 +64,14 @@ public class InternerkurierViewWaedi extends Composite implements View {
 	private Internerkurier internerkurier;
 	private Benutzungsstatistik benutzungsstatistik;
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Hintergrundfarbe
 		if (korrektur == true) {
 			mainLayout.addStyleName("backgroundKorrektur");
 		} else {
@@ -78,10 +83,15 @@ public class InternerkurierViewWaedi extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -91,11 +101,9 @@ public class InternerkurierViewWaedi extends Composite implements View {
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -127,9 +135,11 @@ public class InternerkurierViewWaedi extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			// Holt die Statistik für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
-					StandortEnum.WINTERTHUR_BB);
+					StandortEnum.WÄDENSWIL);
 			internerkurier = benutzungsstatistik.getInternerkurier();
+			// Setzt alle Werte neu
 			lGSTotal.setValue("" + internerkurier.getAnzahl_GS());
 			lRATotal.setValue("" + internerkurier.getAnzahl_RA());
 			lReidbachTotal.setValue("" + internerkurier.getAnzahl_Reidbach());
@@ -241,7 +251,9 @@ public class InternerkurierViewWaedi extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
+		// Korrektur false oder true
 		String korrekturString = args[1];
 		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
 		this.internerkurier = benutzungsstatistik.getInternerkurier();
@@ -265,54 +277,90 @@ public class InternerkurierViewWaedi extends Composite implements View {
 				}
 
 				if (e.getSource() == bReidbach) {
-					internerkurier.increaseAnzahl_Reidbach();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getInternerkurier().increaseAnzahl_Reidbach();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl Reidbach +1", Type.TRAY_NOTIFICATION);
-					lReidbachTotal.setValue("" + internerkurier.getAnzahl_Reidbach());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bReidbachMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (internerkurier.getAnzahl_Reidbach() != 0) {
-						internerkurier.decreaseAnzahl_Reidbach();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getInternerkurier().decreaseAnzahl_Reidbach();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl Reidbach -1", Type.TRAY_NOTIFICATION);
-						lReidbachTotal.setValue("" + internerkurier.getAnzahl_Reidbach());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}
 				}
 
 				if (e.getSource() == bRA) {
-					internerkurier.increaseAnzahl_RA();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getInternerkurier().increaseAnzahl_RA();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl RA +1", Type.TRAY_NOTIFICATION);
-					lRATotal.setValue("" + internerkurier.getAnzahl_RA());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bRAMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (internerkurier.getAnzahl_RA() != 0) {
-						internerkurier.decreaseAnzahl_RA();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getInternerkurier().decreaseAnzahl_RA();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl RA -1", Type.TRAY_NOTIFICATION);
-						lRATotal.setValue("" + internerkurier.getAnzahl_RA());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}
 				}
 
 				if (e.getSource() == bGS) {
-					internerkurier.increaseAnzahl_GS();
+					// Erhöht den Wert in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+					benutzungsstatistik.getInternerkurier().increaseAnzahl_GS();
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("Anzahl GS +1", Type.TRAY_NOTIFICATION);
-					lGSTotal.setValue("" + internerkurier.getAnzahl_GS());
+
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+							+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 				}
 
 				if (e.getSource() == bGSMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (internerkurier.getAnzahl_GS() != 0) {
-						internerkurier.decreaseAnzahl_GS();
+						benutzungsstatistik = benutzungsstatistikDB
+								.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+						benutzungsstatistik.getInternerkurier().decreaseAnzahl_GS();
 						benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 						Notification.show("Anzahl GS -1", Type.TRAY_NOTIFICATION);
-						lGSTotal.setValue("" + internerkurier.getAnzahl_GS());
+
+						// Aktualisiert die Webseite (für das synchrone Arbeiten)
+						getUI().getNavigator().navigateTo(InternerkurierViewWaedi.NAME + '/'
+								+ benutzungsstatistik.getBenutzungsstatistik_ID() + '/' + korrektur);
 					} else {
 						Notification.show("Tiefer als 0 nicht möglich", Type.WARNING_MESSAGE);
 					}

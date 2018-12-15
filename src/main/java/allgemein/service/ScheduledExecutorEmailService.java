@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.ui.Notification;
-
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -26,6 +24,7 @@ import belegung.model.Gruppenräume;
 import belegung.model.SektorA;
 import belegung.model.SektorB;
 import belegung.model.Stockwerk;
+import belegung.model.StockwerkEnum;
 import belegung.model.UhrzeitEnum;
 import benutzungsstatistik.db.BenutzungsstatistikDatenbank;
 import benutzungsstatistik.model.Benutzungsstatistik;
@@ -71,7 +70,7 @@ public class ScheduledExecutorEmailService {
 
 			// Sendet eine Email 1 Stunde nach einer leeren Belegung
 			pruefeLeereBelegung();
-			
+
 			// Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
 			pruefeKassenbeleg();
 
@@ -85,6 +84,7 @@ public class ScheduledExecutorEmailService {
 		Benutzungsstatistik benutzung = benutzungsDB.selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WINTERTHUR_BB);
 
+		// Wenn der Kassenbeleg auf true ist
 		if (benutzung.isKassenbeleg() == true) {
 
 			int wochentag = 0;
@@ -115,12 +115,12 @@ public class ScheduledExecutorEmailService {
 
 			if (wochentag >= 1 && wochentag <= 5) {
 				// Sende Mail um 19:30
-				if (new Date().getHours() == 18 && new Date().getMinutes() >= 1) {
+				if (new Date().getHours() == 19 && new Date().getMinutes() >= 1) {
 					sendeEmailKassenbeleg();
 				}
 			} else if (wochentag == 6) {
 				// Sende Mail um 15:30
-				if (new Date().getHours() == 14 && new Date().getMinutes() >= 1) {
+				if (new Date().getHours() == 15 && new Date().getMinutes() >= 1) {
 					sendeEmailKassenbeleg();
 				}
 			}
@@ -136,7 +136,7 @@ public class ScheduledExecutorEmailService {
 
 		// Nachricht des Textes
 		String subject = "Kassenbeleg ausfüllen";
-		String text = "Der Kassenbeleg wurde noch nicht ausgefüllt und auf Off gestellt.";
+		String text = "Der Kassenbeleg muss noch erstellt und in der Applikation auf Off gestellt werden.";
 
 		// Mail wird versendet
 		sendEmail(to, subject, text);
@@ -146,107 +146,199 @@ public class ScheduledExecutorEmailService {
 	private static void pruefeLeereBelegung() {
 
 		Date date = new Date();
-		
-		if(date.getHours() >= 8 && date.getHours() <= 19) {
-			List<Belegung> belegungsListe = new ArrayList<>();
-			Belegung belegungBB = belegungsDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
-			Belegung belegungLL = belegungsDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_LL);
-			Belegung belegungWaedi = belegungsDB.selectBelegungForDateAndStandort(new Date(), StandortEnum.WÄDENSWIL);
-	
-			belegungsListe.add(belegungBB);
-			belegungsListe.add(belegungLL);
-			belegungsListe.add(belegungWaedi);
-			
-			UhrzeitEnum uhrzeitEnum;
-			switch (date.getHours()) {
-			case 9:
-				uhrzeitEnum = UhrzeitEnum.NEUN;
-				break;
-			case 11:
-				uhrzeitEnum = UhrzeitEnum.ELF;
-				break;
-			case 13:
-				uhrzeitEnum = UhrzeitEnum.DREIZEHN;
-				break;
-			case 15:
-				uhrzeitEnum = UhrzeitEnum.FÜNFZEHN;
-				break;
-			case 17:
-				uhrzeitEnum = UhrzeitEnum.SIEBZEHN;
-				break;
-			case 19:
-				uhrzeitEnum = UhrzeitEnum.NEUNZEHN;
-				break;
-			default:
-				uhrzeitEnum = null;
-				break;
+
+		// Nicht Sonntags
+		if (!LocalDate.now().getDayOfWeek().toString().equals("SUNDAY")) {
+
+			// Samstags ist die letzte Zählung 15 Uhr
+			int letzteZaehlung;
+			if (LocalDate.now().getDayOfWeek().toString().equals("SATURDAY")) {
+				letzteZaehlung = 15;
+			} else {
+				// Montag-Freitags
+				letzteZaehlung = 19;
 			}
-	
-			if(uhrzeitEnum != null) {
+
+			if (date.getHours() >= 8 && date.getHours() <= letzteZaehlung) {
+
+				// Fügt alle Belegungen einer Liste hinzu
+				List<Belegung> belegungsListe = new ArrayList<>();
+				Belegung belegungBB = belegungsDB.selectBelegungForDateAndStandort(new Date(),
+						StandortEnum.WINTERTHUR_BB);
+				Belegung belegungLL = belegungsDB.selectBelegungForDateAndStandort(new Date(),
+						StandortEnum.WINTERTHUR_LL);
+				Belegung belegungWaedi = belegungsDB.selectBelegungForDateAndStandort(new Date(),
+						StandortEnum.WÄDENSWIL);
+
+				belegungsListe.add(belegungBB);
+				belegungsListe.add(belegungLL);
+				belegungsListe.add(belegungWaedi);
+
+				// Setzt die aktuelle Uhrzeit
+				UhrzeitEnum uhrzeitEnum;
+				switch (date.getHours()) {
+				case 9:
+					uhrzeitEnum = UhrzeitEnum.NEUN;
+					break;
+				case 11:
+					uhrzeitEnum = UhrzeitEnum.ELF;
+					break;
+				case 13:
+					uhrzeitEnum = UhrzeitEnum.DREIZEHN;
+					break;
+				case 15:
+					uhrzeitEnum = UhrzeitEnum.FÜNFZEHN;
+					break;
+				case 17:
+					uhrzeitEnum = UhrzeitEnum.SIEBZEHN;
+					break;
+				case 19:
+					uhrzeitEnum = UhrzeitEnum.NEUNZEHN;
+					break;
+				default:
+					uhrzeitEnum = null;
+					break;
+				}
+
+				// Geht durch alle Belegungen
 				for (Belegung belegung : belegungsListe) {
-					
-					boolean nullWert = false;
-					String nullWerteString = "";
-					
-					for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
-						
-						String stockWerkNullWert = "auf Stockwerk "+stockwerk.getName().toString() +" gibt es leere Bereiche:";
-		
-						// Geht durch alle Arbeitsplätze des Stockwerks
-						for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
-							if(arbeitsplätze.getUhrzeit() == uhrzeitEnum) {
-								if(arbeitsplätze.getAnzahlPersonen() == 0) {
+
+					// Wädenswil hat nur um 11 und im 15 Uhr eine Zählung
+					if (belegung.getStandort() == StandortEnum.WÄDENSWIL) {
+						if (uhrzeitEnum == UhrzeitEnum.NEUN || uhrzeitEnum == UhrzeitEnum.DREIZEHN
+								|| uhrzeitEnum == UhrzeitEnum.SIEBZEHN || uhrzeitEnum == UhrzeitEnum.NEUNZEHN)
+							uhrzeitEnum = null;
+					}
+
+					if (uhrzeitEnum != null) {
+
+						// Prüft ob es einen Nullwert gibt
+						boolean nullWert = false;
+						// Fügt am Ende alle stockWerkNullWerte zusammen
+						String nullWerteString = "";
+
+						// Geht durch alle Stockwerke
+						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
+
+							// Der String der später in der Mail versendet wird
+							String stockWerkNullWert = ". Auf Stockwerk " + stockwerk.getName().toString()
+									+ " gibt es leere Bereiche:";
+
+							// Prüft ob ein Eintrag zu dieser Uhrzeit überhaupt vorhanden ist
+							boolean eintragInDBVorhanden;
+
+							// Nur LL hat keine Arbeitsplätze
+							if (stockwerk.getName() != StockwerkEnum.LL) {
+								// Geht durch alle Arbeitsplätze des Stockwerks
+								eintragInDBVorhanden = false;
+								for (Arbeitsplätze arbeitsplätze : stockwerk.getArbeitsplatzListe()) {
+									if (arbeitsplätze.getUhrzeit() == uhrzeitEnum) {
+										if (arbeitsplätze.getAnzahlPersonen() == 0) {
+											nullWert = true;
+											stockWerkNullWert += " Arbeitsplätze";
+										}
+										// Falls ein Eintrag für die Uhrzeit existiert
+										eintragInDBVorhanden = true;
+									}
+								}
+								// Falls es keinen Eintrag zu der Uhrzeit gibt
+								if (eintragInDBVorhanden == false) {
 									nullWert = true;
 									stockWerkNullWert += " Arbeitsplätze";
 								}
 							}
-						}
-		
-						// Geht durch alle SektorA des Stockwerks
-						for (SektorA sektorA : stockwerk.getSektorAListe()) {
-							if(sektorA.getUhrzeit() == uhrzeitEnum) {
-								if(sektorA.getAnzahlPersonen() == 0) {
+
+							// Nur LL hat SektorA
+							if (stockwerk.getName() == StockwerkEnum.LL) {
+								// Geht durch alle SektorA des Stockwerks
+								eintragInDBVorhanden = false;
+								for (SektorA sektorA : stockwerk.getSektorAListe()) {
+									if (sektorA.getUhrzeit() == uhrzeitEnum) {
+										if (sektorA.getAnzahlPersonen() == 0) {
+											nullWert = true;
+											stockWerkNullWert += " SektorA";
+										}
+										// Falls ein Eintrag für die Uhrzeit existiert
+										eintragInDBVorhanden = true;
+									}
+								}
+								// Falls es keinen Eintrag zu der Uhrzeit gibt
+								if (eintragInDBVorhanden == false) {
 									nullWert = true;
 									stockWerkNullWert += " SektorA";
 								}
 							}
-						}
-		
-						// Geht durch alle SektorB des Stockwerks
-						for (SektorB sektorB : stockwerk.getSektorBListe()) {
-							if(sektorB.getUhrzeit() == uhrzeitEnum) {
-								if(sektorB.getAnzahlPersonen() == 0) {
+
+							// Nur LL hat SektorB
+							if (stockwerk.getName() == StockwerkEnum.LL) {
+								// Geht durch alle SektorB des Stockwerks
+								eintragInDBVorhanden = false;
+								for (SektorB sektorB : stockwerk.getSektorBListe()) {
+									if (sektorB.getUhrzeit() == uhrzeitEnum) {
+										if (sektorB.getAnzahlPersonen() == 0) {
+											nullWert = true;
+											stockWerkNullWert += " SektorB";
+										}
+										// Falls ein Eintrag für die Uhrzeit existiert
+										eintragInDBVorhanden = true;
+									}
+								}
+								// Falls es keinen Eintrag zu der Uhrzeit gibt
+								if (eintragInDBVorhanden == false) {
 									nullWert = true;
 									stockWerkNullWert += " SektorB";
 								}
 							}
-						}
-		
-						// Geht durch alle Gruppenräume des Stockwerks
-						for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
-							if(gruppenräume.getUhrzeit() == uhrzeitEnum) {
-								if(gruppenräume.getAnzahlPersonen() == 0) {
+
+							// Nur EG und LL hat Gruppenräume
+							if (stockwerk.getName() == StockwerkEnum.LL || stockwerk.getName() == StockwerkEnum.EG) {
+								// Geht durch alle Gruppenräume des Stockwerks
+								eintragInDBVorhanden = false;
+								for (Gruppenräume gruppenräume : stockwerk.getGruppenräumeListe()) {
+									if (gruppenräume.getUhrzeit() == uhrzeitEnum) {
+										if (gruppenräume.getAnzahlPersonen() == 0) {
+											nullWert = true;
+											stockWerkNullWert += " Gruppenräume";
+										}
+										// Falls ein Eintrag für die Uhrzeit existiert
+										eintragInDBVorhanden = true;
+									}
+								}
+								// Falls es keinen Eintrag zu der Uhrzeit gibt
+								if (eintragInDBVorhanden == false) {
 									nullWert = true;
 									stockWerkNullWert += " Gruppenräume";
 								}
 							}
-						}
-		
-						// Geht durch alle Carrels des Stockwerks
-						for (Carrels carrels : stockwerk.getCarrelsListe()) {
-							if(carrels.getUhrzeit() == uhrzeitEnum) {
-								if(carrels.getAnzahlPersonen() == 0) {
+
+							// Nur LL hat Carrels
+							if (stockwerk.getName() == StockwerkEnum.LL) {
+								// Geht durch alle Carrels des Stockwerks
+								eintragInDBVorhanden = false;
+								for (Carrels carrels : stockwerk.getCarrelsListe()) {
+									if (carrels.getUhrzeit() == uhrzeitEnum) {
+										if (carrels.getAnzahlPersonen() == 0) {
+											nullWert = true;
+											stockWerkNullWert += " Carrels";
+										}
+										// Falls ein Eintrag für die Uhrzeit existiert
+										eintragInDBVorhanden = true;
+									}
+								}
+								// Falls es keinen Eintrag zu der Uhrzeit gibt
+								if (eintragInDBVorhanden == false) {
 									nullWert = true;
 									stockWerkNullWert += " Carrels";
 								}
 							}
+
+							nullWerteString += stockWerkNullWert;
 						}
-						
-						nullWerteString += stockWerkNullWert;
-					}
-					
-					if(nullWert == true) {
-						sendeMailBelegung(nullWerteString, belegung.getStandort());
+
+						// Wenn es einen Null-Wert hat, sende eine Mail
+						if (nullWert == true) {
+							sendeMailBelegung(nullWerteString, belegung.getStandort());
+						}
 					}
 				}
 			}
@@ -256,16 +348,16 @@ public class ScheduledExecutorEmailService {
 
 	private static void sendeMailBelegung(String nullWerteString, StandortEnum standortEnum) {
 		List<String> to = new ArrayList<>();
-		if(standortEnum == StandortEnum.WÄDENSWIL) {
+		if (standortEnum == StandortEnum.WÄDENSWIL) {
 //			to.add("waedenswil.hsb@zhaw.ch");
-		}else {
+		} else {
 //			to.add("ausleihe.winterthur.hsb@zhaw.ch");
 		}
 		to.add("m.bindemann@yahoo.de");
 
 		// Nachricht des Textes
 		String subject = "Belegung nicht ausgefüllt";
-		String text = "Die Belegung wurde noch nicht ausgefüllt " +nullWerteString;
+		String text = "Die Belegung wurde noch nicht ausgefüllt " + nullWerteString;
 
 		// Mail wird versendet
 		sendEmail(to, subject, text);
@@ -283,11 +375,8 @@ public class ScheduledExecutorEmailService {
 
 			springEmailService.send(from, to, subject, text);
 
-			Notification.show("Email gesendet");
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			Notification.show("Error sending the email", Notification.Type.ERROR_MESSAGE);
 		}
 	}
 }

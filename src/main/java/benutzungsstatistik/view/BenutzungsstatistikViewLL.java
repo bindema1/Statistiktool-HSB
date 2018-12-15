@@ -56,6 +56,11 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 	private Benutzungsstatistik benutzungsstatistik;
 	private SimpleDateFormat stundenFormat = new SimpleDateFormat("HH");
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new AbsoluteLayout();
@@ -67,6 +72,12 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
@@ -80,6 +91,9 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		setCompositionRoot(init());
 	}
 
+	/**
+	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
+	 */
 	private void initData() {
 		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WINTERTHUR_LL);
@@ -87,14 +101,16 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		uhrzeit = Integer.parseInt(stundenFormat.format(new Date().getTime()));
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
-		
+
 		bRefresh = new Button();
 		bRefresh.setCaption("Refresh");
 		bRefresh.setIcon(VaadinIcons.REFRESH);
@@ -174,8 +190,6 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 							c.setWidth("86%");
 						}
 					}
-				} else {
-					c.setWidth("80%");
 				}
 			}
 		}
@@ -225,6 +239,9 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 		return sliderLayout;
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setBeantwortungCaption() {
 		int beantwortungzaehler = 0;
 		for (BeantwortungBibliothekspersonal beantwortung : benutzungsstatistik
@@ -233,10 +250,14 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				beantwortungzaehler++;
 			}
 		}
+		bBeantwortungBibliothekspersonal.setCaptionAsHtml(true);
 		bBeantwortungBibliothekspersonal
-				.setCaption("Verweis an Bibliothekspersonal, " + uhrzeit + " Uhr: " + beantwortungzaehler);
+				.setCaption("Verweis an Bibliothekspersonal <br> " + uhrzeit + " Uhr: " + beantwortungzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setBenutzerCaption() {
 		int benutzerzaehler = 0;
 		for (Benutzerkontakt benutzer : benutzungsstatistik.getBenutzerkontaktListe()) {
@@ -244,9 +265,13 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				benutzerzaehler++;
 			}
 		}
-		bBenutzerkontakt.setCaption("Benutzerkontakt, " + uhrzeit + " Uhr: " + benutzerzaehler);
+		bBenutzerkontakt.setCaptionAsHtml(true);
+		bBenutzerkontakt.setCaption("Benutzerkontakt <br> " + uhrzeit + " Uhr: " + benutzerzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setIntensivCaption() {
 		int intensivzaehler = 0;
 		for (Intensivfrage intensiv : benutzungsstatistik.getIntensivfrageListe()) {
@@ -265,23 +290,27 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 				if (e.getSource() == bZurueck) {
 					getUI().getNavigator().navigateTo(StartseiteView.NAME);
 				}
-				
+
 				if (e.getSource() == bRefresh) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
+					// Erstellt einen Eintrag in der Datenbank
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 
-					setBenutzerCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bIntensivFrage) {
+					// Erstellt einen Eintrag in der Datenbank
 					int zaehler = 0;
 					int slider = sIntensivFrageSlider.getValue().intValue();
+					// Pro 5 Minuten gibt es einen Eintrag als Intensivfrage
 					for (int i = 1; i <= slider; i += 5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
@@ -294,18 +323,19 @@ public class BenutzungsstatistikViewLL extends Composite implements View {
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-					setIntensivCaption();
-					sIntensivFrageSlider.setValue(5.0);
-					setBenutzerCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bBeantwortungBibliothekspersonal) {
+					// Erstellt einen Eintrag in der Datenbank
 					benutzungsstatistik.addBeantwortungBibliothekspersonal(new BeantwortungBibliothekspersonal(
 							new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Beantwortung Bibliothekspersonal", Type.TRAY_NOTIFICATION);
 
-					setBeantwortungCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewLL.NAME);
 				}
 
 				if (e.getSource() == bKorrektur) {

@@ -84,8 +84,12 @@ public class KorrekturViewBB extends Composite implements View {
 	private SimpleDateFormat sdfTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		// Setzt die Farbe des Layouts
 		mainLayout.addStyleName("backgroundKorrektur");
@@ -95,25 +99,27 @@ public class KorrekturViewBB extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
 	}
 
 	public KorrekturViewBB() {
-//		this.benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(new Date(), StandortEnum.WINTERTHUR_BB);
-//		setCompositionRoot(init());
-	}
-
-	private void initData() {
 
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -207,12 +213,14 @@ public class KorrekturViewBB extends Composite implements View {
 		kassenbeleg.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
 			Boolean item = event.getValue();
 
+			// Updatet die Benutzungsstatistik
 			benutzungsstatistik.setKassenbeleg(item);
 			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
 			Notification.show("Kassenbeleg verschoben", Type.TRAY_NOTIFICATION);
 		});
 
+		// Dropdown der Uhrzeiten
 		List<String> data = Arrays.asList(new String[] { "Bitte wählen ↓", "08-09", "09-10", "10-11", "11-12", "12-13",
 				"13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20" });
 		NativeSelect<String> uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
@@ -221,6 +229,9 @@ public class KorrekturViewBB extends Composite implements View {
 		uhrzeitListSelect.setWidth(100.0f, Unit.PERCENTAGE);
 		uhrzeitListSelect.addValueChangeListener(event -> {
 			if (!String.valueOf(event.getValue()).equals("Bitte wählen ↓")) {
+
+				// Setzt das komplette Layout, wenn eine Uhrzeit ausgewählt wird
+
 				bBenutzerkontakt.setEnabled(true);
 				bBenutzerkontaktMinus.setEnabled(true);
 				bEmailkontakt.setEnabled(true);
@@ -301,6 +312,7 @@ public class KorrekturViewBB extends Composite implements View {
 				lTelefonkontakt.setValue("" + telefonzaehler);
 
 			} else {
+				// Bei "Bitte Wählen" werden alle Button disabled
 				bBenutzerkontakt.setEnabled(false);
 				bBenutzerkontaktMinus.setEnabled(false);
 				bEmailkontakt.setEnabled(false);
@@ -350,6 +362,7 @@ public class KorrekturViewBB extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			// Sucht die Benutzungsstatik für ein Datum
 			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 
@@ -445,6 +458,7 @@ public class KorrekturViewBB extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
 		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
 
@@ -460,7 +474,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
-
+					// Erhöht den Wert in der Datenbank
 					Date date = null;
 					try {
 						String datumStatistik = sdfDate.format(benutzungsstatistik.getDatum());
@@ -482,7 +496,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bBenutzerkontaktMinus) {
-
+					// Vermindert den Wert in der Datenbank
 					if (benutzerzaehler != 0) {
 						Benutzerkontakt benutzerkontakt = null;
 						for (Benutzerkontakt b : benutzungsstatistik.getBenutzerkontaktListe()) {
@@ -502,7 +516,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bIntensivFrage) {
-
+					// Erhöht den Wert in der Datenbank
 					Date date = null;
 					try {
 						String datumStatistik = sdfDate.format(benutzungsstatistik.getDatum());
@@ -524,7 +538,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bIntensivFrageMinus) {
-
+					// Vermindert den Wert in der Datenbank
 					if (intensivzaehler != 0) {
 						Intensivfrage intensivfrage = null;
 						for (Intensivfrage i : benutzungsstatistik.getIntensivfrageListe()) {
@@ -544,7 +558,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bEmailkontakt) {
-
+					// Erhöht den Wert in der Datenbank
 					Date date = null;
 					try {
 						String datumStatistik = sdfDate.format(benutzungsstatistik.getDatum());
@@ -566,7 +580,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bEmailkontaktMinus) {
-
+					// Vermindert den Wert in der Datenbank
 					if (emailzaehler != 0) {
 						Emailkontakt emailkontakt = null;
 						for (Emailkontakt e1 : benutzungsstatistik.getEmailkontaktListe()) {
@@ -587,7 +601,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bTelefonkontakt) {
-
+					// Erhöht den Wert in der Datenbank
 					Date date = null;
 					try {
 						String datumStatistik = sdfDate.format(benutzungsstatistik.getDatum());
@@ -609,7 +623,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bTelefonkontaktMinus) {
-
+					// Vermindert den Wert in der Datenbank
 					if (telefonzaehler != 0) {
 						Telefonkontakt telefonkontakt = null;
 						for (Telefonkontakt t : benutzungsstatistik.getTelefonkontaktListe()) {
@@ -629,6 +643,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bRechercheBeratung) {
+					// Erhöht den Wert in der Datenbank
 					benutzungsstatistik
 							.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() + 1);
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
@@ -642,6 +657,7 @@ public class KorrekturViewBB extends Composite implements View {
 				}
 
 				if (e.getSource() == bRechercheBeratungMinus) {
+					// Vermindert den Wert in der Datenbank
 					if (benutzungsstatistik.getAnzahl_Rechercheberatung() > 0) {
 						benutzungsstatistik
 								.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() - 1);

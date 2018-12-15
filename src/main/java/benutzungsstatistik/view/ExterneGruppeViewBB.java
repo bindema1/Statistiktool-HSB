@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.vaadin.dialogs.ConfirmDialog;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -61,11 +63,15 @@ public class ExterneGruppeViewBB extends Composite implements View {
 	private List<ExterneGruppeBean> externeGruppeBeanListe;
 	private Benutzungsstatistik benutzungsstatistik;
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
-//	private ExterneGruppeDatenbank externeGruppeDB = new ExterneGruppeDatenbank();
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
+		// Setzt die Hintergrundfarbe
 		if (korrektur == true) {
 			mainLayout.addStyleName("backgroundKorrektur");
 		} else {
@@ -77,10 +83,15 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -90,11 +101,9 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents() {
 
@@ -126,6 +135,7 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
+			// Holt die Statistk für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 
@@ -142,7 +152,7 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		Label lBeschreibung = new Label();
 		lBeschreibung.setContentMode(ContentMode.HTML);
 		lBeschreibung.setValue(
-				"<html><body>- Erfassung von nicht-HSB-geführten Gruppen <br>- Name von angemeldeten Gruppe s. ggf. im Outlook Kalender <br>- Gruppe unbekannt -> N.N.</body></html>");
+				"<html><body>- Erfassung von nicht-HSB-geführten Gruppen <br>- Name von angemeldeten Gruppen s. ggf. im Outlook Kalender <br>- Gruppe unbekannt -> N.N.</body></html>");
 
 		bSpeichern = new Button();
 		bSpeichern.setCaption("Speichern");
@@ -152,11 +162,13 @@ public class ExterneGruppeViewBB extends Composite implements View {
 		tabelle.addColumn(ExterneGruppeBean::getName).setCaption("Name");
 		tabelle.addColumn(ExterneGruppeBean::getAnzahl_personen).setCaption("Anzahl Personen");
 		tabelle.addColumn(ExterneGruppeBean::getErfasstUm).setCaption("Erfasst um");
+		// Spalte zum Bearbeiten
 		tabelle.addColumn(ExterneGruppeBean -> "Bearbeiten", new ButtonRenderer(clickEvent -> {
 			ExterneGruppeBean beanZuBearbeiten = (ExterneGruppeBean) clickEvent.getItem();
 			externeGruppeBeanListe.remove(beanZuBearbeiten);
 
 			ExterneGruppe externeGruppeZuLöschen = null;
+			// Löscht den Eintrag in der Tabelle und fügt es in den Textfeldern ein
 			for (ExterneGruppe e : benutzungsstatistik.getExterneGruppeListe()) {
 				if (beanZuBearbeiten.getName().equals(e.getName())) {
 					externeGruppeZuLöschen = e;
@@ -170,43 +182,44 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 			tabelle.setItems(externeGruppeBeanListe);
 		})).setCaption("Bearbeitung");
-
+		// Spalte zum Löschen
 		tabelle.addColumn(ExterneGruppeBean -> "Löschen", new ButtonRenderer(clickEvent -> {
 
-//			ConfirmDialog.show(this, "Bitte bestätigen:", "Sind Sie sicher sie wollen die Gruppe löschen?",
-//			        "Löschen", "Abbrechen", new ConfirmDialog.Listener() {
-//
-//			            public void onClose(ConfirmDialog dialog) {
-//			                if (dialog.isConfirmed()) {
-//			                    // Confirmed to continue
-//            } else {
-//            // User did not confirm
-//        	// do nothing
-//        }
-//    }
-//});
-//			ConfirmDialog dialog = new ConfirmDialog("Meeting starting",
-//	        "Your next meeting starts in 5 minutes", "OK", this::onOK);
+			ConfirmDialog.show(getUI(), "Bitte bestätigen:", "Sind Sie sicher sie wollen die Gruppe löschen?",
+					"Löschen", "Abbrechen", new ConfirmDialog.Listener() {
 
-			externeGruppeBeanListe.remove(clickEvent.getItem());
+						private static final long serialVersionUID = 1L;
 
-			ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
+						public void onClose(ConfirmDialog dialog) {
+							if (dialog.isConfirmed()) {
+								// User klickt "Löschen"
+								externeGruppeBeanListe.remove(clickEvent.getItem());
 
-			ExterneGruppe externeGruppeZuLöschen = null;
-			for (ExterneGruppe e : benutzungsstatistik.getExterneGruppeListe()) {
-				if (beanZuLöschen.getName().equals(e.getName())) {
-					externeGruppeZuLöschen = e;
-				}
-			}
-			benutzungsstatistik.removeExterneGruppe(externeGruppeZuLöschen);
-			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
+								ExterneGruppeBean beanZuLöschen = (ExterneGruppeBean) clickEvent.getItem();
 
-			tabelle.setItems(externeGruppeBeanListe);
+								ExterneGruppe externeGruppeZuLöschen = null;
+								for (ExterneGruppe e : benutzungsstatistik.getExterneGruppeListe()) {
+									if (beanZuLöschen.getName().equals(e.getName())) {
+										externeGruppeZuLöschen = e;
+									}
+								}
+								// Lösche den Eintrag
+								benutzungsstatistik.removeExterneGruppe(externeGruppeZuLöschen);
+								benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
+
+								tabelle.setItems(externeGruppeBeanListe);
+							} else {
+								// User klickt "Abbrechen"
+								// mache nichts
+							}
+						}
+					});
 
 		})).setCaption("Löschfunktion");
 		fülleGruppenTabelle();
 
 		GridLayout grid = new GridLayout(5, 7);
+		// Setzt die Hintergrundfarbe
 		if (korrektur == true) {
 			grid.addStyleName("backgroundKorrektur");
 		} else {
@@ -255,6 +268,9 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 	}
 
+	/**
+	 * Füllt die Tabelle
+	 */
 	private void fülleGruppenTabelle() {
 
 		externeGruppeBeanListe = new ArrayList<>();
@@ -273,7 +289,9 @@ public class ExterneGruppeViewBB extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
+		// Korrektur auf false oder true
 		String korrekturString = args[1];
 		this.benutzungsstatistik = benutzungsstatistikDB.findBenutzungsstatistikById(Integer.parseInt(id));
 		this.korrektur = Boolean.parseBoolean(korrekturString);
@@ -297,6 +315,7 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 				if (e.getSource() == bSpeichern) {
 
+					// Speichert den Eintrag aus den Textfeldern
 					try {
 						String name = tName.getValue();
 						int personenzahl = Integer.parseInt(tPersonenzahl.getValue());

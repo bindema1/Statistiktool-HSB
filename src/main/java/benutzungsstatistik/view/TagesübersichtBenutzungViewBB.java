@@ -61,8 +61,12 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 	private Benutzungsstatistik benutzungsstatistik;
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		// Setzt die Farbe des Layouts
 		mainLayout.addStyleName("backgroundTages");
@@ -72,10 +76,15 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -85,11 +94,9 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -162,6 +169,7 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			// Holt die Benutzungstatistik für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);
 
@@ -204,43 +212,13 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 		overallLayout.addComponent(contentLayout);
 
 		mainLayout.addComponent(overallLayout);
-
-//		GridLayout grid = new GridLayout(6, 12);
-//		grid.addStyleName("gridlayout");
-//		grid.setSizeFull();
-//		grid.addComponent(bZurueck, 0, 0);
-//		grid.addComponent(lText, 1, 0, 2, 0);
-//		grid.addComponent(datefield, 3, 0, 4, 0);
-//		grid.addComponent(bKorrektur, 5, 0);
-//		grid.addComponent(tabelleUhrzeiten, 0, 1, 2, 11);
-//		grid.addComponent(lRechercheberatung, 3, 1, 5, 1);
-//		grid.addComponent(lKassenbeleg, 3, 2);
-//		grid.addComponent(kassenbeleg, 4, 2, 5, 2);
-//		grid.addComponent(lWintikurier, 3, 3, 5, 3);
-//		grid.addComponent(tabelleWintikurier, 3, 4, 5, 7);
-//		grid.addComponent(lGruppen, 3, 8, 5, 8);
-//		grid.addComponent(tabelleGruppen, 3, 9, 5, 11);
-//
-//		for (int col = 0; col < grid.getColumns(); col++) {
-//			for (int row = 0; row < grid.getRows(); row++) {
-//				Component c = grid.getComponent(col, row);
-//				grid.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
-//
-//				// Button grösser machen
-//				if (row == 0) {
-//					if (col == 1 || col == 2) {
-//						grid.setComponentAlignment(c, Alignment.MIDDLE_RIGHT);
-//					}
-//				} else {
-//					c.setHeight("90%");
-//					c.setWidth("90%");
-//				}
-//			}
-//		}
-//
-//		mainLayout.addComponent(grid);
 	}
 
+	/**
+	 * Füllt die Tabelle für den Internen Kurier
+	 * 
+	 * @param tabelleWintikurier
+	 */
 	private void fülleTabelleWintikurier(Grid<WintikurierBean> tabelleWintikurier) {
 
 		List<WintikurierBean> wintikurierBeanListe = new ArrayList<>();
@@ -267,6 +245,11 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 		tabelleWintikurier.setHeightByRows(wintikurierBeanListe.size());
 	}
 
+	/**
+	 * Füllt die Tabelle der Externen Gruppen
+	 * 
+	 * @param tabelleGruppen
+	 */
 	private void fülleTabelleGruppen(Grid<ExterneGruppeBean> tabelleGruppen) {
 
 		List<ExterneGruppeBean> externeGruppeBeanListe = new ArrayList<>();
@@ -291,6 +274,11 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 		}
 	}
 
+	/**
+	 * Füllt die Tabelle der Uhrzeiten
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten) {
 
 		List<TagesübersichtBenutzungBean> tagesübersichtListe = new ArrayList<>();
@@ -344,6 +332,7 @@ public class TagesübersichtBenutzungViewBB extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
 		// Ob der Zugriff direkt aus der Startseite oder von der Belegung kommt
 		String vonStartseiteString = args[1];

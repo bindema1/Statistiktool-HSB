@@ -10,6 +10,7 @@ allgemein\view\LoginPage$1.class
 benutzungsstatistik\model\Intensivfrage.class
 benutzungsstatistik\model\Wintikurier.class
 belegung\view\BelegungErfassenViewWinti$1.class
+benutzungsstatistik\view\ExterneGruppeViewBB$2.class
 allgemein\view\StartseiteView.class
 benutzungsstatistik\view\WintikurierViewBB.class
 benutzungsstatistik\view\BenutzungsstatistikViewWaedi$1.class

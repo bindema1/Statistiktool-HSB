@@ -10,6 +10,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -18,12 +19,10 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.model.StandortEnum;
@@ -67,10 +66,13 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 	private Benutzungsstatistik benutzungsstatistik;
 	private SimpleDateFormat stundenFormat = new SimpleDateFormat("HH");
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
-		// Setzt die Farbe des Layouts
 		mainLayout.addStyleName("backgroundErfassung");
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
@@ -78,6 +80,12 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
@@ -91,6 +99,9 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		setCompositionRoot(init());
 	}
 
+	/**
+	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
+	 */
 	private void initData() {
 		benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(new Date(),
 				StandortEnum.WINTERTHUR_BB);
@@ -98,22 +109,24 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		uhrzeit = Integer.parseInt(stundenFormat.format(new Date().getTime()));
 	}
 
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
 		bZurueck.setCaption("Zurück");
 		bZurueck.setIcon(VaadinIcons.ARROW_LEFT);
 		bZurueck.addClickListener(createClickListener());
-		
+
 		bRefresh = new Button();
 		bRefresh.setCaption("Refresh");
 		bRefresh.setIcon(VaadinIcons.REFRESH);
 		bRefresh.addClickListener(createClickListener());
 
-		lText = new Label();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		lText.setValue("Benutzungsstatistik vom " + sdf.format(benutzungsstatistik.getDatum()));
+		lText = new Label("Benutzungsstatistik <br> vom " + sdf.format(benutzungsstatistik.getDatum()),
+				ContentMode.HTML);
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		lKassenbeleg = new Label();
@@ -181,6 +194,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		bTagesuebersicht.addClickListener(createClickListener());
 
 		kassenbeleg = new Switch();
+		// Wenn der Kassenbeleg in der DB auf true ist
 		if (benutzungsstatistik.isKassenbeleg()) {
 			kassenbeleg.setValue(true);
 		} else {
@@ -189,6 +203,7 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		kassenbeleg.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
 			Boolean item = event.getValue();
 
+			// Setzt die Variable und updatet den Eintrag in der DB
 			benutzungsstatistik.setKassenbeleg(item);
 			benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
@@ -199,32 +214,22 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 			}
 		});
 
-		VerticalLayout overallLayout = new VerticalLayout();
-		overallLayout.setSpacing(true);
-		overallLayout.setSizeFull();
-		HorizontalLayout headerLayout = new HorizontalLayout();
-		headerLayout.addComponent(bZurueck);
-		headerLayout.addComponent(bRefresh);
-		headerLayout.addComponent(lText);
-		headerLayout.addComponent(lKassenbeleg);
-		headerLayout.addComponent(kassenbeleg);
-		
-		GridLayout grid = new GridLayout(6, 6);
+		GridLayout grid = new GridLayout(6, 7);
 		grid.setSizeFull();
-//		grid.addComponent(bZurueck, 0, 0);
-//		grid.addComponent(bRefresh, 1, 0);
-//		grid.addComponent(lText, 2, 0, 3, 0);
-//		grid.addComponent(lKassenbeleg, 4, 0);
-//		grid.addComponent(kassenbeleg, 5, 0);
-		grid.addComponent(bBenutzerkontakt, 0, 0, 1, 1);
-		grid.addComponent(createSliderGridLayout(), 2, 0, 3, 1);
-		grid.addComponent(bTagesuebersicht, 4, 0, 5, 1);
-		grid.addComponent(bEmailkontakt, 0, 2, 1, 3);
-		grid.addComponent(bTelefonkontakt, 2, 2, 3, 3);
-		grid.addComponent(bRechercheBeratung, 4, 2, 5, 3);
-		grid.addComponent(bExterneGruppe, 0, 4, 1, 5);
-		grid.addComponent(bWintikurier, 2, 4, 3, 5);
-		grid.addComponent(bKorrektur, 4, 4, 5, 5);
+		grid.addComponent(bZurueck, 0, 0);
+		grid.addComponent(bRefresh, 1, 0);
+		grid.addComponent(lText, 2, 0, 3, 0);
+		grid.addComponent(lKassenbeleg, 4, 0);
+		grid.addComponent(kassenbeleg, 5, 0);
+		grid.addComponent(bBenutzerkontakt, 0, 1, 1, 2);
+		grid.addComponent(createSliderGridLayout(), 2, 1, 3, 2);
+		grid.addComponent(bTagesuebersicht, 4, 1, 5, 2);
+		grid.addComponent(bEmailkontakt, 0, 3, 1, 4);
+		grid.addComponent(bTelefonkontakt, 2, 3, 3, 4);
+		grid.addComponent(bRechercheBeratung, 4, 3, 5, 4);
+		grid.addComponent(bExterneGruppe, 0, 5, 1, 6);
+		grid.addComponent(bWintikurier, 2, 5, 3, 6);
+		grid.addComponent(bKorrektur, 4, 5, 5, 6);
 
 		for (int col = 0; col < grid.getColumns(); col++) {
 			for (int row = 0; row < grid.getRows(); row++) {
@@ -251,19 +256,15 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		grid.setColumnExpandRatio(3, 0.1666f);
 		grid.setColumnExpandRatio(4, 0.1666f);
 		grid.setColumnExpandRatio(5, 0.1666f);
-		grid.setRowExpandRatio(0, 0.1666f);
-		grid.setRowExpandRatio(1, 0.1666f);
-		grid.setRowExpandRatio(2, 0.1666f);
-		grid.setRowExpandRatio(3, 0.1666f);
-		grid.setRowExpandRatio(4, 0.1666f);
-		grid.setRowExpandRatio(5, 0.1666f);
-//		grid.setRowExpandRatio(6, 0.15f);
+		grid.setRowExpandRatio(0, 0.15f);
+		grid.setRowExpandRatio(1, 0.15f);
+		grid.setRowExpandRatio(2, 0.15f);
+		grid.setRowExpandRatio(3, 0.15f);
+		grid.setRowExpandRatio(4, 0.15f);
+		grid.setRowExpandRatio(5, 0.15f);
+		grid.setRowExpandRatio(6, 0.15f);
 
-		overallLayout.addComponent(headerLayout);
-		overallLayout.addComponent(grid);
-		overallLayout.setExpandRatio(headerLayout, 0.15f);
-		overallLayout.setExpandRatio(grid, 0.85f);
-		mainLayout.addComponent(overallLayout);
+		mainLayout.addComponent(grid);
 
 	}
 
@@ -296,6 +297,9 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		return sliderLayout;
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setTelefonCaption() {
 		int telefonzaehler = 0;
 		for (Telefonkontakt telefon : benutzungsstatistik.getTelefonkontaktListe()) {
@@ -303,9 +307,13 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				telefonzaehler++;
 			}
 		}
-		bTelefonkontakt.setCaption("Telefon, " + uhrzeit + " Uhr: " + telefonzaehler);
+		bTelefonkontakt.setCaptionAsHtml(true);
+		bTelefonkontakt.setCaption("Telefon <br> " + uhrzeit + " Uhr: " + telefonzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setEmailCaption() {
 		int emailzaehler = 0;
 		for (Emailkontakt email : benutzungsstatistik.getEmailkontaktListe()) {
@@ -313,9 +321,13 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				emailzaehler++;
 			}
 		}
-		bEmailkontakt.setCaption("Email, " + uhrzeit + " Uhr: " + emailzaehler);
+		bEmailkontakt.setCaptionAsHtml(true);
+		bEmailkontakt.setCaption("Email <br> " + uhrzeit + " Uhr: " + emailzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setBenutzerCaption() {
 		int benutzerzaehler = 0;
 		for (Benutzerkontakt benutzer : benutzungsstatistik.getBenutzerkontaktListe()) {
@@ -323,9 +335,13 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				benutzerzaehler++;
 			}
 		}
-		bBenutzerkontakt.setCaption("Benutzerkontakt, " + uhrzeit + " Uhr: " + benutzerzaehler);
+		bBenutzerkontakt.setCaptionAsHtml(true);
+		bBenutzerkontakt.setCaption("Benutzerkontakt <br> " + uhrzeit + " Uhr: " + benutzerzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setIntensivCaption() {
 		int intensivzaehler = 0;
 		for (Intensivfrage intensiv : benutzungsstatistik.getIntensivfrageListe()) {
@@ -336,9 +352,14 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 		bIntensivFrage.setCaption("Intensivfrage, " + uhrzeit + " Uhr: " + intensivzaehler);
 	}
 
+	/**
+	 * Erstellt die Caption für einen Button
+	 */
 	private void setRechercheCaption() {
 		benutzungsstatistik.getAnzahl_Rechercheberatung();
-		bRechercheBeratung.setCaption("Rechercheberatung, Total: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
+		bRechercheBeratung.setCaptionAsHtml(true);
+		bRechercheBeratung
+				.setCaption("Rechercheberatung <br> Total: " + benutzungsstatistik.getAnzahl_Rechercheberatung());
 	}
 
 	@SuppressWarnings("serial")
@@ -349,23 +370,27 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 				if (e.getSource() == bZurueck) {
 					getUI().getNavigator().navigateTo(StartseiteView.NAME);
 				}
-				
+
 				if (e.getSource() == bRefresh) {
 					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bBenutzerkontakt) {
+					// Erstellt einen Eintrag in der Datenbank
 					benutzungsstatistik.addBenutzerkontakt(
 							new Benutzerkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Benutzerkontakt", Type.TRAY_NOTIFICATION);
 
-					setBenutzerCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bIntensivFrage) {
+					// Erstellt einen Eintrag in der Datenbank
 					int zaehler = 0;
 					int slider = sIntensivFrageSlider.getValue().intValue();
+					// Pro 5 Minuten gibt es einen Eintrag als Intensivfrage
 					for (int i = 1; i <= slider; i += 5) {
 						benutzungsstatistik.addIntensivfrage(
 								new Intensivfrage(new Timestamp(new Date().getTime()), benutzungsstatistik));
@@ -376,35 +401,44 @@ public class BenutzungsstatistikViewBB extends Composite implements View {
 
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 
-					setIntensivCaption();
-					sIntensivFrageSlider.setValue(5.0);
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bRechercheBeratung) {
+					// Erstellt einen Eintrag in der Datenbank
+					benutzungsstatistik = benutzungsstatistikDB
+							.findBenutzungsstatistikById(benutzungsstatistik.getBenutzungsstatistik_ID());
+
 					benutzungsstatistik
 							.setAnzahl_Rechercheberatung(benutzungsstatistik.getAnzahl_Rechercheberatung() + 1);
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Rechercheberatung", Type.TRAY_NOTIFICATION);
 
-					setRechercheCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bEmailkontakt) {
+					// Erstellt einen Eintrag in der Datenbank
 					benutzungsstatistik.addEmailkontakt(
 							new Emailkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Emailkontakt", Type.TRAY_NOTIFICATION);
 
-					setEmailCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bTelefonkontakt) {
+					// Erstellt einen Eintrag in der Datenbank
 					benutzungsstatistik.addTelefonkontakt(
 							new Telefonkontakt(new Timestamp(new Date().getTime()), benutzungsstatistik));
 					benutzungsstatistikDB.updateBenutzungsstatistik(benutzungsstatistik);
 					Notification.show("+1 Telefonkontakt", Type.TRAY_NOTIFICATION);
 
-					setTelefonCaption();
+					// Aktualisiert die Webseite (für das synchrone Arbeiten)
+					getUI().getNavigator().navigateTo(BenutzungsstatistikViewBB.NAME);
 				}
 
 				if (e.getSource() == bWintikurier) {

@@ -56,8 +56,12 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 	private Benutzungsstatistik benutzungsstatistik;
 	private BenutzungsstatistikDatenbank benutzungsstatistikDB = new BenutzungsstatistikDatenbank();
 
+	/**
+	 * Bildet das AbsoluteLayout, als Wrapper um die ganze View
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	private AbsoluteLayout buildMainLayout() {
-		// common part: create layout
 		mainLayout = new AbsoluteLayout();
 		// Setzt die Farbe des Layouts
 		mainLayout.addStyleName("backgroundTages");
@@ -67,10 +71,15 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 		return mainLayout;
 	}
 
+	/**
+	 * Setzt den CompositionRoot auf ein AbsoluteLayout. Ruft initComponents auf,
+	 * welches alle Komponenten dem Layout hinzufügt
+	 * 
+	 * @return AbsoluteLayout
+	 */
 	public AbsoluteLayout init() {
 
 		AbsoluteLayout absolutLayout = buildMainLayout();
-		initData();
 		initComponents();
 
 		return absolutLayout;
@@ -80,11 +89,9 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 
 	}
 
-	private void initData() {
-
-	}
-
-	// Initialisieren der GUI Komponente
+	/**
+	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
+	 */
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -122,6 +129,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
 
+			// Holt die Benutzungstatistik für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_LL);
 
@@ -160,6 +168,11 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 		mainLayout.addComponent(grid);
 	}
 
+	/**
+	 * Füllt die Tabelle der Uhrzeiten
+	 * 
+	 * @param tabelleUhrzeiten
+	 */
 	private void fülleTabelleUhrzeiten(Grid<TagesübersichtBenutzungBean> tabelleUhrzeiten) {
 
 		List<TagesübersichtBenutzungBean> tagesübersichtListe = new ArrayList<>();
@@ -205,6 +218,7 @@ public class TagesübersichtBenutzungViewLL extends Composite implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		String args[] = event.getParameters().split("/");
+		// ID der Benutzungsstatistik
 		String id = args[0];
 		// Ob der Zugriff direkt aus der Startseite oder von der Belegung kommt
 		String vonStartseiteString = args[1];

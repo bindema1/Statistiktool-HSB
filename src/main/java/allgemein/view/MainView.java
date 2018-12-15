@@ -21,14 +21,12 @@ import com.vaadin.ui.UI;
 import administrator.view.ExportViewWaedi;
 import administrator.view.ExportViewWinti;
 import administrator.view.PasswortView;
-import allgemein.db.AngestellterDatenbank;
 import allgemein.service.ScheduledExecutorEmailService;
 import belegung.view.BelegungErfassenViewWaedi;
 import belegung.view.BelegungErfassenViewWinti;
 import benutzungsstatistik.view.BenutzungsstatistikViewBB;
 import benutzungsstatistik.view.BenutzungsstatistikViewLL;
 import benutzungsstatistik.view.BenutzungsstatistikViewWaedi;
-import testdaten.TestDaten;
 
 /**
  * MainView ist die Anfangsklasse, welche das VaadinServlet aufsetzt.
@@ -45,10 +43,10 @@ public class MainView extends UI {
 
 		// Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein
 		// SQL-Skript
-		AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
-		if (angestellterDB.selectAllAngestellte().size() == 0) {
-			new TestDaten();
-		}
+//		AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
+//		if (angestellterDB.selectAllAngestellte().size() == 0) {
+//			new TestDaten();
+//		}
 
 		// Ein Navigator wird gesetzt, sodass verschiedene Views gesetzt werden können
 		// und die Navigation per URL funktioniert
