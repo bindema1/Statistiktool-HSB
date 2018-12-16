@@ -19,6 +19,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\Export
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\model\Angestellter.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\BeantwortungBibliothekspersonal.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\model\Internerkurier.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\datenimport\BelegungsImporter.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\KorrekturViewLL.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\BenutzungsstatistikViewBB.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportExterneGruppeBean.java
@@ -63,6 +64,6 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Stockwerk.
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\StockwerkEnum.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\bean\ExterneGruppeBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\view\TagesübersichtBelegungViewWinti.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\datenimport\TestDaten.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\TagesübersichtBenutzungViewWaedi.java
-C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\testdaten\TestDaten.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportWintikurierTagBean.java

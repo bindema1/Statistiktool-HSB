@@ -15071,3 +15071,7 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .backgroundErfassung {
 	background-color: #82e5a3;
 }
+
+.mytheme .v-table-header .v-table-header-cell:first-child {
+	font-weight: bold;
+}

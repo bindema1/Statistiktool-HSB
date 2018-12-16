@@ -1,35 +1,35 @@
 <!DOCTYPE hibernate-configuration PUBLIC
   "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-  "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+  "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
 	<session-factory>
-		
-		<!-- HsqlDB lokale Datenbank 
-	    <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
-	  	<property name="connection.url">jdbc:hsqldb:mem:testdb</property>
-		<property name="connection.username">sa</property>
-		<property name="connection.password"></property>
-		<property name="dialect">org.hibernate.dialect.HSQLDialect</property>
-		<property name="show_sql">false</property>
-		<property name="connection.pool_size">2</property>
-		<property name="hibernate.hbm2ddl.auto">update</property>
-		<property name="hibernate.jdbc.batch_size">0</property>
-		<property name="hibernate.enable_lazy_load_no_trans">true</property> -->
+
+		<!-- HsqlDB lokale Datenbank <property name="connection.driver_class">org.hsqldb.jdbcDriver</property> 
+			<property name="connection.url">jdbc:hsqldb:mem:testdb</property> <property 
+			name="connection.username">sa</property> <property name="connection.password"></property> 
+			<property name="dialect">org.hibernate.dialect.HSQLDialect</property> <property 
+			name="show_sql">false</property> <property name="connection.pool_size">2</property> 
+			<property name="hibernate.hbm2ddl.auto">update</property> <property name="hibernate.jdbc.batch_size">0</property> 
+			<property name="hibernate.enable_lazy_load_no_trans">true</property> -->
 
 		<!-- MYSQL Server/Workbench -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-	  	<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool?serverTimezone=UTC</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/statistiktool?serverTimezone=UTC</property>
 		<property name="connection.username">root</property>
-		<property name="connection.password">JrSf23q1</property>
+		<property name="connection.password">1234</property>
 		<property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
 		<property name="show_sql">false</property>
-		<property name="connection.pool_size">10</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">300</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.jdbc.batch_size">0</property>
 		<property name="hibernate.enable_lazy_load_no_trans">true</property>
-		<!--<property name="connection.password">JrSf23q1</property>-->
-		
+		<!--<property name="connection.password">JrSf23q1</property> -->
+
 		<!-- Nur Unidirectional Associations -->
 		<mapping class="allgemein.model.Angestellter"></mapping>
 		<mapping class="benutzungsstatistik.model.Benutzungsstatistik"></mapping>
@@ -37,18 +37,19 @@
 		<mapping class="benutzungsstatistik.model.Emailkontakt"></mapping>
 		<mapping class="benutzungsstatistik.model.Telefonkontakt"></mapping>
 		<mapping class="benutzungsstatistik.model.Intensivfrage"></mapping>
-		<mapping class="benutzungsstatistik.model.BeantwortungBibliothekspersonal"></mapping>
+		<mapping
+			class="benutzungsstatistik.model.BeantwortungBibliothekspersonal"></mapping>
 		<mapping class="benutzungsstatistik.model.ExterneGruppe"></mapping>
 		<mapping class="benutzungsstatistik.model.Wintikurier"></mapping>
 		<mapping class="benutzungsstatistik.model.Internerkurier"></mapping>
-		<mapping class="belegung.model.Arbeitsplätze"/>
-		<mapping class="belegung.model.Belegung"/>
-		<mapping class="belegung.model.Carrels"/>
-		<mapping class="belegung.model.Gruppenräume"/>
-		<mapping class="belegung.model.Kapazität"/>
-		<mapping class="belegung.model.SektorA"/>
-		<mapping class="belegung.model.SektorB"/>
-		<mapping class="belegung.model.Stockwerk"/>
-		
+		<mapping class="belegung.model.Arbeitsplätze" />
+		<mapping class="belegung.model.Belegung" />
+		<mapping class="belegung.model.Carrels" />
+		<mapping class="belegung.model.Gruppenräume" />
+		<mapping class="belegung.model.Kapazität" />
+		<mapping class="belegung.model.SektorA" />
+		<mapping class="belegung.model.SektorB" />
+		<mapping class="belegung.model.Stockwerk" />
+
 	</session-factory>
 </hibernate-configuration>

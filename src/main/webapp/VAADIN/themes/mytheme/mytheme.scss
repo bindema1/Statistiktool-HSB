@@ -35,25 +35,23 @@ $v-shadow-opacity: 5%;
   @include valo;
 
   // Insert your own theme rules here
-  //.icon-align-top.huge-icon .v-icon {
-  	//font-size: $v-font-size--huge;
-	//}
+  .iconBenutzungHuge .v-icon{
+	font-size: 40px;
+  }
 	
-	.iconBenutzungHuge .v-icon{
-	  font-size: 40px;
-	}
-	
-	.backgroundKorrektur{
-           background-color:#ff6b6b;
-      }
-      
-     .backgroundTages{
-           background-color:#99c8ff;
-      }
-      
-      .backgroundErfassung{
-           background-color:#82e5a3;
-      }
-      
-  		
+  .backgroundKorrektur{
+	background-color:#ff6b6b;
+  }
+  
+  .backgroundTages{
+	background-color:#99c8ff;
+  }
+  
+  .backgroundErfassung{
+	background-color:#82e5a3;
+  }
+  
+  .v-table-header .v-table-header-cell:first-child {
+	font-weight: bold;
+  }
 }

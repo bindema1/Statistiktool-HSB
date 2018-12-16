@@ -117,4 +117,10 @@ public class Arbeitsplätze implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Arbeitsplätze [arbeitsplätze_ID=" + arbeitsplätze_ID + ", anzahlPersonen=" + anzahlPersonen
+				+ ", uhrzeit=" + uhrzeit + ", stockwerk=" + stockwerk + "]";
+	}
+
 }

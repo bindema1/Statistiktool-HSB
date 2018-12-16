@@ -41,6 +41,7 @@ import benutzungsstatistik.view.TagesübersichtBenutzungViewBB;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewLL;
 import benutzungsstatistik.view.TagesübersichtBenutzungViewWaedi;
 import benutzungsstatistik.view.WintikurierViewBB;
+import datenimport.DatenbankAufsetzen;
 
 /**
  * LoginPage setzt das Layout zum einloggen. Ausserdem erstellt es alle Views
@@ -75,7 +76,6 @@ public class LoginPage extends VerticalLayout implements View {
 		username.setEmptySelectionAllowed(false);
 		content.addComponent(username);
 		PasswordField password = new PasswordField("Passwort");
-		password.setValue("123");
 		content.addComponent(password);
 
 		Button send = new Button("Login");
@@ -85,6 +85,8 @@ public class LoginPage extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
+				new DatenbankAufsetzen();
+				
 				Angestellter angestellter = angestellterDB.getAngestellterByName(username.getValue());
 
 				if (angestellter != null) {

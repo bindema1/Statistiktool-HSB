@@ -13,6 +13,7 @@ belegung\view\BelegungErfassenViewWinti$1.class
 benutzungsstatistik\view\ExterneGruppeViewBB$2.class
 allgemein\view\StartseiteView.class
 benutzungsstatistik\view\WintikurierViewBB.class
+datenimport\BelegungsImporter.class
 benutzungsstatistik\view\BenutzungsstatistikViewWaedi$1.class
 belegung\view\BelegungErfassenViewWaedi$2.class
 allgemein\model\StandortEnum.class
@@ -26,7 +27,6 @@ administrator\bean\ExportBenutzungsstatistikBean.class
 allgemein\view\MainView.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewWaedi$1.class
 allgemein\view\MainView$1.class
-testdaten\TestDaten.class
 administrator\bean\ExportWintikurierMonatBean.class
 belegung\db\BelegungsDatenbank.class
 belegung\view\TagesübersichtBelegungViewWaedi$2.class
@@ -92,6 +92,7 @@ belegung\model\Kapazität.class
 belegung\model\Stockwerk.class
 benutzungsstatistik\model\Emailkontakt.class
 allgemein\model\MD5.class
+datenimport\TestDaten.class
 belegung\model\SektorB.class
 benutzungsstatistik\view\KorrekturViewWaedi.class
 benutzungsstatistik\view\InternerkurierViewWaedi$1.class
