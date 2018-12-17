@@ -31,9 +31,11 @@ administrator\bean\ExportWintikurierMonatBean.class
 belegung\db\BelegungsDatenbank.class
 belegung\view\TagesübersichtBelegungViewWaedi$2.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewBB.class
+datenimport\DatenbankAufsetzen.class
 belegung\view\TagesübersichtBelegungViewWinti$2.class
 benutzungsstatistik\bean\ExterneGruppeBean.class
 benutzungsstatistik\view\KorrekturViewBB.class
+datenimport\Benutzungsimporter.class
 allgemein\view\MainView$MyServlet.class
 allgemein\view\MainView$MyServlet$1.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL$1.class

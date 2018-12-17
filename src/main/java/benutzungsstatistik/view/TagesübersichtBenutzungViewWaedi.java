@@ -101,7 +101,7 @@ public class TagesübersichtBenutzungViewWaedi extends Composite implements View
 		bZurueck.addClickListener(createClickListener());
 
 		Label lText = new Label();
-		lText.setValue("Tagesübersicht Belegungsstatistik vom ");
+		lText.setValue("Tagesübersicht Benutzungsstatistik vom ");
 		lText.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		bKorrektur = new Button();

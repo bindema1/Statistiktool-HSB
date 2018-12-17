@@ -74,8 +74,8 @@ public class ScheduledExecutorEmailService {
 			// Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
 			pruefeKassenbeleg();
 
-		}, initalDelay, 30, TimeUnit.MINUTES);
-
+		}, 0, 30, TimeUnit.MINUTES);
+//		}, initalDelay, 30, TimeUnit.MINUTES);
 	}
 
 	@SuppressWarnings("deprecation")

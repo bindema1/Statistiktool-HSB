@@ -60,7 +60,7 @@ public class Benutzungsimporter {
 					}
 
 					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-					SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 					Date timestamp = null;
 					boolean email = false;
 					boolean telefon = false;
@@ -69,62 +69,63 @@ public class Benutzungsimporter {
 					try {
 						switch (uhrzeit[2]) {
 						case "8 - 9 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 08:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 08:30");
 							break;
 						case "9 - 10 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 09:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 09:30");
 							break;
 						case "10 - 11 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 10:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 10:30");
 							break;
 						case "11 - 12 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 11:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 11:30");
 							break;
 						case "12 - 13 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 12:30:00.0");
+							SimpleDateFormat sdf4 = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+							timestamp = sdf4.parse(sdf2.format(datum) + " 12:30 PM");
 							break;
 						case "13 - 14 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 13:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 13:30");
 							break;
 						case "14 - 15 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 14:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 14:30");
 							break;
 						case "15 - 16 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 15:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 15:30");
 							break;
 						case "16 - 17 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 16:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 16:30");
 							break;
 						case "17 - 18 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 17:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 17:30");
 							break;
 						case "18 - 19 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 18:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 18:30");
 							break;
 						case "19 - 20 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 19:30:00.0");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 19:30");
 							break;
 						case "Telefon":
 							if (uhrzeit[0].equals("Samstag,")) {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55");
 							} else {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55");
 							}
 							telefon = true;
 							break;
 						case "Email":
 							if (uhrzeit[0].equals("Samstag,")) {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55");
 							} else {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55");
 							}
 							email = true;
 							break;
 						case "Intensiv":
 							if (uhrzeit[0].equals("Samstag,")) {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 15:55");
 							} else {
-								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55:00.0");
+								timestamp = sdf3.parse(sdf2.format(datum) + " 19:55");
 							}
 							intensiv = true;
 							break;
@@ -343,7 +344,8 @@ public class Benutzungsimporter {
 							timestamp = sdf3.parse(sdf2.format(datum) + " 11:30:00.0");
 							break;
 						case "12 - 13 Uhr":
-							timestamp = sdf3.parse(sdf2.format(datum) + " 12:30:00.0");
+							SimpleDateFormat sdf4 = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+							timestamp = sdf4.parse(sdf2.format(datum) + " 12:30:00.0 PM");
 							break;
 						case "13 - 14 Uhr":
 							timestamp = sdf3.parse(sdf2.format(datum) + " 13:30:00.0");

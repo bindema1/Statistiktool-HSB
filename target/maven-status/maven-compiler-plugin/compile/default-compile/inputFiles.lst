@@ -13,6 +13,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\view\Tagesübersi
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBenutzungsstatistikBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Kapazität.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\view\TagesübersichtBenutzungViewBB.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\datenimport\Benutzungsimporter.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\view\LoginPage.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\ExterneGruppeDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBelegungNormalBean.java
@@ -28,6 +29,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Gruppenräu
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportWintikurierMonatBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBelegungKomplettBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Arbeitsplätze.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\datenimport\DatenbankAufsetzen.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\WintikurierDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Belegung.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\view\PasswortView.java
