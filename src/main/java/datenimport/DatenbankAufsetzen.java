@@ -18,6 +18,7 @@ public class DatenbankAufsetzen {
 	public DatenbankAufsetzen() {
 //		userUndKapazitätAufsetzen();
 //		new BelegungsImporter();
+//		new Benutzungsimporter();
 	}
 
 	/**
@@ -28,7 +29,7 @@ public class DatenbankAufsetzen {
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = null;
 		try {
-			date = sdf2.parse("01.01.2015");
+			date = sdf2.parse("01.01.2019");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

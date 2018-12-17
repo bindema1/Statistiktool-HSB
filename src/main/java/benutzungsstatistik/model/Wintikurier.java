@@ -148,4 +148,12 @@ public class Wintikurier implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Wintikurier [wintikurier_ID=" + wintikurier_ID + ", anzahl_Gesundheit=" + anzahl_Gesundheit
+				+ ", anzahl_Technik=" + anzahl_Technik + ", anzahl_Wirtschaft=" + anzahl_Wirtschaft
+				+ ", anzahl_Linguistik=" + anzahl_Linguistik + "]";
+	}
+	
+
 }
