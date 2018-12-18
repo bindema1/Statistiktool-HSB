@@ -16,9 +16,12 @@ import belegung.model.StockwerkEnum;
 public class DatenbankAufsetzen {
 
 	public DatenbankAufsetzen() {
-//		userUndKapazitätAufsetzen();
-//		new BelegungsImporter();
-//		new Benutzungsimporter();
+		AngestellterDatenbank angestellterDB = new AngestellterDatenbank();
+		if (angestellterDB.selectAllAngestellte().size() == 0) {
+			userUndKapazitätAufsetzen();
+			new BelegungsImporter();
+			new Benutzungsimporter();
+		}
 	}
 
 	/**
