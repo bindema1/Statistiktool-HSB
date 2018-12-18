@@ -337,7 +337,7 @@ public class ScheduledExecutorEmailService {
 
 						// Wenn es einen Null-Wert hat, sende eine Mail
 						if (nullWert == true) {
-							sendeMailBelegung(nullWerteString, belegung.getStandort());
+							sendeMailBelegung(uhrzeitEnum, nullWerteString, belegung.getStandort());
 						}
 					}
 				}
@@ -346,7 +346,7 @@ public class ScheduledExecutorEmailService {
 
 	}
 
-	private static void sendeMailBelegung(String nullWerteString, StandortEnum standortEnum) {
+	private static void sendeMailBelegung(UhrzeitEnum uhrzeitEnum, String nullWerteString, StandortEnum standortEnum) {
 		List<String> to = new ArrayList<>();
 		if (standortEnum == StandortEnum.WÄDENSWIL) {
 //			to.add("waedenswil.hsb@zhaw.ch");
@@ -357,7 +357,28 @@ public class ScheduledExecutorEmailService {
 
 		// Nachricht des Textes
 		String subject = "Belegung nicht ausgefüllt";
-		String text = "Die Belegung wurde noch nicht ausgefüllt " + nullWerteString;
+		String uhrzeit = null;
+		switch (uhrzeitEnum) {
+		case NEUN:
+			uhrzeit = "9";
+			break;
+		case ELF:
+			uhrzeit = "11";
+			break;
+		case DREIZEHN:
+			uhrzeit = "13";
+			break;
+		case FÜNFZEHN:
+			uhrzeit = "15";
+			break;
+		case SIEBZEHN:
+			uhrzeit = "17";
+			break;
+		case NEUNZEHN:
+			uhrzeit = "19";
+			break;
+		}
+		String text = "Die Belegung wurde noch nicht ausgefüllt um "+uhrzeit +" Uhr" + nullWerteString;
 
 		// Mail wird versendet
 		sendEmail(to, subject, text);
