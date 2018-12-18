@@ -60,7 +60,7 @@ public class Benutzungsimporter {
 					}
 
 					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-					SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+					SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Date timestamp = null;
 					boolean email = false;
 					boolean telefon = false;
@@ -81,8 +81,8 @@ public class Benutzungsimporter {
 							timestamp = sdf3.parse(sdf2.format(datum) + " 11:30");
 							break;
 						case "12 - 13 Uhr":
-							SimpleDateFormat sdf4 = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-							timestamp = sdf4.parse(sdf2.format(datum) + " 12:30 PM");
+//							SimpleDateFormat sdf4 = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 12:30");
 							break;
 						case "13 - 14 Uhr":
 							timestamp = sdf3.parse(sdf2.format(datum) + " 13:30");
@@ -326,7 +326,7 @@ public class Benutzungsimporter {
 					}
 
 					SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
-					SimpleDateFormat sdf3 = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+					SimpleDateFormat sdf3 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 					Date timestamp = null;
 
 					try {
@@ -344,8 +344,8 @@ public class Benutzungsimporter {
 							timestamp = sdf3.parse(sdf2.format(datum) + " 11:30");
 							break;
 						case "12 - 13 Uhr":
-							SimpleDateFormat sdf4 = new SimpleDateFormat("dd.MM.yyyy hh:mm a");
-							timestamp = sdf4.parse(sdf2.format(datum) + " 12:30 PM");
+//							SimpleDateFormat sdf4 = new SimpleDateFormat("dd.MM.yyyy hh:mm a");
+							timestamp = sdf3.parse(sdf2.format(datum) + " 12:30");
 							break;
 						case "13 - 14 Uhr":
 							timestamp = sdf3.parse(sdf2.format(datum) + " 13:30");

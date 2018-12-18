@@ -47,7 +47,7 @@ public class Belegung implements Serializable {
 	
 	//Eine Belegung hat 1-mehrer Stockwerk
 	@ManyToMany(cascade = CascadeType.ALL, targetEntity=Stockwerk.class)
-	@JoinTable(name = "Belegung_Stockwerk", joinColumns = @JoinColumn(name = "belegungs_ID"), inverseJoinColumns = @JoinColumn(name = "stockwerk_ID"))
+	@JoinTable(name = "belegung_stockwerk", joinColumns = @JoinColumn(name = "belegungs_ID"), inverseJoinColumns = @JoinColumn(name = "stockwerk_ID"))
 	private List<Stockwerk> stockwerkListe = new ArrayList<>();
 	
 	// Für Hibernate
