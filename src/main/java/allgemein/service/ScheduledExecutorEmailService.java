@@ -137,8 +137,7 @@ public class ScheduledExecutorEmailService {
 
 	private static void sendeEmailKassenbeleg() {
 		List<String> to = new ArrayList<>();
-//		to.add("ausleihe.winterthur.hsb@zhaw.ch");
-		to.add("m.bindemann@yahoo.de");
+		to.add("ausleihe.winterthur.hsb@zhaw.ch");
 
 		// Nachricht des Textes
 		String subject = "Kassenbeleg ausfüllen";
@@ -359,11 +358,10 @@ public class ScheduledExecutorEmailService {
 	private static void sendeMailBelegung(UhrzeitEnum uhrzeitEnum, String nullWerteString, StandortEnum standortEnum) {
 		List<String> to = new ArrayList<>();
 		if (standortEnum == StandortEnum.WÄDENSWIL) {
-//			to.add("waedenswil.hsb@zhaw.ch");
+			to.add("waedenswil.hsb@zhaw.ch");
 		} else {
-//			to.add("ausleihe.winterthur.hsb@zhaw.ch");
+			to.add("ausleihe.winterthur.hsb@zhaw.ch");
 		}
-		to.add("m.bindemann@yahoo.de");
 
 		// Nachricht des Textes
 		String subject = "Belegung nicht ausgefüllt";
