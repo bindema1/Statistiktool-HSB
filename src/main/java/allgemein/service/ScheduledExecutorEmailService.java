@@ -48,6 +48,7 @@ public class ScheduledExecutorEmailService {
 	 * Sendet eine Email, wenn eine Belegung nach einer Stunde immer noch leer ist
 	 * Sendet eine Mail, wenn am Ende des Tages der Kassenbeleg auf true ist
 	 */
+	@SuppressWarnings("deprecation")
 	public static void sendeMailWegenLeererBelegungOderWegenKassenbeleg() {
 
 		// Der Task soll am Anfang mit initalDelay genau Nachts um 00.00 starten
@@ -68,13 +69,18 @@ public class ScheduledExecutorEmailService {
 			// Task welcher gemacht werden soll
 			System.out.println("Running repetitive task at: " + new java.util.Date());
 
+			int minutes = new Date().getMinutes();
 			// Sendet eine Email 1 Stunde nach einer leeren Belegung
-			pruefeLeereBelegung();
+			if (minutes >= 55) {
+				pruefeLeereBelegung();
+			}
 
 			// Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
-			pruefeKassenbeleg();
+			if (minutes >= 28 && minutes <= 32) {
+				pruefeKassenbeleg();
+			}
 
-		}, 0, 30, TimeUnit.MINUTES);
+		}, 1, 5, TimeUnit.MINUTES);
 //		}, initalDelay, 30, TimeUnit.MINUTES);
 	}
 
@@ -221,8 +227,7 @@ public class ScheduledExecutorEmailService {
 						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 
 							// Der String der später in der Mail versendet wird
-							String stockWerkNullWert = ". Auf Stockwerk " + stockwerk.getName().toString()
-									+ " gibt es leere Bereiche:";
+							String stockWerkNullWert = "";
 
 							// Prüft ob ein Eintrag zu dieser Uhrzeit überhaupt vorhanden ist
 							boolean eintragInDBVorhanden;
@@ -332,6 +337,11 @@ public class ScheduledExecutorEmailService {
 								}
 							}
 
+							if (!stockWerkNullWert.equals("")) {
+								// Der String der später in der Mail versendet wird
+								stockWerkNullWert = ". Auf Stockwerk " + stockwerk.getName().toString()
+										+ " gibt es leere Bereiche:" + stockWerkNullWert;
+							}
 							nullWerteString += stockWerkNullWert;
 						}
 
@@ -378,7 +388,7 @@ public class ScheduledExecutorEmailService {
 			uhrzeit = "19";
 			break;
 		}
-		String text = "Die Belegung wurde noch nicht ausgefüllt um "+uhrzeit +" Uhr" + nullWerteString;
+		String text = "Die Belegung wurde noch nicht ausgefüllt um " + uhrzeit + " Uhr" + nullWerteString;
 
 		// Mail wird versendet
 		sendEmail(to, subject, text);

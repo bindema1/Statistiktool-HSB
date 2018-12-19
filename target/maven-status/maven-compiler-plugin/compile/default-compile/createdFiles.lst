@@ -64,6 +64,7 @@ allgemein\service\SpringEmailService.class
 benutzungsstatistik\view\TagesübersichtBenutzungViewLL$1.class
 benutzungsstatistik\view\KorrekturViewWaedi$1.class
 allgemein\model\Angestellter.class
+allgemein\service\ScheduledExecutorEmailService$1.class
 benutzungsstatistik\db\WintikurierDatenbank.class
 belegung\view\TagesübersichtBelegungViewWaedi.class
 benutzungsstatistik\view\ExterneGruppeViewBB.class
