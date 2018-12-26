@@ -21,7 +21,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import allgemein.db.AngestellterDatenbank;
 import allgemein.model.Angestellter;
-import allgemein.model.MD5;
 import allgemein.view.StartseiteView;
 
 /**
@@ -138,9 +137,8 @@ public class PasswortView extends Composite implements View {
 					//Wenn beide Passwörter den selben Wert haben
 					if (passwort1.getValue().equals(passwort2.getValue())) {
 						String passwort = passwort1.getValue();
-						MD5 md5 = new MD5();
 						//Verschlüsselt das Passwort mit MD5 in der Datenbank
-						angestellter.setPasswort(md5.convertMD5(passwort));
+						angestellter.setPasswort(passwort);
 						angestellter.setPasswort_datum(new Date());
 						//Updatet den Angestellten in der Datenbank
 						angestellterDB.updateAngestellter(angestellter);

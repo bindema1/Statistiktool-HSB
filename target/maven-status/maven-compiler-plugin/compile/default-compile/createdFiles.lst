@@ -94,7 +94,6 @@ allgemein\view\StartseiteView$1.class
 belegung\model\Kapazität.class
 belegung\model\Stockwerk.class
 benutzungsstatistik\model\Emailkontakt.class
-allgemein\model\MD5.class
 datenimport\TestDaten.class
 belegung\model\SektorB.class
 benutzungsstatistik\view\KorrekturViewWaedi.class

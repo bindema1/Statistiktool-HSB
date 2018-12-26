@@ -44,6 +44,11 @@ public class ScheduledExecutorEmailService {
 	private static BelegungsDatenbank belegungsDB = new BelegungsDatenbank();
 	private static BenutzungsstatistikDatenbank benutzungsDB = new BenutzungsstatistikDatenbank();
 
+	
+	public ScheduledExecutorEmailService() {
+		sendeMailWegenLeererBelegungOderWegenKassenbeleg();
+	}
+	
 	/**
 	 * Sendet eine Email, wenn eine Belegung nach einer Stunde immer noch leer ist
 	 * Sendet eine Mail, wenn am Ende des Tages der Kassenbeleg auf true ist
@@ -80,7 +85,7 @@ public class ScheduledExecutorEmailService {
 				pruefeKassenbeleg();
 			}
 
-		}, 1, 5, TimeUnit.MINUTES);
+		}, 3, 5, TimeUnit.MINUTES);
 //		}, initalDelay, 30, TimeUnit.MINUTES);
 	}
 
@@ -137,7 +142,8 @@ public class ScheduledExecutorEmailService {
 
 	private static void sendeEmailKassenbeleg() {
 		List<String> to = new ArrayList<>();
-		to.add("ausleihe.winterthur.hsb@zhaw.ch");
+//		to.add("ausleihe.winterthur.hsb@zhaw.ch");
+		to.add("m.bindemann@yahoo.de");
 
 		// Nachricht des Textes
 		String subject = "Kassenbeleg ausfüllen";
@@ -151,7 +157,7 @@ public class ScheduledExecutorEmailService {
 	private static void pruefeLeereBelegung() {
 
 		Date date = new Date();
-
+		
 		// Nicht Sonntags
 		if (!LocalDate.now().getDayOfWeek().toString().equals("SUNDAY")) {
 
@@ -358,10 +364,11 @@ public class ScheduledExecutorEmailService {
 	private static void sendeMailBelegung(UhrzeitEnum uhrzeitEnum, String nullWerteString, StandortEnum standortEnum) {
 		List<String> to = new ArrayList<>();
 		if (standortEnum == StandortEnum.WÄDENSWIL) {
-			to.add("waedenswil.hsb@zhaw.ch");
+//			to.add("waedenswil.hsb@zhaw.ch");
 		} else {
-			to.add("ausleihe.winterthur.hsb@zhaw.ch");
+//			to.add("ausleihe.winterthur.hsb@zhaw.ch");
 		}
+		to.add("m.bindemann@yahoo.de");
 
 		// Nachricht des Textes
 		String subject = "Belegung nicht ausgefüllt";
