@@ -37,6 +37,7 @@ benutzungsstatistik\bean\ExterneGruppeBean.class
 benutzungsstatistik\view\KorrekturViewBB.class
 datenimport\Benutzungsimporter.class
 allgemein\view\MainView$MyServlet.class
+allgemein\model\Email.class
 allgemein\view\MainView$MyServlet$1.class
 benutzungsstatistik\view\BenutzungsstatistikViewLL$1.class
 allgemein\db\AngestellterDatenbank.class
@@ -79,6 +80,7 @@ benutzungsstatistik\view\ExterneGruppeViewBB$1.class
 belegung\model\Gruppenräume.class
 benutzungsstatistik\db\IntensivfrageDatenbank.class
 belegung\bean\TagesübersichtBelegungBean.class
+allgemein\db\EmailDatenbank.class
 belegung\view\TagesübersichtBelegungViewWinti.class
 benutzungsstatistik\db\TelefonkontaktDatenbank.class
 administrator\bean\ExportBelegungKomplettBean.class

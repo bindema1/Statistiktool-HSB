@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import allgemein.db.EmailDatenbank;
+import allgemein.model.Email;
 import allgemein.model.StandortEnum;
 import belegung.db.BelegungsDatenbank;
 import belegung.model.Arbeitsplätze;
@@ -43,12 +45,12 @@ public class ScheduledExecutorEmailService {
 	private static SpringEmailService springEmailService;
 	private static BelegungsDatenbank belegungsDB = new BelegungsDatenbank();
 	private static BenutzungsstatistikDatenbank benutzungsDB = new BenutzungsstatistikDatenbank();
+	private static EmailDatenbank emailDB = new EmailDatenbank();
 
-	
 	public ScheduledExecutorEmailService() {
 		sendeMailWegenLeererBelegungOderWegenKassenbeleg();
 	}
-	
+
 	/**
 	 * Sendet eine Email, wenn eine Belegung nach einer Stunde immer noch leer ist
 	 * Sendet eine Mail, wenn am Ende des Tages der Kassenbeleg auf true ist
@@ -74,15 +76,26 @@ public class ScheduledExecutorEmailService {
 			// Task welcher gemacht werden soll
 			System.out.println("Running repetitive task at: " + new java.util.Date());
 
-			int minutes = new Date().getMinutes();
-			// Sendet eine Email 1 Stunde nach einer leeren Belegung
-			if (minutes >= 55) {
-				pruefeLeereBelegung();
-			}
+			// Es wird geschaut wann zuletzt eine Mail versendet wurde
+			long zuletztVersendeteMailZeit = emailDB.getEmail().getVersendetTimestamp().getTime();
+			// 300000 Millisekunden sind 5 Minuten
+			long jetzigeZeitMinusFuenfMinuten = new Date().getTime() - 300000;
 
-			// Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
-			if (minutes >= 28 && minutes <= 32) {
-				pruefeKassenbeleg();
+			// Nur falls die letzte Email länger her ist als 5 Minuten, soll wieder geprüft
+			// werden, dies verhindert, dass mehrere Emails hintereinander eintreffen in
+			// sekunden abständen
+			if (jetzigeZeitMinusFuenfMinuten >= zuletztVersendeteMailZeit) {
+
+				int minutes = new Date().getMinutes();
+				// Sendet eine Email 1 Stunde nach einer leeren Belegung
+				if (minutes >= 55) {
+					pruefeLeereBelegung();
+				}
+
+				// Email wenn Kassenbeleg == true am 19.30 Mo-Fr und Sa 15.30
+				if (minutes >= 28 && minutes <= 32) {
+					pruefeKassenbeleg();
+				}
 			}
 
 		}, 3, 5, TimeUnit.MINUTES);
@@ -157,7 +170,7 @@ public class ScheduledExecutorEmailService {
 	private static void pruefeLeereBelegung() {
 
 		Date date = new Date();
-		
+
 		// Nicht Sonntags
 		if (!LocalDate.now().getDayOfWeek().toString().equals("SUNDAY")) {
 
@@ -409,6 +422,12 @@ public class ScheduledExecutorEmailService {
 		try {
 			String from = "statistiktoolhsb@gmail.com";
 
+			// Aktualisiert den Eintrag in der Datenbank
+			Email email = emailDB.getEmail();
+			email.setVersendetTimestamp(new Date());
+			emailDB.updateEmail(email);
+
+			// Sendet die Email
 			springEmailService.send(from, to, subject, text);
 
 		} catch (Exception e) {

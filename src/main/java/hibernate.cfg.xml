@@ -32,6 +32,7 @@
 
 		<!-- Nur Unidirectional Associations -->
 		<mapping class="allgemein.model.Angestellter"></mapping>
+		<mapping class="allgemein.model.Email"></mapping>
 		<mapping class="benutzungsstatistik.model.Benutzungsstatistik"></mapping>
 		<mapping class="benutzungsstatistik.model.Benutzerkontakt"></mapping>
 		<mapping class="benutzungsstatistik.model.Emailkontakt"></mapping>

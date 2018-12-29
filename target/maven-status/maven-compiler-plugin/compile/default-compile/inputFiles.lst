@@ -1,4 +1,5 @@
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\view\MainView.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\model\Email.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\view\StartseiteView.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\SektorB.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\UhrzeitEnum.java
@@ -30,6 +31,7 @@ C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\Export
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\bean\ExportBelegungKomplettBean.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Arbeitsplätze.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\datenimport\DatenbankAufsetzen.java
+C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\allgemein\db\EmailDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\benutzungsstatistik\db\WintikurierDatenbank.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\belegung\model\Belegung.java
 C:\Users\mbind\git\Statistiktool-HSBTest\src\main\java\administrator\view\PasswortView.java
