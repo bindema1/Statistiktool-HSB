@@ -99,7 +99,7 @@ public class ScheduledExecutorEmailService {
 			}
 
 		}, 3, 5, TimeUnit.MINUTES);
-//		}, initalDelay, 30, TimeUnit.MINUTES);
+//		}, initalDelay, 30, TimeUnit.MINUTES); //Delay wird nicht verwendet
 	}
 
 	@SuppressWarnings("deprecation")
@@ -155,8 +155,7 @@ public class ScheduledExecutorEmailService {
 
 	private static void sendeEmailKassenbeleg() {
 		List<String> to = new ArrayList<>();
-//		to.add("ausleihe.winterthur.hsb@zhaw.ch");
-		to.add("m.bindemann@yahoo.de");
+		to.add("ausleihe.winterthur.hsb@zhaw.ch");
 
 		// Nachricht des Textes
 		String subject = "Kassenbeleg ausfüllen";
@@ -227,10 +226,11 @@ public class ScheduledExecutorEmailService {
 				// Geht durch alle Belegungen
 				for (Belegung belegung : belegungsListe) {
 
-					// Wädenswil hat nur um 11 und im 15 Uhr eine Zählung
+					// Wädenswil hat nur um 15 Uhr eine Zählung
 					if (belegung.getStandort() == StandortEnum.WÄDENSWIL) {
 						if (uhrzeitEnum == UhrzeitEnum.NEUN || uhrzeitEnum == UhrzeitEnum.DREIZEHN
-								|| uhrzeitEnum == UhrzeitEnum.SIEBZEHN || uhrzeitEnum == UhrzeitEnum.NEUNZEHN)
+								|| uhrzeitEnum == UhrzeitEnum.ELF || uhrzeitEnum == UhrzeitEnum.SIEBZEHN
+								|| uhrzeitEnum == UhrzeitEnum.NEUNZEHN)
 							uhrzeitEnum = null;
 					}
 
@@ -377,11 +377,10 @@ public class ScheduledExecutorEmailService {
 	private static void sendeMailBelegung(UhrzeitEnum uhrzeitEnum, String nullWerteString, StandortEnum standortEnum) {
 		List<String> to = new ArrayList<>();
 		if (standortEnum == StandortEnum.WÄDENSWIL) {
-//			to.add("waedenswil.hsb@zhaw.ch");
+			to.add("waedenswil.hsb@zhaw.ch");
 		} else {
-//			to.add("ausleihe.winterthur.hsb@zhaw.ch");
+			to.add("ausleihe.winterthur.hsb@zhaw.ch");
 		}
-		to.add("m.bindemann@yahoo.de");
 
 		// Nachricht des Textes
 		String subject = "Belegung nicht ausgefüllt";
