@@ -107,6 +107,7 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 	/**
 	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
 	 */
+	@SuppressWarnings("deprecation")
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -145,8 +146,11 @@ public class TagesübersichtBelegungViewWinti extends Composite implements View 
 		datefield.addValueChangeListener(event -> {
 			Notification.show("Datum geändert", Type.TRAY_NOTIFICATION);
 
+			System.out.println(event.getValue());
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
+			//Wegen Zeitverschiebung, sodass es nicht zu fehlern kommt, +8St. dem Datum anfügen
+			date.setHours(8);
 
 			// Sucht die Belegung für ein gewähltes Datum und für ein bestimmten Standort
 			if (stockwerkEnum == StockwerkEnum.LL) {

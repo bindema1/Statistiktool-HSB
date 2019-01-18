@@ -1,10 +1,6 @@
 package allgemein.service;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,15 +55,15 @@ public class ScheduledExecutorEmailService {
 	public static void sendeMailWegenLeererBelegungOderWegenKassenbeleg() {
 
 		// Der Task soll am Anfang mit initalDelay genau Nachts um 00.00 starten
-		LocalDateTime localNow = LocalDateTime.now();
-		ZoneId currentZone = ZoneId.of("Europe/Berlin");
-		ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
-		ZonedDateTime zonedNext5;
-		zonedNext5 = zonedNow.withHour(0).withMinute(0).withSecond(0);
-		if (zonedNow.compareTo(zonedNext5) > 0)
-			zonedNext5 = zonedNext5.plusDays(1);
-		Duration duration = Duration.between(zonedNow, zonedNext5);
-		long initalDelay = duration.getSeconds();
+//		LocalDateTime localNow = LocalDateTime.now();
+//		ZoneId currentZone = ZoneId.of("Europe/Berlin");
+//		ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
+//		ZonedDateTime zonedNext5;
+//		zonedNext5 = zonedNow.withHour(0).withMinute(0).withSecond(0);
+//		if (zonedNow.compareTo(zonedNext5) > 0)
+//			zonedNext5 = zonedNext5.plusDays(1);
+//		Duration duration = Duration.between(zonedNow, zonedNext5);
+//		long initalDelay = duration.getSeconds();
 
 		// Task für die Belegung und Kassenbeleg
 		ScheduledExecutorService execService = Executors.newScheduledThreadPool(1);

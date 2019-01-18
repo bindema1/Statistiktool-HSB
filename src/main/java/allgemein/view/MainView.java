@@ -78,17 +78,17 @@ public class MainView extends UI {
 		});
 
 		router("");
-		
+
+		// Ein Task, welcher im Hintergrund läuft und leere Belegungen sowie den
+		// Kassenbeleg prüft
+		new ScheduledExecutorEmailService();
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = MainView.class, productionMode = true)
 	public static class MyServlet extends VaadinServlet {
 		private static final long serialVersionUID = 5334673737128772893L;
-		// Ein Task, welcher im Hintergrund läuft und leere Belegungen sowie den
-		// Kassenbeleg prüft
-		private ScheduledExecutorEmailService s = new ScheduledExecutorEmailService();
-				
+
 		@Override
 		protected void servletInitialized() throws ServletException {
 			super.servletInitialized();

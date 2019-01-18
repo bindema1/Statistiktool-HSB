@@ -120,6 +120,7 @@ public class KorrekturViewBB extends Composite implements View {
 	/**
 	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
 	 */
+	@SuppressWarnings("deprecation")
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -361,6 +362,8 @@ public class KorrekturViewBB extends Composite implements View {
 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
+			//Wegen Zeitverschiebung, sodass es nicht zu fehlern kommt, +8St. dem Datum anfügen
+			date.setHours(8);
 
 			// Sucht die Benutzungsstatik für ein Datum
 			benutzungsstatistik = benutzungsstatistikDB.selectBenutzungsstatistikForDateAndStandort(date,

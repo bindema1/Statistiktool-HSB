@@ -112,6 +112,7 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 	/**
 	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
 	 */
+	@SuppressWarnings("deprecation")
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -185,32 +186,31 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 		data = null;
 		NativeSelect<String> uhrzeitListSelect;
 		if (korrektur == true) {
-			data = Arrays.asList(new String[] { "Bitte wählen ↓", "11 Uhr", "15 Uhr" });
+			data = Arrays.asList(new String[] { "Bitte wählen ↓", "15 Uhr" });
 			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 			uhrzeitListSelect.setEmptySelectionAllowed(false);
 			if (ausgewählteUhrzeit != null) {
-				if (ausgewählteUhrzeit == UhrzeitEnum.ELF) {
+				if (ausgewählteUhrzeit == UhrzeitEnum.FÜNFZEHN) {
 					uhrzeitListSelect.setSelectedItem(data.get(1));
-				} else if (ausgewählteUhrzeit == UhrzeitEnum.FÜNFZEHN) {
-					uhrzeitListSelect.setSelectedItem(data.get(2));
 				}
 			} else {
 				uhrzeitListSelect.setSelectedItem(data.get(0));
 				setButtonEnabled(false);
 			}
 		} else {
-			data = Arrays.asList(new String[] { "11 Uhr", "15 Uhr" });
+			data = Arrays.asList(new String[] { "15 Uhr" });
+//			data = Arrays.asList(new String[] { "11 Uhr", "15 Uhr" });
 			uhrzeitListSelect = new NativeSelect<>("Uhrzeit:", data);
 			uhrzeitListSelect.setEmptySelectionAllowed(false);
 
-			int time = Integer.parseInt(new SimpleDateFormat("HH").format(new Date()));
-			if (time <= 13) {
+//			int time = Integer.parseInt(new SimpleDateFormat("HH").format(new Date()));
+//			if (time >= 13) {
+//				uhrzeitListSelect.setSelectedItem(data.get(0));
+//				ausgewählteUhrzeit = UhrzeitEnum.ELF;
+//			} else if (time >= 13) {
 				uhrzeitListSelect.setSelectedItem(data.get(0));
-				ausgewählteUhrzeit = UhrzeitEnum.ELF;
-			} else if (time >= 13) {
-				uhrzeitListSelect.setSelectedItem(data.get(1));
 				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
-			}
+//			}
 		}
 
 		uhrzeitListSelect.setWidth(100.0f, Unit.PERCENTAGE);
@@ -228,9 +228,9 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 
 			// Setzt die ausgewählte Uhrzeit
 			switch (event.getValue()) {
-			case "11 Uhr":
-				ausgewählteUhrzeit = UhrzeitEnum.ELF;
-				break;
+//			case "11 Uhr":
+//				ausgewählteUhrzeit = UhrzeitEnum.ELF;
+//				break;
 			case "15 Uhr":
 				ausgewählteUhrzeit = UhrzeitEnum.FÜNFZEHN;
 				break;
@@ -259,6 +259,8 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
+			//Wegen Zeitverschiebung, sodass es nicht zu fehlern kommt, +8St. dem Datum anfügen
+			date.setHours(8);
 
 			// Sucht die Belegung für das ausgewählte Datum und für den jeweiligen Standort
 			if (stockwerkEnum == StockwerkEnum.WÄDI) {

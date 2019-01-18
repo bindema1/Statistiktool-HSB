@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -197,9 +198,10 @@ public class ExportViewWaedi extends Composite implements View {
 		lBelegung.addStyleName(ValoTheme.LABEL_LARGE + " " + ValoTheme.LABEL_BOLD);
 
 		// Checkbox um die Zeit zu wählen
-		List<String> dataUhrzeit = Arrays.asList("11 Uhr", "15 Uhr");
+//		List<String> dataUhrzeit = Arrays.asList("11 Uhr", "15 Uhr");
+		List<String> dataUhrzeit = Arrays.asList("15 Uhr");
 		checkUhrzeit = new CheckBoxGroup<>("Uhrzeit", dataUhrzeit);
-		checkUhrzeit.select(dataUhrzeit.get(1));
+		checkUhrzeit.select(dataUhrzeit.get(0));
 		checkUhrzeit.addValueChangeListener(event -> {
 			Notification.show("Value changed:", String.valueOf(event.getValue()), Type.TRAY_NOTIFICATION);
 		});
@@ -274,7 +276,7 @@ public class ExportViewWaedi extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für Standort Wädenswil
 				Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
@@ -368,7 +370,7 @@ public class ExportViewWaedi extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such den Internen Kurier für das ausgewählte Datum für Wädenswil
 				Internerkurier internerkurier = benutzungsstatistikDB
@@ -397,7 +399,7 @@ public class ExportViewWaedi extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
-			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 			// Such den Internen Kurier für das ausgewählte Datum für Wädenswil
 			Internerkurier internerkurier = benutzungsstatistikDB
@@ -473,7 +475,7 @@ public class ExportViewWaedi extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für Wädenswil
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);
@@ -534,7 +536,7 @@ public class ExportViewWaedi extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für Wädenswil
 				Belegung belegung = belegungDB.selectBelegungForDateAndStandort(datum, StandortEnum.WÄDENSWIL);

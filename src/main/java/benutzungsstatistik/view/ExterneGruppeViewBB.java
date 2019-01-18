@@ -104,7 +104,7 @@ public class ExterneGruppeViewBB extends Composite implements View {
 	/**
 	 * Holt die akutelle Benutzungsstatistik und setzt die Uhrzeit
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -135,6 +135,9 @@ public class ExterneGruppeViewBB extends Composite implements View {
 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			Date date = Date.from(zdt.toInstant());
+			//Wegen Zeitverschiebung, sodass es nicht zu fehlern kommt, +8St. dem Datum anfügen
+			date.setHours(8);
+			
 			// Holt die Statistk für ein Datum
 			benutzungsstatistik = new BenutzungsstatistikDatenbank().selectBenutzungsstatistikForDateAndStandort(date,
 					StandortEnum.WINTERTHUR_BB);

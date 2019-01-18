@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -322,7 +323,7 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
-			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 			// Such die Benutzungsstatistik für das ausgewählte Datum
 			Benutzungsstatistik benutzungsstatistik = benutzungsstatistikDB
@@ -350,7 +351,7 @@ public class ExportViewWinti extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
 				// Bibliothek
@@ -427,7 +428,7 @@ public class ExportViewWinti extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
 				// Lernlandschaft
@@ -509,7 +510,7 @@ public class ExportViewWinti extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such den Wintikurier für das ausgewählte Datum für Winterthur Bibliothek
 				Wintikurier wintikurier = benutzungsstatistikDB
@@ -541,7 +542,7 @@ public class ExportViewWinti extends Composite implements View {
 		// Geht durch alle Tage vom Startdatum bis Enddatum
 		for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
 
-			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+			Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 			// Such den Wintikurier für das ausgewählte Datum für Winterthur Bibliothek
 			Wintikurier wintikurier = benutzungsstatistikDB
@@ -622,7 +623,7 @@ public class ExportViewWinti extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
 				// Bibliothek & Lernlandschaft
@@ -790,7 +791,7 @@ public class ExportViewWinti extends Composite implements View {
 			// Wenn der Wochentag nicht Sonntag ist, Sonntags arbeitet niemand
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 
-				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+				Date datum = Date.from((date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().plus(8, ChronoUnit.HOURS)));
 
 				// Such die Benutzungsstatistik für das ausgewählte Datum für die Winterthur
 				// Bibliothek & Lernlandschaft

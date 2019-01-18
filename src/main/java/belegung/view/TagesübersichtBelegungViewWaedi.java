@@ -94,6 +94,7 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 	/**
 	 * Initialisieren der GUI Komponente. Fügt alle Komponenten dem Layout hinzu
 	 */
+	@SuppressWarnings("deprecation")
 	private void initComponents() {
 
 		bZurueck = new Button();
@@ -134,6 +135,8 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 
 			ZonedDateTime zdt = event.getValue().atStartOfDay().atZone(ZoneId.systemDefault());
 			date = Date.from(zdt.toInstant());
+			//Wegen Zeitverschiebung, sodass es nicht zu fehlern kommt, +8St. dem Datum anfügen
+			date.setHours(8);
 
 			// Sucht die Belegung für ein gewähltes Datum und für ein bestimmten Standort
 			if (stockwerkEnum == StockwerkEnum.WÄDI) {
@@ -187,7 +190,7 @@ public class TagesübersichtBelegungViewWaedi extends Composite implements View 
 
 		// Fügt alle Uhrzeiten einer Liste hinzu
 		List<UhrzeitEnum> enumListe = new ArrayList<>();
-		enumListe.add(UhrzeitEnum.ELF);
+//		enumListe.add(UhrzeitEnum.ELF);
 		enumListe.add(UhrzeitEnum.FÜNFZEHN);
 
 		// Sucht das richtige Stockwerk
