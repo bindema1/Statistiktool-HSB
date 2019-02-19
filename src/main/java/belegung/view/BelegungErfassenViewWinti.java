@@ -1103,7 +1103,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				if (erfassungsSchritt == 0) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxArbeitsplätze()) {
 								Notification.show(
 										"Arbeitsplätze darf nicht mehr sein als " + kapazität.getMaxArbeitsplätze(),
@@ -1115,7 +1115,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				} else {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxGruppenräumePersonen()) {
 								Notification.show("Personen in Gruppenräume dürfen nicht mehr sein als "
 										+ kapazität.getMaxGruppenräumePersonen(), Type.WARNING_MESSAGE);
@@ -1134,7 +1134,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			} else if (stockwerkEnum == StockwerkEnum.ZG1) {
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
-						Kapazität kapazität = s.getKapazität();
+						Kapazität kapazität = s.getKapzität();
 						if (anzahlPersonen > kapazität.getMaxArbeitsplätze()) {
 							Notification.show(
 									"Arbeitsplätze darf nicht mehr sein als " + kapazität.getMaxArbeitsplätze(),
@@ -1146,7 +1146,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 			} else if (stockwerkEnum == StockwerkEnum.ZG2) {
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
-						Kapazität kapazität = s.getKapazität();
+						Kapazität kapazität = s.getKapzität();
 						if (anzahlPersonen > kapazität.getMaxArbeitsplätze()) {
 							Notification.show(
 									"Arbeitsplätze darf nicht mehr sein als " + kapazität.getMaxArbeitsplätze(),
@@ -1159,7 +1159,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				if (erfassungsSchritt == 1) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxGruppenräumePersonen()) {
 								Notification.show("Personen in Gruppenräume dürfen nicht mehr sein als "
 										+ kapazität.getMaxGruppenräumePersonen(), Type.WARNING_MESSAGE);
@@ -1176,7 +1176,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				} else if (erfassungsSchritt == 2) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxCarrelsPersonen()) {
 								Notification.show("Personen in Carrels dürfen nicht mehr sein als "
 										+ kapazität.getMaxCarrelsPersonen(), Type.WARNING_MESSAGE);
@@ -1192,7 +1192,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				} else if (erfassungsSchritt == 3) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxSektorA()) {
 								Notification.show("SektorA darf nicht mehr sein als " + kapazität.getMaxSektorA(),
 										Type.WARNING_MESSAGE);
@@ -1203,7 +1203,7 @@ public class BelegungErfassenViewWinti extends Composite implements View {
 				} else if (erfassungsSchritt == 4) {
 					for (Stockwerk s : belegung.getStockwerkListe()) {
 						if (s.getName() == stockwerkEnum) {
-							Kapazität kapazität = s.getKapazität();
+							Kapazität kapazität = s.getKapzität();
 							if (anzahlPersonen > kapazität.getMaxSektorB()) {
 								Notification.show("SektorB darf nicht mehr sein als " + kapazität.getMaxSektorB(),
 										Type.WARNING_MESSAGE);

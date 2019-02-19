@@ -43,7 +43,7 @@ public class Stockwerk implements Serializable {
 	private boolean hatCarrels;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Kapazität kapazität;
+	private Kapazität kapzität;
 
 	//Das Stockwerk hat eine Liste von allen Arbeitsplätzen/Sektoren/Räumen
 	@OneToMany(mappedBy = "stockwerk", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -76,7 +76,7 @@ public class Stockwerk implements Serializable {
 		this.hatSektorB = hatSektorB;
 		this.hatGruppenräume = hatGruppenräume;
 		this.hatCarrels = hatCarrels;
-		this.kapazität = kapzität;
+		this.kapzität = kapzität;
 		this.name = name;
 	}
 
@@ -104,8 +104,8 @@ public class Stockwerk implements Serializable {
 		return hatCarrels;
 	}
 
-	public Kapazität getKapazität() {
-		return kapazität;
+	public Kapazität getKapzität() {
+		return kapzität;
 	}
 
 	public List<Arbeitsplätze> getArbeitsplatzListe() {
@@ -232,8 +232,8 @@ public class Stockwerk implements Serializable {
 		this.hatCarrels = hatCarrels;
 	}
 
-	public void setKapazität(Kapazität kapzität) {
-		this.kapazität = kapzität;
+	public void setKapzität(Kapazität kapzität) {
+		this.kapzität = kapzität;
 	}
 
 	@Override
@@ -248,7 +248,7 @@ public class Stockwerk implements Serializable {
 		result = prime * result + (hatGruppenräume ? 1231 : 1237);
 		result = prime * result + (hatSektorA ? 1231 : 1237);
 		result = prime * result + (hatSektorB ? 1231 : 1237);
-		result = prime * result + ((kapazität == null) ? 0 : kapazität.hashCode());
+		result = prime * result + ((kapzität == null) ? 0 : kapzität.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((sektorAListe == null) ? 0 : sektorAListe.hashCode());
 		result = prime * result + ((sektorBListe == null) ? 0 : sektorBListe.hashCode());
@@ -293,10 +293,10 @@ public class Stockwerk implements Serializable {
 			return false;
 		if (hatSektorB != other.hatSektorB)
 			return false;
-		if (kapazität == null) {
-			if (other.kapazität != null)
+		if (kapzität == null) {
+			if (other.kapzität != null)
 				return false;
-		} else if (!kapazität.equals(other.kapazität))
+		} else if (!kapzität.equals(other.kapzität))
 			return false;
 		if (name != other.name)
 			return false;

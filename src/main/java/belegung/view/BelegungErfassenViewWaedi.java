@@ -521,7 +521,7 @@ public class BelegungErfassenViewWaedi extends Composite implements View {
 			if (stockwerkEnum == StockwerkEnum.WÄDI) {
 				for (Stockwerk s : belegung.getStockwerkListe()) {
 					if (s.getName() == stockwerkEnum) {
-						Kapazität kapazität = s.getKapazität();
+						Kapazität kapazität = s.getKapzität();
 						if (anzahlPersonen > kapazität.getMaxArbeitsplätze()) {
 							Notification.show(
 									"Arbeitsplätze darf nicht mehr sein als " + kapazität.getMaxArbeitsplätze(),
