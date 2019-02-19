@@ -193,11 +193,19 @@ public class BelegungsDatenbank {
 		Belegung belegung = null;
 
 		if (belegungenListe.size() == 1) {
+			// Wenn genau eine Belegung gefunden wurde
 			belegung = belegungenListe.get(0);
+		} else if (belegungenListe.size() > 1) {
+			// Falls es mehr als nur eine Belegung für das Datum gibt -> Fehler, darf nicht
+			// passieren
+			System.out.println("WARNING: Mehrere Belegungen für das selbe Datum");
+			for (Belegung b : belegungenListe) {
+				deleteBelegung(b);
+			}
 		}
-
-		// Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
+		
 		if (belegung == null) {
+			// Falls es keine Belegung für das Datum gibt, erstelle eine Belegung
 			belegung = new Belegung(date, standort);
 
 			if (standort == StandortEnum.WINTERTHUR_BB) {
@@ -220,6 +228,44 @@ public class BelegungsDatenbank {
 		}
 
 		return belegung;
+	}
+	
+	/**
+	 * Belegung löschen
+	 * 
+	 * @param belegung
+	 */
+	public void deleteBelegung(Belegung belegung) {
+
+		Session tempSession = null;
+		Transaction tempTransaction = null;
+
+		try {
+			tempSession = sessionFactory.openSession();
+			tempTransaction = tempSession.beginTransaction();
+
+			tempSession.delete(belegung);
+
+			tempTransaction.commit();
+		} catch (final HibernateException ex) {
+
+			ex.printStackTrace();
+
+			if (tempTransaction != null) {
+				try {
+					tempTransaction.rollback();
+				} catch (final HibernateException exRb) {
+				}
+			}
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try {
+				if (tempSession != null) {
+					tempSession.close();
+				}
+			} catch (final Exception exC1) {
+			}
+		}
 	}
 
 }

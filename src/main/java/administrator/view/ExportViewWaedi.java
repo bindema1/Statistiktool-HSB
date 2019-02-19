@@ -484,7 +484,7 @@ public class ExportViewWaedi extends Composite implements View {
 				// Geht durch das Stockwerk
 				for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 					String stockwerkName = "EG";
-					Kapazität kapazität = stockwerk.getKapzität();
+					Kapazität kapazität = stockwerk.getKapazität();
 
 					List<UhrzeitEnum> enumListe = new ArrayList<>();
 					enumListe.add(UhrzeitEnum.ELF);
@@ -576,7 +576,7 @@ public class ExportViewWaedi extends Composite implements View {
 					// Geht durch das Stockwerk
 					for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 
-						Kapazität kapazität = stockwerk.getKapzität();
+						Kapazität kapazität = stockwerk.getKapazität();
 						int maxKapazität = kapazität.getHunderProzentArbeitsplätze();
 						maxAlleKapazitäten += maxKapazität;
 

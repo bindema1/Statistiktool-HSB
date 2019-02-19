@@ -659,7 +659,7 @@ public class ExportViewWinti extends Composite implements View {
 							stockwerkName = "Lernlandschaft";
 						}
 
-						Kapazität kapazität = stockwerk.getKapzität();
+						Kapazität kapazität = stockwerk.getKapazität();
 
 						// Erstellt eine Liste aller Uhrzeiten
 						List<UhrzeitEnum> enumListe = new ArrayList<>();
@@ -871,7 +871,7 @@ public class ExportViewWinti extends Composite implements View {
 						for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
 
 							// Zählt die Maximale Kapazität für das Stockwerk zusammen
-							Kapazität kapazität = stockwerk.getKapzität();
+							Kapazität kapazität = stockwerk.getKapazität();
 							int maxKapazität = kapazität.getHunderProzentArbeitsplätze()
 									+ kapazität.getHunderProzentSektorA() + kapazität.getHunderProzentSektorB()
 									+ kapazität.getHunderProzentGruppenräume() + kapazität.getHunderProzentCarrels();
