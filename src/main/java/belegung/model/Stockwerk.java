@@ -42,7 +42,7 @@ public class Stockwerk implements Serializable {
 	private boolean hatGruppenräume;
 	private boolean hatCarrels;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	private Kapazität kapzität;
 
 	//Das Stockwerk hat eine Liste von allen Arbeitsplätzen/Sektoren/Räumen
