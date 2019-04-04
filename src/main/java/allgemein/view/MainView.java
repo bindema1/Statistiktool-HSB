@@ -1,5 +1,7 @@
 package allgemein.view;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
@@ -16,6 +18,7 @@ import com.vaadin.server.SessionInitEvent;
 import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 import administrator.view.ExportViewWaedi;
@@ -51,6 +54,10 @@ public class MainView extends UI {
 	private static final long serialVersionUID = 1L;
 
 	protected void init(VaadinRequest request) {
+
+		// Set Session timeout programmatically. Overrides the default timeout configured for Servlet.
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval( ( int ) TimeUnit.MINUTES.toSeconds( 240 ) );  // Setting timeout of 240 minutes = ( 240 * 60 ) seconds.
+
 
 		// Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein
 		// SQL-Skript

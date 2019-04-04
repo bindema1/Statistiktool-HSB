@@ -378,11 +378,11 @@ public class ExportViewWaedi extends Composite implements View {
 
 				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus Reidbach", internerkurier.getAnzahl_Reidbach()));
+						sdf.format(datum), "Campus Reidbach", internerkurier.getAnzahl_Reidbach()));
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus RA", internerkurier.getAnzahl_RA()));
+						sdf.format(datum), "Campus RA", internerkurier.getAnzahl_RA()));
 				beanListe.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus GS", internerkurier.getAnzahl_GS()));
+						sdf.format(datum), "Campus GS", internerkurier.getAnzahl_GS()));
 			}
 		}
 
@@ -408,11 +408,11 @@ public class ExportViewWaedi extends Composite implements View {
 			if (!getWochentagForDate(date).equals("Sonntag")) {
 				// Fügt für den ausgewählten Tag alle Einträge in eine Liste ein
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus Reidbach", internerkurier.getAnzahl_Reidbach()));
+						sdf.format(datum), "Campus Reidbach", internerkurier.getAnzahl_Reidbach()));
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus RA", internerkurier.getAnzahl_RA()));
+						sdf.format(datum), "Campus RA", internerkurier.getAnzahl_RA()));
 				beanListeTag.add(new ExportWintikurierTagBean(getKWForDate(datum), getWochentagForDate(date),
-						sdf.format(datum), "Kampus GS", internerkurier.getAnzahl_GS()));
+						sdf.format(datum), "Campus GS", internerkurier.getAnzahl_GS()));
 			}
 		}
 
@@ -441,11 +441,11 @@ public class ExportViewWaedi extends Composite implements View {
 					// Wenn das Jahr und der Monat für einen Eintrag identisch ist, erhöhe Zähler um
 					// 1
 					if (calendar.get(Calendar.YEAR) == jahr && calendar.get(Calendar.MONTH) == monat) {
-						if (e.getDepartement().equals("Kampus Reidbach")) {
+						if (e.getDepartement().equals("Campus Reidbach")) {
 							zaehlerRE += e.getTotal();
-						} else if (e.getDepartement().equals("Kampus RA")) {
+						} else if (e.getDepartement().equals("Campus RA")) {
 							zaehlerRA += e.getTotal();
-						} else if (e.getDepartement().equals("Kampus GS")) {
+						} else if (e.getDepartement().equals("Campus GS")) {
 							zaehlerGS += e.getTotal();
 						}
 					}
@@ -453,9 +453,9 @@ public class ExportViewWaedi extends Composite implements View {
 
 				// Erstellt Einträge für einen Monat
 				beanListeMonat
-						.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Kampus Reidbach", zaehlerRE));
-				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Kampus RA", zaehlerRA));
-				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Kampus GS", zaehlerGS));
+						.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Campus Reidbach", zaehlerRE));
+				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Campus RA", zaehlerRA));
+				beanListeMonat.add(new ExportWintikurierMonatBean(getMonatForInt(monat), jahr, "Campus GS", zaehlerGS));
 			}
 		}
 
@@ -483,7 +483,7 @@ public class ExportViewWaedi extends Composite implements View {
 
 				// Geht durch das Stockwerk
 				for (Stockwerk stockwerk : belegung.getStockwerkListe()) {
-					String stockwerkName = "EG";
+					String stockwerkName = "WÄDI";
 					Kapazität kapazität = stockwerk.getKapzität();
 
 					List<UhrzeitEnum> enumListe = new ArrayList<>();
