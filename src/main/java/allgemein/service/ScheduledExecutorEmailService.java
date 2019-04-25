@@ -361,7 +361,11 @@ public class ScheduledExecutorEmailService {
 
 						// Wenn es einen Null-Wert hat, sende eine Mail
 						if (nullWert == true) {
-							sendeMailBelegung(uhrzeitEnum, nullWerteString, belegung.getStandort());
+							if(belegung.getStandort() == StandortEnum.WÄDENSWIL && LocalDate.now().getDayOfWeek().toString().equals("SATURDAY")) {
+								// Samstags hat Wädenswil keine Belegung, daher soll keine Mail verschickt werden
+							}else {
+								sendeMailBelegung(uhrzeitEnum, nullWerteString, belegung.getStandort());
+							}
 						}
 					}
 				}
