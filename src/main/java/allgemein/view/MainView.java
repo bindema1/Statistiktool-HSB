@@ -56,7 +56,7 @@ public class MainView extends UI {
 	protected void init(VaadinRequest request) {
 
 		// Set Session timeout programmatically. Overrides the default timeout configured for Servlet.
-        VaadinSession.getCurrent().getSession().setMaxInactiveInterval( ( int ) TimeUnit.MINUTES.toSeconds( 240 ) );  // Setting timeout of 240 minutes = ( 240 * 60 ) seconds.
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval( ( int ) TimeUnit.MINUTES.toSeconds( 480 ) );  // Setting timeout of 480 minutes = ( 240 * 60 ) seconds.
 
 
 		// Zu Testzwecken werden hier Testdaten geladen. Später gibt es dafür ein
